@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { SiseApi } from '../api/Sise.api';
+import { Sise } from '../models/Sise.model';
+import { useSise } from '../hooks/useSise';
 
 const SiseList = () => {
-    const [siseData, setSiseData] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const { siseData, setSiseData, error, setError } = useSise();
 
     const getSise = async (lawdCd: number, dealYmd: number) => {
         const apiParams = {
@@ -15,10 +16,10 @@ const SiseList = () => {
         const api = SiseApi(apiParams);
 
         try {
-            const response = await api.get('');
-            setSiseData(JSON.stringify(response.data));
+            const responseApi = await api.get('');
+            console.log(responseApi);
+            setSiseData(responseApi.data.response.body.items.item);
         } catch (err) {
-            console.error('Error fetching Sise data:', err);
             setError('Failed to fetch data');
         }
     };
@@ -35,7 +36,11 @@ const SiseList = () => {
         return <SiseListStyle>Loading...</SiseListStyle>;
     }
 
-    return <SiseListStyle>Sise Data: {siseData}</SiseListStyle>;
+    return (
+        <>
+            <SiseListStyle></SiseListStyle>
+        </>
+    );
 };
 
 const SiseListStyle = styled.div`

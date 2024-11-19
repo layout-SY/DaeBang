@@ -10,7 +10,7 @@ export const SiseApi = (params: ApiParams): AxiosInstance => {
         baseURL:
             'http://apis.data.go.kr/1613000/RTMSDataSvcRHRent/getRTMSDataSvcRHRent',
         params: {
-            serviceKey: process.env.PRICE_API_KEY,
+            serviceKey: process.env.REACT_APP_Sise_API_KEY,
             ...params,
         },
     });
