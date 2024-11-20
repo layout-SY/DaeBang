@@ -14,6 +14,7 @@ const router = createBrowserRouter([
 ]);
 
 // 임시 라우팅임
+// 스타일 관련 부분은 나중에 분리 할 수도 있음
 function App() {
     return (
         <ThemeProvider theme={theme}>
