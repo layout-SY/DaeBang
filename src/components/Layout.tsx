@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import CategoryBar from './CategoryBar';
-import SidbarLayout from './SidbarLayout';
+import SidebarLayout from './SidebarLayout';
 
 const Layout = () => {
     return (
         <StyledLayout>
             <CategoryBar />
-            <SidbarLayout />
+            <SidebarLayout />
         </StyledLayout>
     );
 };
