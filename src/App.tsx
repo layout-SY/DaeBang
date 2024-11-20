@@ -1,25 +1,30 @@
 import './App.css';
-import SiseList from './components/SiseList';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './pages/Home';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './style/theme';
 import GlobalStyle from './style/global';
+import Layout from './components/Layout';
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 
-const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Home />,
-    },
-]);
-
-// 임시 라우팅임
-// 스타일 관련 부분은 나중에 분리 할 수도 있음
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyle />
-            <RouterProvider router={router} />
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route
+                            path="/:category"
+                            element={
+                                <p>
+                                    원룸 시세 :category를 useParam으로 가져올 수
+                                    있음.
+                                </p>
+                            }
+                        />
+                        <Route path="/bookmark" element={<p>북마크</p>} />
+                    </Route>
+                </Routes>
+            </Router>
         </ThemeProvider>
     );
 }
