@@ -1,7 +1,13 @@
 import styled from 'styled-components';
 import { useSise } from '../../hooks/useSise';
 
-const SiseList = ({ lawdCd }: { lawdCd: number }) => {
+interface SiseListProps {
+    searchParams: URLSearchParams;
+}
+
+const SiseList = ({ searchParams }: SiseListProps) => {
+    const lawdCd = parseInt(searchParams.get('region') || '0', 10);
+
     const { siseData, error, isLoading } = useSise(lawdCd);
 
     if (isLoading) {
@@ -21,16 +27,23 @@ const SiseList = ({ lawdCd }: { lawdCd: number }) => {
             {siseData.map((data, index) => (
                 <li key={index}>
                     <p>
-                        <strong>House Name:</strong> {data.mhouseNm}
+                        <strong>{`건물명 : ${data.mhouseNm} `}</strong>
                     </p>
                     <p>
                         <strong>Build Year:</strong> {data.buildYear}
                     </p>
                     <p>
-                        <strong>Monthly Rent:</strong> {data.monthlyRent}
+                        <strong>
+                            {data.monthlyRent === 0
+                                ? '전세'
+                                : `월세 금액 : ${data.monthlyRent} 만원`}
+                        </strong>
                     </p>
                     <p>
-                        <strong>Deposit:</strong> {data.deposit}
+                        <strong>{`계약금 : ${data.deposit} 만원`}</strong>
+                    </p>
+                    <p>
+                        <strong>{`지번 : ${data.jibun}`}</strong>
                     </p>
                 </li>
             ))}

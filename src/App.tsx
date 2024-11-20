@@ -1,16 +1,12 @@
 import './App.css';
-import Map from './components/Map';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SiseList from './components/Sise/SiseList';
+import MainPage from './pages/MainPage';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Map />,
-    },
-    {
-        path: '/side/sise',
-        element: <SiseList lawdCd={11110} />,
+        element: <MainPage />,
     },
 ]);
 
