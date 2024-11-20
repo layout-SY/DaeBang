@@ -2,17 +2,17 @@ import styled from 'styled-components';
 import Map from './Map';
 import Sidebar from './Sidebar';
 
-const SidbarLayout = () => {
+const SidebarLayout = () => {
     return (
-        <StyledSidbarLayout>
+        <StyledSidebarLayout>
             <Sidebar></Sidebar>
             <Map />
-        </StyledSidbarLayout>
+        </StyledSidebarLayout>
     );
 };
 
-const StyledSidbarLayout = styled.div`
+const StyledSidebarLayout = styled.div`
     flex: 1 1;
 `;
 
-export default SidbarLayout;
+export default SidebarLayout;
