@@ -11,7 +11,15 @@ const GlobalStyle = createGlobalStyle`
     h1 {
         margin: 0;
     }
+    
+    a{
+        text-decoration: none;
+        color: #3B4856;
+    }
 
+    a:visited {
+        color: #3B4856;
+    }
 `;
 
 export default GlobalStyle;
