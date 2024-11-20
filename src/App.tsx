@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './style/theme';
+import GlobalStyle from './style/global';
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
 function App() {
     return (
         <ThemeProvider theme={theme}>
+            <GlobalStyle />
             <RouterProvider router={router} />
         </ThemeProvider>
     );
