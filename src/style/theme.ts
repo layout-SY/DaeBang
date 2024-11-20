@@ -3,9 +3,9 @@ type Colorkey =
     | 'secondary'
     | 'third'
     | 'forth'
-    | 'light-background'
-    | 'neutral-background'
-    | 'dark-background'
+    | 'lightBackground'
+    | 'neutralBackground'
+    | 'darkBackground'
     | 'text';
 type HeadingSize = 'large' | 'medium' | 'small';
 type LayoutWidth = 'small' | 'medium' | 'large';
@@ -35,9 +35,9 @@ export const theme: Theme = {
         secondary: '#6B95BC',
         third: '#D5A667',
         forth: '#9C7236',
-        'light-background': '#F2FAFF',
-        'neutral-background': '#9FADBD',
-        'dark-background': '#3B4856',
+        lightBackground: '#F2FAFF',
+        neutralBackground: '#9FADBD',
+        darkBackground: '#3B4856',
         text: '#3B4856',
     },
     heading: {
