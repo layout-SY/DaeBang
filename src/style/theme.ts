@@ -1,4 +1,4 @@
-export type Colorkey =
+type Colorkey =
     | 'primary'
     | 'secondary'
     | 'third'
@@ -7,8 +7,8 @@ export type Colorkey =
     | 'neutral-background'
     | 'dark-background'
     | 'text';
-export type HeadingSize = 'large' | 'medium' | 'small';
-export type LayoutWidth = 'small' | 'medium' | 'large';
+type HeadingSize = 'large' | 'medium' | 'small';
+type LayoutWidth = 'small' | 'medium' | 'large';
 
 interface Theme {
     name: string;
