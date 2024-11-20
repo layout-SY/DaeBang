@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { SiseApiResponseAll } from '../models/Sise.model';
 
 interface ApiParams {
     LAWD_CD: number;
@@ -14,4 +15,12 @@ export const SiseApi = (params: ApiParams): AxiosInstance => {
             ...params,
         },
     });
+};
+
+export const fetchSiseData = async (
+    params: ApiParams,
+): Promise<SiseApiResponseAll> => {
+    const api = SiseApi(params);
+    const response = await api.get<SiseApiResponseAll>('');
+    return response.data;
 };

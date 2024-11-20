@@ -1,3 +1,20 @@
+export interface SiseApiResponseAll {
+    response: {
+        body: {
+            items: {
+                item: Sise[] | Sise; // 배열이거나 단일 객체일 수 있음
+            };
+            numOfRows: number;
+            pageNo: number;
+            totalCount: number;
+        };
+        header: {
+            resultCode: string;
+            resultMsg: string;
+        };
+    };
+}
+
 export interface Sise {
     buildYear: number;
     contractTerm: string;
