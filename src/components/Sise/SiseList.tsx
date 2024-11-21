@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useSise } from '../../hooks/useSise';
 
 const SiseList = () => {
-    const { siseData, error, isLoading } = useSise();
+    const { groupedByAddrSiseData, error, isLoading } = useSise();
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -12,33 +12,29 @@ const SiseList = () => {
         return <div>Error: {error}</div>;
     }
 
-    if (!siseData.length) {
+    if (!groupedByAddrSiseData.length) {
         return <div>No data available.</div>;
     }
 
     return (
         <SiseListStyle>
-            {siseData.map((data, index) => (
-                <li key={index}>
+            {groupedByAddrSiseData.map((data) => (
+                <li key={data.key}>
                     <p>
-                        <strong>{`건물명 : ${data.mhouseNm} `}</strong>
+                        <strong>{data.key}</strong>
                     </p>
+
                     <p>
-                        <strong>Build Year:</strong> {data.buildYear}
+                        <strong>{`최신 갱신 날짜 : ${data.items[0].dealYear}년 ${data.items[0].dealMonth}월 ${data.items[0].dealDay}일`}</strong>
                     </p>
+                    <p>{`건물명 : ${data.items[0].mhouseNm} `}</p>
+                    <p>{`완공 날짜 : ${data.items[0].buildYear}년`}</p>
                     <p>
-                        <strong>
-                            {data.monthlyRent === 0
-                                ? '전세'
-                                : `월세 금액 : ${data.monthlyRent} 만원`}
-                        </strong>
+                        {data.items[0].monthlyRent === 0
+                            ? '전세'
+                            : `월세 금액 : ${data.items[0].monthlyRent} 만원`}
                     </p>
-                    <p>
-                        <strong>{`계약금 : ${data.deposit} 만원`}</strong>
-                    </p>
-                    <p>
-                        <strong>{`지번 : ${data.jibun}`}</strong>
-                    </p>
+                    <p>{`계약금 : ${data.items[0].deposit} 만원`}</p>
                 </li>
             ))}
         </SiseListStyle>
