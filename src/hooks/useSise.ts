@@ -26,5 +26,5 @@ export const useSise = () => {
         fetchData();
     }, [regionCode]);
 
-    return { siseData, error, isLoading };
+    return { siseData, error, isLoading, regionCode };
 };

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Outlet } from 'react-router';
 
 const Sidebar = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
@@ -11,7 +11,7 @@ const Sidebar = () => {
 
     return (
         <>
-            <StyledSidebar isOpen={isOpen}>
+            <StyledSidebar $isOpen={isOpen}>
                 <ToggleButton onClick={toggleSidebar}>
                     {isOpen ? '<' : '>'}
                 </ToggleButton>
@@ -22,9 +22,9 @@ const Sidebar = () => {
 };
 
 interface SidebarProps {
-    isOpen: boolean;
+    $isOpen: boolean;
 }
-// TODO : Sidebar 스타일링 필요
+
 const StyledSidebar = styled.div<SidebarProps>`
     position: absolute;
     top: 0;
@@ -34,8 +34,8 @@ const StyledSidebar = styled.div<SidebarProps>`
     background-color: white;
     display: flex;
     flex-direction: column;
-    transform: ${({ isOpen }) =>
-        isOpen ? 'translateX(0%)' : 'translateX(-100%)'};
+    transform: ${({ $isOpen }) =>
+        $isOpen ? 'translateX(0%)' : 'translateX(-100%)'};
     z-index: 200;
 `;
 
