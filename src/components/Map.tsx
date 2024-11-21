@@ -7,17 +7,21 @@ import {
 import useKakaoLoader from '../hooks/useKaKaoLoader';
 import { useRef, useCallback, useState } from 'react';
 import { debounce } from 'lodash';
-import { useSearchParams } from 'react-router-dom';
 
 interface Position {
     lat: number;
     lng: number;
 }
 
-const Map = () => {
+interface MapProps {
+    searchParams: URLSearchParams;
+    setSearchParams: (params: URLSearchParams) => void;
+}
+
+const Map = ({ searchParams, setSearchParams }: MapProps) => {
     useKakaoLoader();
+
     const mapRef = useRef<kakao.maps.Map>(null);
-    const [searchParams, setSearchParams] = useSearchParams();
     const [markers, setMarkers] = useState([
         { lat: 33.450701, lng: 126.570667 },
     ]);
@@ -89,7 +93,7 @@ const Map = () => {
                 // TODO : 임시 스타일링 입니다. 후에 width, height 100%로 변경해주세요.
                 style={{
                     width: '100%',
-                    height: '100vh',
+                    height: '100%',
                 }}
                 ref={mapRef}
                 aria-label="지도"

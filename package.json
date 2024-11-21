@@ -1,4 +1,5 @@
 {
+
   "name": "daebang",
   "version": "0.1.0",
   "private": true,
@@ -58,4 +59,5 @@
     "kakao.maps.d.ts": "^0.1.40",
     "prettier": "^3.3.3"
   }
+
 }
