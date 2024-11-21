@@ -7,6 +7,7 @@ import {
 import useKakaoLoader from '../hooks/useKaKaoLoader';
 import { useRef, useCallback, useState } from 'react';
 import { debounce } from 'lodash';
+import { useSearchParams } from 'react-router-dom';
 
 interface Position {
     lat: number;
@@ -18,9 +19,10 @@ interface MapProps {
     setSearchParams: (params: URLSearchParams) => void;
 }
 
-const Map = ({ searchParams, setSearchParams }: MapProps) => {
+const Map = () => {
     useKakaoLoader();
 
+    const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
     const [markers, setMarkers] = useState([
         { lat: 33.450701, lng: 126.570667 },

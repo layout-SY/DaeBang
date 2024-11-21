@@ -1,14 +1,8 @@
 import styled from 'styled-components';
 import { useSise } from '../../hooks/useSise';
 
-interface SiseListProps {
-    searchParams: URLSearchParams;
-}
-
-const SiseList = ({ searchParams }: SiseListProps) => {
-    const lawdCd = parseInt(searchParams.get('region') || '0', 10);
-
-    const { siseData, error, isLoading } = useSise(lawdCd);
+const SiseList = () => {
+    const { siseData, error, isLoading } = useSise();
 
     if (isLoading) {
         return <div>Loading...</div>;

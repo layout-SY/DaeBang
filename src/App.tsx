@@ -1,4 +1,4 @@
-import './App.css
+import './App.css';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './style/theme';
 import GlobalStyle from './style/global';
@@ -13,12 +13,7 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<Layout />}>
-                        <Route
-                            path="/:category"
-                            element={
-                                   <SiseList searchParams={searchParams} />
-                            }
-                        />
+                        <Route path="/:category" element={<SiseList />} />
                         <Route path="/bookmark" element={<p>북마크</p>} />
                     </Route>
                 </Routes>

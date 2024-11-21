@@ -4,6 +4,7 @@ import { FaHome } from 'react-icons/fa';
 import { HiMiniBuildingOffice } from 'react-icons/hi2';
 import { MdApartment } from 'react-icons/md';
 import { CiBookmark } from 'react-icons/ci';
+import { useSise } from '../hooks/useSise';
 
 interface ICategory {
     name: string;
@@ -20,6 +21,7 @@ const CATEGORY_LIST: ICategory[] = [
 
 const CategoryBar = () => {
     const { category } = useParams<{ category: string }>();
+    const { regionCode } = useSise();
 
     console.log(category);
 
@@ -31,7 +33,8 @@ const CategoryBar = () => {
                         <li key={item.value}>
                             <StyledLink
                                 to={`/${item.value}`}
-                                isActive={item.value === category}
+                                state={{ regionCode }}
+                                $isActive={item.value === category}
                             >
                                 {item.icon}
                                 <span>{item.name}</span>
@@ -65,7 +68,7 @@ const StyledCategoryBar = styled.nav`
 `;
 
 interface StyledLinkProps {
-    isActive: boolean;
+    $isActive: boolean;
 }
 
 const StyledLink = styled(Link)<StyledLinkProps>`
@@ -76,8 +79,8 @@ const StyledLink = styled(Link)<StyledLinkProps>`
     width: 4.5rem;
     height: 4.5rem;
     border-radius: ${({ theme }) => theme.borderRadius.default};
-    color: ${({ isActive }) => (isActive ? 'white' : '#4b5563')};
-    background-color: ${({ isActive }) => (isActive ? '#3b82f6' : 'white')};
+    color: ${({ $isActive }) => ($isActive ? 'white' : '#4b5563')};
+    background-color: ${({ $isActive }) => ($isActive ? '#3b82f6' : 'white')};
     gap: 0.25rem;
     transition: color 0.3s ease;
     font-weight: 700;
