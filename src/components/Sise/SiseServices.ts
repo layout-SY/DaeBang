@@ -5,7 +5,7 @@ import { generatePastMonths } from '../../utils/dateUtils';
 export const fetchSiseDataForPastMonths = async (
     lawdCd: number,
 ): Promise<Sise[]> => {
-    const dealYmList = generatePastMonths(3); // n개월(2년치 or 유동적으로)
+    const dealYmList = generatePastMonths(24); // n개월(2년치 or 유동적으로)
     const requests = dealYmList.map((dealYmd) =>
         fetchSiseData({ LAWD_CD: lawdCd, DEAL_YMD: parseInt(dealYmd) }),
     );
