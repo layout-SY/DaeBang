@@ -17,13 +17,14 @@ const Sidebar = () => {
 
     const detailId = searchParams.get('detail_id');
 
-
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
     };
 
     const openDetail = (house: Sise) => {
-        setSearchParams({ detail_id: 'open' });
+        const newSearchParams = new URLSearchParams(searchParams.toString());
+        newSearchParams.set('detail_id', 'open');
+        setSearchParams(newSearchParams);
         setDetailInfo(house);
     };
 
