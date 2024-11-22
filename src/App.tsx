@@ -5,7 +5,6 @@ import GlobalStyle from './style/global';
 import Layout from './components/Layout';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 
-import SiseList from './components/Sise/SiseList';
 function App() {
     return (
         <ThemeProvider theme={theme}>
@@ -13,8 +12,8 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<Layout />}>
-                        <Route path="/:category" element={<SiseList />} />
                         <Route path="/bookmark" element={<p>북마크</p>} />
+                        <Route path=":category"></Route>
                     </Route>
                 </Routes>
             </Router>
