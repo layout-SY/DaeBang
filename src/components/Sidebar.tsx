@@ -17,6 +17,7 @@ const Sidebar = () => {
 
     const detailId = searchParams.get('detail_id');
 
+
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
     };

@@ -5,6 +5,7 @@ import { HiMiniBuildingOffice } from 'react-icons/hi2';
 import { MdApartment } from 'react-icons/md';
 import { CiBookmark } from 'react-icons/ci';
 import { useSise } from '../hooks/useSise';
+import { useLocation } from 'react-router-dom';
 
 interface ICategory {
     name: string;
@@ -22,6 +23,7 @@ const CATEGORY_LIST: ICategory[] = [
 const CategoryBar = () => {
     const { category } = useParams<{ category: string }>();
     const { regionCode } = useSise();
+    const location = useLocation();
 
     console.log(category);
 
@@ -32,7 +34,10 @@ const CategoryBar = () => {
                     return (
                         <li key={item.value}>
                             <StyledLink
-                                to={`/${item.value}`}
+                                to={{
+                                    pathname: `/${item.value}`,
+                                    search: location.search,
+                                }}
                                 state={{ regionCode }}
                                 $isActive={item.value === category}
                             >
