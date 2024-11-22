@@ -8,6 +8,7 @@ import useKakaoLoader from '../hooks/useKaKaoLoader';
 import { useRef, useCallback, useState } from 'react';
 import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
+import LocationPopup from './Map/LocationPopup';
 
 interface Position {
     lat: number;
@@ -19,6 +20,12 @@ const Map = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
+    const [center, setCenter] = useState<Position>({
+        lat: 33.450701,
+        lng: 126.570667,
+    });
+    const [address, setAddress] = useState<string>('');
+
     const [markers, setMarkers] = useState([
         { lat: 33.450701, lng: 126.570667 },
     ]);
@@ -39,9 +46,7 @@ const Map = () => {
                     { lat: center.getLat(), lng: center.getLng() },
                     (result, status) => {
                         if (status === kakao.maps.services.Status.OK) {
-                            console.log(result);
-                            console.log(result[0].address_name);
-
+                            setAddress(result[0].address_name);
                             const code = result[0].code
                                 .toString()
                                 .substring(0, 5);
@@ -80,10 +85,7 @@ const Map = () => {
         <>
             <KakaoMap
                 id="map"
-                center={{
-                    lat: 33.450701,
-                    lng: 126.570667,
-                }}
+                center={center}
                 level={3}
                 keyboardShortcuts={true}
                 onCenterChanged={handleCenterChanged}
@@ -107,6 +109,7 @@ const Map = () => {
                         }}
                     />
                 ))}
+                <LocationPopup address={address} />
             </KakaoMap>
         </>
     );
