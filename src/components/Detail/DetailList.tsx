@@ -124,8 +124,8 @@ const DetailListStyle = styled.div`
     gap: 30px;
     overflow: scroll;
     height: 100%;
-    // width: ${WIDTH};
-    // left: calc(5rem + ${WIDTH});
+    width: ${WIDTH};
+    left: calc(5rem + ${WIDTH});
     z-index: 1000;
     background: #fff;
     border-right: 1px solid ${({ theme }) => theme.colors.border};
