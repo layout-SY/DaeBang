@@ -6,7 +6,10 @@ type Colorkey =
     | 'lightBackground'
     | 'neutralBackground'
     | 'darkBackground'
-    | 'text';
+    | 'text'
+    | 'border'
+    | 'hover';
+
 type HeadingSize = 'large' | 'medium' | 'small';
 type LayoutWidth = 'small' | 'medium' | 'large';
 
@@ -39,6 +42,8 @@ export const theme: Theme = {
         neutralBackground: '#9FADBD',
         darkBackground: '#3B4856',
         text: '#3B4856',
+        border: '#EDEDED',
+        hover: '#EFF4FA',
     },
     heading: {
         large: {
