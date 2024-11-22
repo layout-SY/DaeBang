@@ -1,8 +1,19 @@
 import styled from 'styled-components';
 import { useSise } from '../../hooks/useSise';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
 
 const SiseList = () => {
     const { groupedByAddrSiseData, error, isLoading } = useSise();
+    const [ref, inView] = useInView({
+        threshold: 0.5, // 화면의 50%가 보일 때 감지
+    });
+
+    useEffect(() => {
+        if (inView) {
+            console.log('요소가 화면에 보입니다!');
+        }
+    }, [inView]);
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -17,10 +28,9 @@ const SiseList = () => {
     }
 
     return (
-        <SiseListStyle>
+        <SiseListStyle ref={ref}>
             {groupedByAddrSiseData.map((page) => (
                 <div key={page.index}>
-                    <h3>Page {page.index}</h3>
                     {page.data.map((data) => (
                         <li key={data.key}>
                             <p>
