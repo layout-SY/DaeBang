@@ -6,12 +6,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppRoutes from './AppRoutes';
 
-// 기본적으로 모든 데이터가 캐시되도록 설정합니다
-// 모든 데이터가 영원히 fresh한 것으로 간주됩니다.
+// staleTime Infinite는 모든 캐시가 영원히 fresh한 것으로 간주됩니다.
+// gcTime Infinity는 캐시가 제거되지 않도록 설정합니다.
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: Infinity,
+            staleTime: Infinity, // 1000 * 60 * 30 (30분) 으로 설정하면 30분이 지나면 캐시가 만료됩니다.
+            gcTime: Infinity, // 1000 * 60 * 30 (30분) 으로 설정하면 30분마다 캐시가 제거됩니다.
         },
     },
 });
