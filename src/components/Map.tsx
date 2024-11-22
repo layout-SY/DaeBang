@@ -9,6 +9,7 @@ import { useRef, useCallback, useState } from 'react';
 import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
+import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 
 interface Position {
     lat: number;
@@ -25,10 +26,10 @@ const Map = () => {
         lng: 126.570667,
     });
     const [address, setAddress] = useState<string>('');
-
     const [markers, setMarkers] = useState([
         { lat: 33.450701, lng: 126.570667 },
     ]);
+    const { data, isPending, isError, error } = useSiseWithReactQuery();
 
     // 지도 드래그가 끝날 때 마다 중심좌표를 가져오고 주소를 검색합니다.
     // 검색된 주소의 법정동 코드 앞 5자리(구코드)를 URLSearchParams에 추가합니다.
@@ -38,9 +39,6 @@ const Map = () => {
             const map = mapRef.current;
             if (map) {
                 const center = map.getCenter();
-                console.log(
-                    `위도: ${center.getLat()}, 경도: ${center.getLng()}`,
-                );
 
                 searchAddrFromCoords(
                     { lat: center.getLat(), lng: center.getLng() },

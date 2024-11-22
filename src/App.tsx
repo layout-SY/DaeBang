@@ -2,25 +2,29 @@ import './App.css';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './style/theme';
 import GlobalStyle from './style/global';
-import Layout from './components/Layout';
-import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-import SiseList2 from './components/SiseList2';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import AppRoutes from './AppRoutes';
+
+// 기본적으로 모든 데이터가 캐시되도록 설정합니다
+// 모든 데이터가 영원히 fresh한 것으로 간주됩니다.
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: Infinity,
+        },
+    },
+});
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyle />
-            <Router>
-                <Routes>
-                    <Route path="/" element={<Layout />}>
-                        <Route path=":category" element={<SiseList2 />} />
-                        <Route
-                            path="/bookmark"
-                            element={<p style={{ width: '330px' }}>북마크</p>}
-                        />
-                    </Route>
-                </Routes>
-            </Router>
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    <AppRoutes />
+                </Router>
+            </QueryClientProvider>
         </ThemeProvider>
     );
 }
