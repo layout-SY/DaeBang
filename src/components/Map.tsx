@@ -91,6 +91,7 @@ const Map = () => {
                 onCenterChanged={handleCenterChanged}
                 // TODO : 임시 스타일링 입니다. 후에 width, height 100%로 변경해주세요.
                 style={{
+                    display: 'flex',
                     width: '100%',
                     height: '100%',
                 }}

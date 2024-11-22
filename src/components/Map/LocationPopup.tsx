@@ -14,17 +14,19 @@ const LocationPopup = ({ address }: LocationPopupProps) => {
 };
 
 const StyledLocationPopup = styled.div`
-    display: flex;
-    position: absolute;
+    position: relative;
     bottom: 50px;
-    left: 50%;
+    width: 300px;
+    display: flex;
+    margin: 0 auto;
     padding: 8px 20px;
     border-radius: 20px;
     font-size: 16px;
     font-weight: 700;
     line-height: 26px;
     text-align: center;
-
+    justify-content: center;
+    align-items: center;
     background-color: #3b82f6;
     color: white;
     z-index: 60;
