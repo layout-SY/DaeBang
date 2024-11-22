@@ -14,7 +14,10 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route path=":category" element={<SiseList2 />} />
-                        <Route path="/bookmark" element={<p>북마크</p>} />
+                        <Route
+                            path="/bookmark"
+                            element={<p style={{ width: '330px' }}>북마크</p>}
+                        />
                     </Route>
                 </Routes>
             </Router>
