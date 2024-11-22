@@ -116,6 +116,7 @@ const DetailList = ({ house, closeDetail }: Props) => {
 };
 const DetailListStyle = styled.div`
     padding-top: 10px;
+    position: absolute;
     top: 0;
     bottom: 0;
     display: flex;
@@ -127,10 +128,7 @@ const DetailListStyle = styled.div`
     // left: calc(5rem + ${WIDTH});
     z-index: 1000;
     background: #fff;
-
     border-right: 1px solid ${({ theme }) => theme.colors.border};
-    display: flex;
-    flex-direction: column;
 
     h2 {
         margin: 0;
@@ -157,8 +155,6 @@ const DetailListStyle = styled.div`
             transform: rotate(45deg);
         }
     }
-
-    position: absolute;
 
     .content {
         padding: 0 10px;
