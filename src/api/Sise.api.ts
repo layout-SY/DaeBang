@@ -4,6 +4,8 @@ import { SiseApiResponseAll } from '../models/Sise.model';
 interface ApiParams {
     LAWD_CD: number;
     DEAL_YMD: number;
+    pageNo: number;
+    numOfRows: number;
 }
 
 export const SiseApi = (params: ApiParams): AxiosInstance => {
@@ -12,7 +14,7 @@ export const SiseApi = (params: ApiParams): AxiosInstance => {
             'http://apis.data.go.kr/1613000/RTMSDataSvcRHRent/getRTMSDataSvcRHRent',
         params: {
             serviceKey: process.env.REACT_APP_Sise_API_KEY,
-            numOfRows: 20,
+
             ...params,
         },
     });

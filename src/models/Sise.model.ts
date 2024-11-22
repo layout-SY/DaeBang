@@ -35,3 +35,8 @@ export interface Sise {
     umdNm: string;
     useRRRight: string;
 }
+
+export interface paginateByKeyResultProps {
+    index: number;
+    data: { key: string; items: Sise[] }[];
+}

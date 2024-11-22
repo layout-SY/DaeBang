@@ -4,10 +4,17 @@ import { generatePastMonths } from '../../utils/dateUtils';
 
 export const fetchSiseDataForPastMonths = async (
     lawdCd: number,
+    pageNo: number,
+    numOfRows: number,
 ): Promise<Sise[]> => {
-    const dealYmList = generatePastMonths(24); // n개월(2년치 or 유동적으로)
+    const dealYmList = generatePastMonths(3); // n개월(2년치 or 유동적으로)
     const requests = dealYmList.map((dealYmd) =>
-        fetchSiseData({ LAWD_CD: lawdCd, DEAL_YMD: parseInt(dealYmd) }),
+        fetchSiseData({
+            LAWD_CD: lawdCd,
+            DEAL_YMD: parseInt(dealYmd),
+            pageNo: pageNo,
+            numOfRows: numOfRows,
+        }),
     );
 
     try {
@@ -15,6 +22,7 @@ export const fetchSiseDataForPastMonths = async (
         // 응답 데이터 병합
         const allData = responses.flatMap((data) => {
             const itemsResponse = data.response.body.items.item;
+
             if (!itemsResponse) return []; // 데이터가 없는 경우 빈 배열 반환
 
             // 단일 객체일 경우 배열로 변환

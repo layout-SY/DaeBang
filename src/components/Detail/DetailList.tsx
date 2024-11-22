@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { FaAngleLeft, FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
 import styled from 'styled-components';
-import { WIDTH } from '../../utils/constants';
 import { Sise } from '../../models/Sise.model';
 import DetailRoadView from './DetailRoadView';
 import { useGetPosition } from '../../hooks/useGetPosition';
 import DetailNeighbor from './DetailNeighbor';
+import { WIDTH } from '../../utils/constants';
 
 export interface Position {
     lat: number;
@@ -123,8 +123,8 @@ const DetailListStyle = styled.div`
     gap: 30px;
     overflow: scroll;
     height: 100%;
-    width: ${WIDTH};
-    left: calc(5rem + ${WIDTH});
+    // width: ${WIDTH};
+    // left: calc(5rem + ${WIDTH});
     z-index: 1000;
     background: #fff;
 
