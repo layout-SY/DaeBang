@@ -14,11 +14,6 @@ interface Position {
     lng: number;
 }
 
-interface MapProps {
-    searchParams: URLSearchParams;
-    setSearchParams: (params: URLSearchParams) => void;
-}
-
 const Map = () => {
     useKakaoLoader();
 
