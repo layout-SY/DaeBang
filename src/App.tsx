@@ -4,7 +4,7 @@ import { theme } from './style/theme';
 import GlobalStyle from './style/global';
 import Layout from './components/Layout';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-import SiseList from './components/Sise/SiseList';
+import SiseList2 from './components/SiseList2';
 
 function App() {
     return (
@@ -13,8 +13,8 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<Layout />}>
+                        <Route path=":category" element={<SiseList2 />} />
                         <Route path="/bookmark" element={<p>북마크</p>} />
-                        <Route path=":category"></Route>
                     </Route>
                 </Routes>
             </Router>

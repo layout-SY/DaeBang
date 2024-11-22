@@ -1,79 +1,45 @@
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
-import { Outlet } from 'react-router';
-import { useSise } from '../hooks/useSise';
-import SideBarItem from './SideBarItem';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { FaAngleLeft } from 'react-icons/fa';
 import { WIDTH } from '../utils/constants';
-import { Sise } from '../models/Sise.model';
-import DetailList from './Detail/DetailList';
-import { useSearchParams } from 'react-router-dom';
 
-const Sidebar = () => {
-    const { siseData } = useSise();
+interface SidebarProps {
+    children: ReactNode;
+}
+
+const Sidebar = ({ children }: SidebarProps) => {
     const [isOpen, setIsOpen] = useState(true);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [detailInfo, setDetailInfo] = useState<Sise | null>();
-
-    const detailId = searchParams.get('detail_id');
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
     };
 
-    const openDetail = (house: Sise) => {
-        const newSearchParams = new URLSearchParams(searchParams.toString());
-        newSearchParams.set('detail_id', 'open');
-        setSearchParams(newSearchParams);
-        setDetailInfo(house);
-    };
-
-    const closeDetail = () => {
-        searchParams.delete('detail_id');
-        setSearchParams(searchParams);
-    };
-
     return (
         <>
-            {/* 검색 창 */}
             <StyledSidebar $isOpen={isOpen}>
-                {siseData.map((house, index) => (
-                    <SideBarItem
-                        house={house}
-                        index={index}
-                        key={index}
-                        onClick={openDetail}
-                    />
-                ))}
+                {/* 검색 창 */}
+                {children}
             </StyledSidebar>
-
             <ToggleButton
                 onClick={toggleSidebar}
                 className="toggle"
                 $isOpen={isOpen}
             >
-                {isOpen ? <FaAngleLeft /> : <FaAngleRight />}
+                <FaAngleLeft />
             </ToggleButton>
-
-            <Outlet />
-            {detailId && detailInfo && (
-                <DetailList house={detailInfo} closeDetail={closeDetail} />
-            )}
         </>
     );
 };
 
-interface SidebarProps {
+interface StyledSidebarProps {
     $isOpen: boolean;
 }
 
-export const StyledSidebar = styled.div<SidebarProps>`
+export const StyledSidebar = styled.div<StyledSidebarProps>`
     position: absolute;
     top: 0;
     bottom: 0;
-    overflow: scroll;
     height: 100%;
-    width: ${WIDTH};
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -83,16 +49,18 @@ export const StyledSidebar = styled.div<SidebarProps>`
     border-right: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
-const ToggleButton = styled.button<SidebarProps>`
+interface ToggleButtonProps {
+    $isOpen: boolean;
+}
+
+const ToggleButton = styled.button<ToggleButtonProps>`
     position: absolute;
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     top: 50%;
-    left: calc(5rem + ${WIDTH});
-    transform: ${({ $isOpen }) =>
-        $isOpen ? 'translateX(0%)' : `translateX(-${WIDTH})`};
+    left: ${({ $isOpen }) => ($isOpen ? '390px' : '79px')};
+    z-index: 1000;
     width: 23px;
     height: 46px;
     border: solid 1px ${({ theme }) => theme.colors.border};
@@ -103,7 +71,11 @@ const ToggleButton = styled.button<SidebarProps>`
     padding-bottom: 0.2rem;
     border-radius: 0 0.5rem 0.5rem 0;
     cursor: pointer;
-    z-index: 200;
+
+    svg {
+        transform: ${({ $isOpen }) =>
+            $isOpen ? 'rotate(0deg)' : 'rotate(180deg)'};
+    }
 `;
 
 export default Sidebar;
