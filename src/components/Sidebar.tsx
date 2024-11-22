@@ -4,10 +4,11 @@ import { Outlet } from 'react-router';
 import { useSise } from '../hooks/useSise';
 import SideBarItem from './SideBarItem';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
-import { WIDTH } from '../utils/constants';
 import { Sise } from '../models/Sise.model';
 import DetailList from './Detail/DetailList';
 import { useSearchParams } from 'react-router-dom';
+import { WIDTH } from '../utils/constants';
+import SiseList from './Sise/SiseList';
 
 const Sidebar = () => {
     const { siseData } = useSise();
@@ -16,7 +17,6 @@ const Sidebar = () => {
     const [detailInfo, setDetailInfo] = useState<Sise | null>();
 
     const detailId = searchParams.get('detail_id');
-
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
@@ -36,14 +36,15 @@ const Sidebar = () => {
         <>
             {/* 검색 창 */}
             <StyledSidebar $isOpen={isOpen}>
-                {siseData.map((house, index) => (
+                {/* {siseData.map((house, index) => (
                     <SideBarItem
                         house={house}
                         index={index}
                         key={index}
                         onClick={openDetail}
                     />
-                ))}
+                ))} */}
+                <SiseList onClick={openDetail} />
             </StyledSidebar>
 
             <ToggleButton

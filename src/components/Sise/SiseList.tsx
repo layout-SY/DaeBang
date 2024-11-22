@@ -2,12 +2,21 @@ import styled from 'styled-components';
 import { useSise } from '../../hooks/useSise';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
+import { Sise } from '../../models/Sise.model';
 
-const SiseList = () => {
+interface SiseListProps {
+    onClick: (house: Sise) => void;
+}
+
+const SiseList = ({ onClick }: SiseListProps) => {
     const { groupedByAddrSiseData, error, isLoading } = useSise();
     const [ref, inView] = useInView({
         threshold: 0.5, // 화면의 50%가 보일 때 감지
     });
+
+    const handleClick = (house: Sise) => {
+        onClick(house);
+    };
 
     useEffect(() => {
         if (inView) {
@@ -32,7 +41,10 @@ const SiseList = () => {
             {groupedByAddrSiseData.map((page) => (
                 <div key={page.index}>
                     {page.data.map((data) => (
-                        <li key={data.key}>
+                        <div
+                            key={data.key}
+                            onClick={() => handleClick(data.items[0])}
+                        >
                             <p>
                                 <strong>{data.key}</strong>
                             </p>
@@ -47,7 +59,7 @@ const SiseList = () => {
                                     : `월세 금액 : ${data.items[0].monthlyRent} 만원`}
                             </p>
                             <p>{`계약금 : ${data.items[0].deposit} 만원`}</p>
-                        </li>
+                        </div>
                     ))}
                 </div>
             ))}

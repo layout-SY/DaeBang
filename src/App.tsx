@@ -4,7 +4,6 @@ import { theme } from './style/theme';
 import GlobalStyle from './style/global';
 import Layout from './components/Layout';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-import SiseList from './components/Sise/SiseList';
 
 function App() {
     return (
