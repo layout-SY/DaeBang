@@ -109,6 +109,7 @@ const Map = () => {
                         }}
                     />
                 ))}
+
                 <LocationPopup address={address} />
             </KakaoMap>
         </>
