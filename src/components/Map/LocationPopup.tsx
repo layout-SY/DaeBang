@@ -27,7 +27,7 @@ const StyledLocationPopup = styled.div`
 
     background-color: #3b82f6;
     color: white;
-    z-index: 400;
+    z-index: 60;
 `;
 
 export default LocationPopup;
