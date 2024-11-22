@@ -117,7 +117,7 @@ const DetailList = ({ house, closeDetail }: Props) => {
 const DetailListStyle = styled.div`
     position: absolute;
     border-radius: ${({ theme }) => theme.borderRadius.large};
-    left: 350px;
+    left: 360px;
     display: flex;
     flex-direction: column;
     gap: 30px;

@@ -59,7 +59,7 @@ const ToggleButton = styled.button<ToggleButtonProps>`
     align-items: center;
     justify-content: center;
     top: 50%;
-    left: ${({ $isOpen }) => ($isOpen ? '390px' : '79px')};
+    left: ${({ $isOpen }) => ($isOpen ? '411px' : '79px')};
     z-index: 1000;
     width: 23px;
     height: 46px;
