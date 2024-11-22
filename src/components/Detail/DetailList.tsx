@@ -107,25 +107,24 @@ const DetailList = ({ house, closeDetail }: Props) => {
                 <div className="navigation">
                     <h2>길찾기</h2>
                 </div>
+                {/* <ToggleButton onClick={handleClose} className="totoggle">
+                    <FaAngleLeft />
+                </ToggleButton> */}
             </DetailListStyle>
-            <ToggleButton onClick={handleClose} className="totoggle">
-                <FaAngleLeft />
-            </ToggleButton>
         </>
     );
 };
 const DetailListStyle = styled.div`
-    padding-top: 10px;
     position: absolute;
-    top: 0;
-    bottom: 0;
+    border-radius: ${({ theme }) => theme.borderRadius.large};
+    left: 350px;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    overflow: scroll;
+    overflow-y: scroll;
     height: 100%;
     width: ${WIDTH};
-    left: calc(5rem + ${WIDTH});
+    padding-top: 10px;
     z-index: 1000;
     background: #fff;
     border-right: 1px solid ${({ theme }) => theme.colors.border};
