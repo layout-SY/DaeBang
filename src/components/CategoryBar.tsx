@@ -25,8 +25,6 @@ const CategoryBar = () => {
     const { regionCode } = useSise();
     const location = useLocation();
 
-    console.log(category);
-
     return (
         <StyledCategoryBar>
             <ul>

@@ -8,15 +8,12 @@ import useKakaoLoader from '../hooks/useKaKaoLoader';
 import { useRef, useCallback, useState } from 'react';
 import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
+import LocationPopup from './Map/LocationPopup';
+import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 
 interface Position {
     lat: number;
     lng: number;
-}
-
-interface MapProps {
-    searchParams: URLSearchParams;
-    setSearchParams: (params: URLSearchParams) => void;
 }
 
 const Map = () => {
@@ -24,9 +21,16 @@ const Map = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
+    const [center, setCenter] = useState<Position>({
+        lat: 37.5642135,
+        lng: 127.0016985,
+    });
+    const [address, setAddress] = useState<string>('');
     const [markers, setMarkers] = useState([
         { lat: 33.450701, lng: 126.570667 },
     ]);
+    const { data, isPending, isError, error } = useSiseWithReactQuery();
+    console.log(data, isPending, isError, error);
 
     // 지도 드래그가 끝날 때 마다 중심좌표를 가져오고 주소를 검색합니다.
     // 검색된 주소의 법정동 코드 앞 5자리(구코드)를 URLSearchParams에 추가합니다.
@@ -36,17 +40,12 @@ const Map = () => {
             const map = mapRef.current;
             if (map) {
                 const center = map.getCenter();
-                console.log(
-                    `위도: ${center.getLat()}, 경도: ${center.getLng()}`,
-                );
 
                 searchAddrFromCoords(
                     { lat: center.getLat(), lng: center.getLng() },
                     (result, status) => {
                         if (status === kakao.maps.services.Status.OK) {
-                            console.log(result);
-                            console.log(result[0].address_name);
-
+                            setAddress(result[0].address_name);
                             const code = result[0].code
                                 .toString()
                                 .substring(0, 5);
@@ -85,15 +84,13 @@ const Map = () => {
         <>
             <KakaoMap
                 id="map"
-                center={{
-                    lat: 33.450701,
-                    lng: 126.570667,
-                }}
-                level={3}
+                center={center}
+                level={7}
                 keyboardShortcuts={true}
                 onCenterChanged={handleCenterChanged}
                 // TODO : 임시 스타일링 입니다. 후에 width, height 100%로 변경해주세요.
                 style={{
+                    display: 'flex',
                     width: '100%',
                     height: '100%',
                 }}
@@ -112,6 +109,8 @@ const Map = () => {
                         }}
                     />
                 ))}
+
+                <LocationPopup address={address} />
             </KakaoMap>
         </>
     );
