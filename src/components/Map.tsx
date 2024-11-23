@@ -19,10 +19,10 @@ interface Position {
 
 const Map = () => {
     // 해당 hook를 사용이후 전역에 설치가 되고 이후 재호출(동일한 옵션)이 일어나더라도 재설치 되거나, 제거되지 않습니다.
-    useKakaoLoader({
-        appkey: '0be8ca05ad0dd0c80da443e49e5f1488',
-        libraries: ['clusterer', 'drawing', 'services'],
-    });
+    // useKakaoLoader({
+    //     appkey: '0be8ca05ad0dd0c80da443e49e5f1488',
+    //     libraries: ['clusterer', 'drawing', 'services'],
+    // });
 
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
