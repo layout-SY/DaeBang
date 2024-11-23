@@ -23,6 +23,7 @@ interface Theme {
     };
     borderRadius: {
         default: string;
+        large: string;
     };
     layout: {
         width: {
@@ -58,6 +59,7 @@ export const theme: Theme = {
     },
     borderRadius: {
         default: '4px',
+        large: '8px',
     },
     layout: {
         width: {
