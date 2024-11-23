@@ -66,3 +66,8 @@ export interface Contract {
     preMonthyRent: number;
     useRRRight: string;
 }
+
+export interface SiseOfBuildingWithXy extends SiseOfBuilding {
+    x: number;
+    y: number;
+}
