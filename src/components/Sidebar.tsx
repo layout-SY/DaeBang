@@ -8,7 +8,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ children }: SidebarProps) => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
