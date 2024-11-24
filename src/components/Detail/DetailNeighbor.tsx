@@ -36,12 +36,12 @@ interface Category {
 
 // 은행을 눌렀는 데 자꾸 주유소가 표시가 됨
 const categories: Category[] = [
+    { id: 'BK9', name: '은행', order: 0 },
     { id: 'MT1', name: '마트', order: 1 },
-    { id: 'PM9', name: '약국', order: 2 },
-    { id: 'BK9', name: '은행', order: 3 }, // 주유소로 표기가 됨 ...
+    { id: 'PM9', name: '약국', order: 2 }, // 주유소로 표기가 됨 ...
+    { id: 'OL7', name: '주유소', order: 3 },
     { id: 'CE7', name: '카페', order: 4 },
     { id: 'CS2', name: '편의점', order: 5 },
-    { id: 'SW8', name: '지하철', order: 6 },
 ];
 
 interface PlacesSearchResultItem {
@@ -250,9 +250,22 @@ const DetailNeighbor = ({ position }: Props) => {
 
     if (position.lat === -1) {
         return (
-            <Empty>
-                <FaSadCry /> 위치를 찾을 수 없습니다
-            </Empty>
+            <>
+                <Empty>
+                    <FaSadCry /> 위치를 찾을 수 없습니다
+                </Empty>
+                <ul className="category-list">
+                    {categories.map((category) => (
+                        <CategoryItem
+                            key={category.id}
+                            $active={currCategory === category.id}
+                            onClick={() => setCurrCategory(category.id)}
+                        >
+                            {category.name}
+                        </CategoryItem>
+                    ))}
+                </ul>
+            </>
         );
     }
 
@@ -285,7 +298,6 @@ const DetailNeighbor = ({ position }: Props) => {
 
 const DetailNeighborStyle = styled.div`
     width: 100%;
-    overflow: hidden;
 
     .map-container {
         width: 100%;
@@ -320,10 +332,6 @@ const DetailNeighborStyle = styled.div`
         padding: 8px;
         border-radius: 6px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-        li {
-            font-size: 14px;
-        }
     }
 
     h2 {
@@ -337,10 +345,11 @@ interface CategoryItemProps {
 }
 
 const CategoryItem = styled.li<CategoryItemProps>`
+    font-size: 14px;
     padding: 4px 8px;
     cursor: pointer;
     border-radius: 4px;
-    background: ${(props) => (props.$active ? '#007AFF' : 'transparent')};
+    background: ${(props) => (props.$active ? '#007AFF' : 'white')};
     color: ${(props) => (props.$active ? 'white' : 'black')};
     transition: all 0.2s;
 

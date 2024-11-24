@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { act, useCallback, useEffect, useRef, useState } from 'react';
 import { FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
 import styled from 'styled-components';
 import { Sise } from '../../models/Sise.model';
@@ -44,6 +44,7 @@ const menus: menuProps[] = [
 
 const THRESHOLD = 230;
 const DELAY = 500;
+const stairs = [0, 350, 780, 830];
 
 const DetailList = ({ house, closeDetail }: Props) => {
     const { position } = useGetPosition(house);
@@ -84,14 +85,29 @@ const DetailList = ({ house, closeDetail }: Props) => {
         localStorage.setItem('bookmark', JSON.stringify(newBookMarks));
     };
 
-    // 메뉴 관련 이벤트 및 함수
-    const handleMenuVisible = useCallback(() => {
-        if (wrapper!.current!.scrollTop > THRESHOLD) {
-            setMenuVisible(true);
-        } else {
-            setMenuVisible(false);
-        }
-    }, []);
+    const handleMenuVisible = useCallback(
+        throttle(() => {
+            const scrollY = wrapper!.current!.scrollTop;
+            console.log(scrollY);
+
+            if (scrollY >= stairs[3]) {
+                setActiveMenu(menus[3].data_link);
+            } else if (scrollY >= stairs[2]) {
+                setActiveMenu(menus[2].data_link);
+            } else if (scrollY >= stairs[1]) {
+                setActiveMenu(menus[1].data_link);
+            } else {
+                setActiveMenu(menus[0].data_link);
+            }
+
+            if (scrollY > THRESHOLD) {
+                setMenuVisible(true);
+            } else {
+                setMenuVisible(false);
+            }
+        }, DELAY), // 200ms의 스로틀링
+        [],
+    );
 
     useEffect(() => {
         if (!wrapper) return;
@@ -106,7 +122,6 @@ const DetailList = ({ house, closeDetail }: Props) => {
             const link = target.dataset.link;
             if (link) {
                 setActiveMenu(link);
-                console.log(link);
                 handleScroll(link);
             }
         }
@@ -114,7 +129,13 @@ const DetailList = ({ house, closeDetail }: Props) => {
 
     const handleScroll = (name: string) => {
         const scroll = document.querySelector(`.${name}`);
-        scroll?.scrollIntoView({ behavior: 'smooth' });
+        if (scroll && wrapper.current) {
+            const index = menus.findIndex((menu) => menu.data_link === name);
+            wrapper.current.scrollTo({
+                top: stairs[index],
+                behavior: 'smooth',
+            });
+        }
     };
 
     return (
@@ -133,6 +154,7 @@ const DetailList = ({ house, closeDetail }: Props) => {
                         </li>
                     ))}
                 </ul>
+
                 <div className="detail_header">
                     <h2>상세 정보</h2>
                     <div className="header_button_container">
@@ -237,6 +259,7 @@ const DetailListStyle = styled.div<DetailListStyleProps>`
         grid-template-columns: 1fr 1fr 1fr 1fr;
         font-size: 14px;
         font-weight: 600;
+        transition: color 0.3s ease;
 
         li {
             background: white;
