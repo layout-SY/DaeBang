@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { FaAngleLeft, FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
 import styled from 'styled-components';
 import { Sise } from '../../models/Sise.model';
 import DetailRoadView from './DetailRoadView';
 import { useGetPosition } from '../../hooks/useGetPosition';
 import DetailNeighbor from './DetailNeighbor';
 import { WIDTH } from '../../utils/constants';
+import { throttle } from 'lodash';
 
 export interface Position {
     lat: number;
@@ -14,13 +15,42 @@ export interface Position {
 
 interface Props {
     house: Sise;
-
     closeDetail: () => void;
 }
 
+interface menuProps {
+    data_link: string;
+    name: string;
+}
+
+const menus: menuProps[] = [
+    {
+        data_link: 'detail_header',
+        name: '상세정보',
+    },
+    {
+        data_link: 'detail_neighbor',
+        name: '주변시설',
+    },
+    {
+        data_link: 'detail_graph',
+        name: '시세정보',
+    },
+    {
+        data_link: 'detail_navigation',
+        name: '길찾기',
+    },
+];
+
+const THRESHOLD = 230;
+const DELAY = 500;
+
 const DetailList = ({ house, closeDetail }: Props) => {
     const { position } = useGetPosition(house);
+    const [activeMenu, setActiveMenu] = useState<string>('header');
     const [bookmarkIndex, setBookMarkIndex] = useState<number>(-1);
+    const [menuVisible, setMenuVisible] = useState(false);
+    const wrapper = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // 북마크 여부
@@ -54,11 +84,57 @@ const DetailList = ({ house, closeDetail }: Props) => {
         localStorage.setItem('bookmark', JSON.stringify(newBookMarks));
     };
 
+    // 메뉴 관련 이벤트 및 함수
+    const handleMenuVisible = useCallback(() => {
+        if (wrapper!.current!.scrollTop > THRESHOLD) {
+            setMenuVisible(true);
+        } else {
+            setMenuVisible(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!wrapper) return;
+        wrapper!.current!.addEventListener('scroll', handleMenuVisible);
+        return () =>
+            wrapper!.current!.removeEventListener('scroll', handleMenuVisible);
+    }, [handleMenuVisible]);
+
+    const handleClickMenu = (e: React.MouseEvent<HTMLUListElement>) => {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'LI') {
+            const link = target.dataset.link;
+            if (link) {
+                setActiveMenu(link);
+                console.log(link);
+                handleScroll(link);
+            }
+        }
+    };
+
+    const handleScroll = (name: string) => {
+        const scroll = document.querySelector(`.${name}`);
+        scroll?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     return (
         <>
-            <DetailListStyle>
-                <div className="header">
-                    <h2>제목</h2>
+            <DetailListStyle $visible={menuVisible} ref={wrapper}>
+                <ul className="menu" onClick={handleClickMenu}>
+                    {menus.map((menu) => (
+                        <li
+                            className={
+                                activeMenu === menu.data_link ? 'active' : ''
+                            }
+                            key={menu.data_link}
+                            data-link={menu.data_link}
+                        >
+                            {menu.name}
+                        </li>
+                    ))}
+                </ul>
+                <div className="detail_header">
+                    <h2>상세 정보</h2>
                     <div className="header_button_container">
                         <button className="bookmark" onClick={handleClickHeart}>
                             {bookmarkIndex !== -1 ? (
@@ -72,7 +148,7 @@ const DetailList = ({ house, closeDetail }: Props) => {
                         </button>
                     </div>
                 </div>
-                <div className="content">
+                <div className="detail_content">
                     <DetailRoadView position={position} />
 
                     <h2>
@@ -96,25 +172,41 @@ const DetailList = ({ house, closeDetail }: Props) => {
                     </div>
                 </div>
 
-                <div className="neighbor">
+                <div className="detail_neighbor">
                     <DetailNeighbor position={position} />
                 </div>
 
-                <div className="graph">
+                <div className="detail_graph">
                     <h2>시세 정보</h2>
+                    <div
+                        style={{
+                            background: 'gray',
+                            width: '100%',
+                            height: '300px',
+                        }}
+                    />
                 </div>
 
-                <div className="navigation">
+                <div className="detail_navigation">
                     <h2>길찾기</h2>
+                    <div
+                        style={{
+                            background: 'gray',
+                            width: '100%',
+                            height: '300px',
+                        }}
+                    />
                 </div>
-                {/* <ToggleButton onClick={handleClose} className="totoggle">
-                    <FaAngleLeft />
-                </ToggleButton> */}
             </DetailListStyle>
         </>
     );
 };
-const DetailListStyle = styled.div`
+
+interface DetailListStyleProps {
+    $visible: boolean;
+}
+
+const DetailListStyle = styled.div<DetailListStyleProps>`
     position: absolute;
     border-radius: ${({ theme }) => theme.borderRadius.large};
     left: 360px;
@@ -124,17 +216,49 @@ const DetailListStyle = styled.div`
     overflow-y: scroll;
     height: 100%;
     width: ${WIDTH};
-    padding-top: 10px;
-    z-index: 1000;
+
+    z-index: 10;
     background: #fff;
     border-right: 1px solid ${({ theme }) => theme.colors.border};
+
+    .menu {
+        position: fixed;
+        left: 360px;
+        margin: 0;
+        width: ${WIDTH};
+        height: 40px;
+        padding: 0;
+        visibility: ${({ $visible }) => ($visible ? 'visible' : 'hidden')};
+        background: white;
+        z-index: 11;
+
+        list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        font-size: 14px;
+        font-weight: 600;
+
+        li {
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid ${({ theme }) => theme.colors.border};
+            height: 100%;
+            cursor: pointer;
+        }
+
+        li.active {
+            border-bottom: 2px solid ${({ theme }) => theme.colors.black};
+        }
+    }
 
     h2 {
         margin: 0;
     }
 
-    .header {
-        padding: 0 10px 0 10px;
+    .detail_header {
+        padding: 0 10px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -155,9 +279,8 @@ const DetailListStyle = styled.div`
         }
     }
 
-    .content {
+    .detail_content {
         padding: 0 10px;
-
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -173,26 +296,20 @@ const DetailListStyle = styled.div`
             grid-template-columns: repeat(2, 1fr);
         }
     }
+
+    .detail_neighbor {
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .detail_graph {
+        padding: 0 10px;
+    }
+    .detail_navigation {
+        padding: 0 10px;
+    }
 `;
 
-const ToggleButton = styled.button`
-    position: absolute;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 50%;
-    left: calc(5rem + ${WIDTH} + ${WIDTH});
-    width: 23px;
-    height: 46px;
-    border: solid 1px ${({ theme }) => theme.colors.border};
-    color: ${({ theme }) => theme.colors.primary};
-    background-color: #fff;
-    font-size: 1.5rem;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-    border-radius: 0 0.5rem 0.5rem 0;
-    cursor: pointer;
-    z-index: 200;
-`;
 export default DetailList;
