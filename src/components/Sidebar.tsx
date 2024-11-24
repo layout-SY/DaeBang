@@ -1,7 +1,6 @@
 import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
-import { WIDTH } from '../utils/constants';
 
 interface SidebarProps {
     children: ReactNode;
