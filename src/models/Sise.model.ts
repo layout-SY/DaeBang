@@ -40,3 +40,34 @@ export interface paginateByKeyResultProps {
     index: number;
     data: { key: string; items: Sise[] }[];
 }
+
+export interface SiseOfBuilding {
+    buildYear: number;
+    huseType: string;
+    jibun: number;
+    mhouseNm: string;
+    sggCd: number;
+    umdNum: string;
+    contracts: Contract[];
+}
+
+// 같은 지번이라도 면적이 다를 수 있어서 빼봤습니다.
+export interface Contract {
+    contractTerm: string;
+    contractType: string;
+    dealDay: number;
+    dealMonth: number;
+    dealYear: number;
+    deposit: string;
+    excluUseAr: number;
+    floor: number;
+    monthlyRent: number;
+    preDeposit: string;
+    preMonthyRent: number;
+    useRRRight: string;
+}
+
+export interface SiseOfBuildingWithXy extends SiseOfBuilding {
+    x: number;
+    y: number;
+}
