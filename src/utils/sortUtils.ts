@@ -1,4 +1,9 @@
-import { paginateByKeyResultProps, Sise } from '../models/Sise.model';
+import {
+    paginateByKeyResultProps,
+    Sise,
+    SiseOfBuilding,
+    Contract,
+} from '../models/Sise.model';
 
 export const groupAndSortByDate = (
     data: Sise[],
@@ -39,4 +44,42 @@ export const paginateByKey = (
     }
 
     return paginatedData;
+};
+
+export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
+    const buildingMap: { [key: string]: SiseOfBuilding } = {};
+
+    data.forEach((item) => {
+        const key = `${item.umdNm} ${item.jibun}`;
+        if (!buildingMap[key]) {
+            buildingMap[key] = {
+                buildYear: item.buildYear,
+                huseType: item.houseType,
+                jibun: item.jibun,
+                mhouseNm: item.mhouseNm,
+                sggCd: item.sggCd,
+                umdNum: item.umdNm,
+                contracts: [],
+            };
+        }
+
+        const contract: Contract = {
+            contractTerm: item.contractTerm,
+            contractType: item.contractType,
+            dealDay: item.dealDay,
+            dealMonth: item.dealMonth,
+            dealYear: item.dealYear,
+            deposit: item.deposit,
+            excluUseAr: item.excluUseAr,
+            floor: item.floor,
+            monthlyRent: item.monthlyRent,
+            preDeposit: item.preDeposit,
+            preMonthyRent: item.preMonthyRent,
+            useRRRight: item.useRRRight,
+        };
+
+        buildingMap[key].contracts.push(contract);
+    });
+
+    return Object.values(buildingMap);
 };

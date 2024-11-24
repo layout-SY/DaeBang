@@ -4,9 +4,10 @@ import {
     ZoomControl,
     MapMarker,
 } from 'react-kakao-maps-sdk';
-import useKakaoLoader from '../hooks/useKaKaoLoader';
-import { useRef, useCallback, useState } from 'react';
-import { debounce } from 'lodash';
+// import useKakaoLoader from '../hooks/useKaKaoLoader';
+import { useKakaoLoader } from 'react-kakao-maps-sdk';
+import { useRef, useCallback, useState, useEffect } from 'react';
+import { debounce, set } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
@@ -17,7 +18,11 @@ interface Position {
 }
 
 const Map = () => {
-    useKakaoLoader();
+    // 해당 hook를 사용이후 전역에 설치가 되고 이후 재호출(동일한 옵션)이 일어나더라도 재설치 되거나, 제거되지 않습니다.
+    // useKakaoLoader({
+    //     appkey: '0be8ca05ad0dd0c80da443e49e5f1488',
+    //     libraries: ['clusterer', 'drawing', 'services'],
+    // });
 
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
@@ -32,48 +37,52 @@ const Map = () => {
     const { data, isPending, isError, error } = useSiseWithReactQuery();
     console.log(data, isPending, isError, error);
 
+    // 기존에는 첫 진입시 서치파람이 없는 문제가 있었는데, 일단은 하드코딩해서 해결했습니다.
+    useEffect(() => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        if (!newSearchParams.has('region')) {
+            newSearchParams.set('region', '11140');
+            setSearchParams(newSearchParams);
+        }
+        if (!address) {
+            setAddress('서울특별시 중구 ');
+        }
+    }, []);
+
     // 지도 드래그가 끝날 때 마다 중심좌표를 가져오고 주소를 검색합니다.
     // 검색된 주소의 법정동 코드 앞 5자리(구코드)를 URLSearchParams에 추가합니다.
     // TODO: 후에 custom hook으로 분리할 수도 있음.
     const handleCenterChanged = useCallback(
         debounce(() => {
             const map = mapRef.current;
-            if (map) {
-                const center = map.getCenter();
-
-                searchAddrFromCoords(
-                    { lat: center.getLat(), lng: center.getLng() },
-                    (result, status) => {
-                        if (status === kakao.maps.services.Status.OK) {
-                            setAddress(result[0].address_name);
-                            const code = result[0].code
-                                .toString()
-                                .substring(0, 5);
-                            const newSearchParams = new URLSearchParams(
-                                searchParams,
-                            );
-
-                            newSearchParams.set('region', code);
-                            setSearchParams(newSearchParams);
-                        } else {
-                            console.log('주소 정보를 가져오지 못했습니다.');
-                        }
-                    },
-                );
-            }
+            if (!map) return;
+            const center = map.getCenter();
+            setCenter({ lat: center.getLat(), lng: center.getLng() });
+            searchAddressFromCoordsAndSetSearchParam({
+                lat: center.getLat(),
+                lng: center.getLng(),
+            });
         }, 200),
         [searchParams, setSearchParams],
     );
 
-    // 좌표로 행정동 주소 정보를 요청합니다.
-    // TODO : any 타입 대신 명확한 타입을 정의.
-    const searchAddrFromCoords = (
-        position: Position,
-        callback: (result: any, status: any) => void,
-    ) => {
+    const searchAddressFromCoordsAndSetSearchParam = (position: Position) => {
         // 좌표로 행정동 주소 정보를 요청합니다
         const geocoder = new kakao.maps.services.Geocoder();
-        geocoder.coord2RegionCode(position.lng, position.lat, callback);
+        geocoder.coord2RegionCode(
+            position.lng,
+            position.lat,
+            (result, status) => {
+                if (status === kakao.maps.services.Status.OK) {
+                    const address = result[0].address_name;
+                    const code = result[0].code.toString().substring(0, 5);
+                    setAddress(address);
+                    const newSearchParams = new URLSearchParams(searchParams);
+                    newSearchParams.set('region', code);
+                    setSearchParams(newSearchParams);
+                }
+            },
+        );
     };
 
     //TODO : 마커정보를 받아와 동적으로 마커를 표시합니다.
