@@ -6,6 +6,7 @@ import DetailRoadView from './DetailRoadView';
 import { useGetPosition } from '../../hooks/useGetPosition';
 import DetailNeighbor from './DetailNeighbor';
 import { WIDTH } from '../../utils/constants';
+import { useNavigate } from 'react-router';
 
 export interface Position {
     lat: number;
@@ -14,13 +15,14 @@ export interface Position {
 
 interface Props {
     house: Sise;
-
     closeDetail: () => void;
 }
 
 const DetailList = ({ house, closeDetail }: Props) => {
     const { position } = useGetPosition(house);
     const [bookmarkIndex, setBookMarkIndex] = useState<number>(-1);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         // 북마크 여부

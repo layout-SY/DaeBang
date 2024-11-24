@@ -28,11 +28,9 @@ const useSiseWithReactQuery = () => {
                 item = [item];
             }
             const groupedByAdressItems = groupSiseByAddress(item);
-
             return await addXyToSiseOfBuilding(groupedByAdressItems);
         },
     });
-
     return { data, isPending, isError, error };
 };
 

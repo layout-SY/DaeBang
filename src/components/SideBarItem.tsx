@@ -9,17 +9,12 @@ interface Props {
 }
 
 const SideBarItem = ({ house, index, onClick }: Props) => {
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        onClick(house);
-    };
     return (
-        <SideBarItemStyle onClick={handleClick}>
+        <SideBarItemStyle onClick={() => onClick(house)}>
             <img
                 src={`https://picsum.photos/id/${index}/100/100`}
                 alt={house.mhouseNm}
             />
-
             <div className="content">
                 <h3>
                     {house.monthlyRent === 0
@@ -57,4 +52,5 @@ const SideBarItemStyle = styled.div`
         }
     }
 `;
+
 export default SideBarItem;
