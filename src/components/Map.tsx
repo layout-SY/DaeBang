@@ -27,16 +27,9 @@ const Map = () => {
     const { data, isPending, isError, error } = useSiseWithReactQuery();
     console.log(data, isPending, isError, error);
 
-    // 기존에는 첫 진입시 서치파람이 없는 문제가 있었는데, 일단은 하드코딩해서 해결했습니다.
+    // 첫 로드시 중심좌표로 주소를 검색하여 구코드를 URLSearchParams에 추가합니다.
     useEffect(() => {
-        const newSearchParams = new URLSearchParams(searchParams);
-        if (!newSearchParams.has('region')) {
-            newSearchParams.set('region', '11140');
-            setSearchParams(newSearchParams);
-        }
-        if (!address) {
-            setAddress('서울특별시 중구 ');
-        }
+        searchAddressFromCoordsAndSetSearchParam(center);
     }, []);
 
     // 지도 드래그가 끝날 때 마다 중심좌표를 가져오고 주소를 검색합니다.
