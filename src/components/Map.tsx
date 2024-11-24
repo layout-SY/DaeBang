@@ -2,7 +2,7 @@ import {
     Map as KakaoMap,
     MapTypeControl,
     ZoomControl,
-    MapMarker,
+    CustomOverlayMap,
 } from 'react-kakao-maps-sdk';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import { debounce } from 'lodash';
@@ -10,6 +10,7 @@ import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 import { MAP_CENTER_POSITION } from '../utils/constants';
+import CustomMapMarker from './Map/CustomMapMarker';
 
 export interface Position {
     lat: number;
@@ -21,9 +22,7 @@ const Map = () => {
     const mapRef = useRef<kakao.maps.Map>(null);
     const [center, setCenter] = useState<Position>(MAP_CENTER_POSITION);
     const [address, setAddress] = useState<string>('');
-    const [markers, setMarkers] = useState([
-        { lat: 33.450701, lng: 126.570667 },
-    ]);
+    const [markers, setMarkers] = useState([]);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
     console.log(data, isPending, isError, error);
 
@@ -68,9 +67,7 @@ const Map = () => {
         );
     };
 
-    //TODO : 마커정보를 받아와 동적으로 마커를 표시합니다.
-    //TODO : 마커를 클릭시 해당 마커의 정보를 표시합니다.
-    //TODO : 마커정보는 상태로 관리하지만 Props로 받아올 수도 있습니다.
+    //TODO : 일정 zoom level부터 마커를 표시합니다.
 
     return (
         <>
@@ -92,16 +89,17 @@ const Map = () => {
             >
                 <MapTypeControl position={'TOPRIGHT'} />
                 <ZoomControl position={'BOTTOMRIGHT'} />
-                {markers.map((marker, index) => (
-                    <MapMarker
-                        key={index}
-                        position={{ lat: marker.lat, lng: marker.lng }}
-                        onClick={() => {
-                            console.log('마커 클릭됨');
-                        }}
-                    />
-                ))}
-
+                {data &&
+                    data.map((item) => {
+                        return (
+                            <CustomOverlayMap
+                                key={`${item.umdNum} ${item.jibun} ${item.mhouseNm}`}
+                                position={{ lat: item.y, lng: item.x }}
+                            >
+                                <CustomMapMarker sise={item} />
+                            </CustomOverlayMap>
+                        );
+                    })}
                 <LocationPopup address={address} />
             </KakaoMap>
         </>
