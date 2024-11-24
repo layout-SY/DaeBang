@@ -5,11 +5,11 @@ import {
     CustomOverlayMap,
 } from 'react-kakao-maps-sdk';
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
-import { MAP_CENTER_POSITION } from '../utils/constants';
+import { MAP_CENTER_POSITION, MAP_ZOOM_LEVEL } from '../utils/constants';
 import CustomMapMarker from './Map/CustomMapMarker';
 
 export interface Position {
@@ -22,7 +22,7 @@ const Map = () => {
     const mapRef = useRef<kakao.maps.Map>(null);
     const [center, setCenter] = useState<Position>(MAP_CENTER_POSITION);
     const [address, setAddress] = useState<string>('');
-    const [markers, setMarkers] = useState([]);
+    const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
     console.log(data, isPending, isError, error);
 
@@ -74,10 +74,12 @@ const Map = () => {
             <KakaoMap
                 id="map"
                 center={center}
-                level={7}
+                level={zoom}
+                onZoomChanged={(target) => setZoom(target.getLevel())}
                 keyboardShortcuts={true}
                 onCenterChanged={handleCenterChanged}
                 // TODO : 임시 스타일링 입니다. 후에 width, height 100%로 변경해주세요.
+
                 style={{
                     display: 'flex',
                     width: '100%',
@@ -90,6 +92,7 @@ const Map = () => {
                 <MapTypeControl position={'TOPRIGHT'} />
                 <ZoomControl position={'BOTTOMRIGHT'} />
                 {data &&
+                    zoom <= 7 &&
                     data.map((item) => {
                         return (
                             <CustomOverlayMap
