@@ -9,8 +9,9 @@ import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
+import { MAP_CENTER_POSITION } from '../utils/constants';
 
-interface Position {
+export interface Position {
     lat: number;
     lng: number;
 }
@@ -18,10 +19,7 @@ interface Position {
 const Map = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
-    const [center, setCenter] = useState<Position>({
-        lat: 37.5642135,
-        lng: 127.0016985,
-    });
+    const [center, setCenter] = useState<Position>(MAP_CENTER_POSITION);
     const [address, setAddress] = useState<string>('');
     const [markers, setMarkers] = useState([
         { lat: 33.450701, lng: 126.570667 },
