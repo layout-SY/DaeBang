@@ -29,19 +29,21 @@ const SiseList2 = () => {
         setSearchParams(searchParams);
     };
 
-    if (isLoading) return <LoadingSpinner />;
-
     return (
         <StyledSiseList2>
-            {data?.map((house, index) => (
-                <div key={house.jibun + house.mhouseNm}>
-                    <SideBarItem
-                        house={house}
-                        index={index}
-                        onClick={() => openDetail(house)}
-                    />
-                </div>
-            ))}
+            {isLoading ? (
+                <LoadingSpinner />
+            ) : (
+                data?.map((house, index) => (
+                    <div key={house.jibun + house.mhouseNm}>
+                        <SideBarItem
+                            house={house}
+                            index={index}
+                            onClick={() => openDetail(house)}
+                        />
+                    </div>
+                ))
+            )}
             {detailOpen && <DetailList closeDetail={closeDetail} />}
         </StyledSiseList2>
     );
