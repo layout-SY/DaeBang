@@ -1,14 +1,13 @@
 import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
-import { WIDTH } from '../utils/constants';
 
 interface SidebarProps {
     children: ReactNode;
 }
 
 const Sidebar = ({ children }: SidebarProps) => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
