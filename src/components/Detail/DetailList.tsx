@@ -46,7 +46,7 @@ const DELAY = 500;
 const stairs = [0, 350, 780, 830];
 
 const DetailList = ({ house, closeDetail }: Props) => {
-    const position = { lat: house.x, lng: house.y };
+    const position = { lat: house.y, lng: house.x };
     const [activeMenu, setActiveMenu] = useState<string>('header');
     const [bookmarkIndex, setBookMarkIndex] = useState<number>(-1);
     const [menuVisible, setMenuVisible] = useState(false);
@@ -87,7 +87,6 @@ const DetailList = ({ house, closeDetail }: Props) => {
     const handleMenuVisible = useCallback(
         throttle(() => {
             const scrollY = wrapper!.current!.scrollTop;
-            console.log(scrollY);
 
             if (scrollY >= stairs[3]) {
                 setActiveMenu(menus[3].data_link);
