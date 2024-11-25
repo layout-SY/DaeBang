@@ -37,12 +37,10 @@ const menus: menuProps[] = [
 
 const THRESHOLD = 230;
 const DELAY = 500;
-const stairs = [0, 350, 780, 830];
+const stairs = [0, 350, 780, 930];
 
 const DetailList = ({ closeDetail }: Props) => {
-    const { detailInfo, detailOpen } = useTypedSelector(
-        (state) => state.detail,
-    );
+    const { detailInfo } = useTypedSelector((state) => state.detail);
     const position = { lat: detailInfo!.y, lng: detailInfo!.x };
     const [activeMenu, setActiveMenu] = useState<string>('header');
     const [bookmarkIndex, setBookMarkIndex] = useState<number>(-1);
@@ -143,7 +141,7 @@ const DetailList = ({ closeDetail }: Props) => {
     };
 
     return (
-        <>
+        <TEST>
             <DetailListStyle
                 $visible={menuVisible}
                 ref={wrapper}
@@ -230,13 +228,31 @@ const DetailList = ({ closeDetail }: Props) => {
                     />
                 </div>
             </DetailListStyle>
-        </>
+        </TEST>
     );
 };
 
 interface DetailListStyleProps {
     $visible: boolean;
 }
+
+const TEST = styled.div`
+    position: fixed;
+    border-radius: ${({ theme }) => theme.borderRadius.large};
+    top: 0;
+    left: calc(10px + ${WIDTH});
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    gap: 30px;
+    height: 100%;
+    width: ${WIDTH};
+    z-index: 1001;
+    padding-top: 10px;
+    background: #fff;
+    border-right: 1px solid ${({ theme }) => theme.colors.border};
+    border-left: 1px solid ${({ theme }) => theme.colors.border};
+`;
 
 const DetailListStyle = styled.div<DetailListStyleProps>`
     position: fixed;
