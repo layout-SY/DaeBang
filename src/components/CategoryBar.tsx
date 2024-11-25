@@ -30,7 +30,9 @@ const CategoryBar = () => {
     return (
         <StyledCategoryBar>
             <StyledLink to="/" $isActive={false}>
-                <LogoText>⌂대방</LogoText>
+                <LogoText>
+                    <span>⌂대방</span>
+                </LogoText>
             </StyledLink>
             <nav>
                 <ul>
@@ -116,13 +118,39 @@ const StyledLink = styled(Link)<StyledLinkProps>`
 `;
 
 const LogoText = styled.h1`
-    position: relative;
+    position: relative; // 이미 있음
     width: 100px;
     height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5rem;
+
+    // z-index 컨텍스트 생성
+    isolation: isolate;
+
+    span {
+        position: relative;
+        z-index: 2; // 텍스트를 밑줄 위로 올림
+        font-size: 1.5rem;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 35%;
+        transform: translateX(-50%) skew(-12deg);
+        width: 55px;
+        height: 10px;
+        background-color: rgba(59, 130, 246, 0.3);
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    &:hover::after {
+        background-color: rgba(59, 130, 246, 0.5);
+        transform: translateX(-50%) skew(-43deg);
+    }
 `;
 
 export default CategoryBar;
