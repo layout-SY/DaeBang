@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Sise } from '../models/Sise.model';
+import { Sise, SiseOfBuilding } from '../models/Sise.model';
 
 interface Props {
-    house: Sise;
+    house: SiseOfBuilding;
     index?: number;
-    onClick: (house: Sise) => void;
+    onClick: (house: SiseOfBuilding) => void;
 }
 
 const SideBarItem = ({ house, index, onClick }: Props) => {
@@ -17,9 +17,9 @@ const SideBarItem = ({ house, index, onClick }: Props) => {
             />
             <div className="content">
                 <h3>
-                    {house.monthlyRent === 0
-                        ? `전세 ${house.deposit}`
-                        : `월세 ${house.deposit}/${house.monthlyRent}`}
+                    {house.contracts[0].monthlyRent === 0
+                        ? `전세 ${house.contracts[0].deposit}`
+                        : `월세 ${house.contracts[0].deposit}/${house.contracts[0].monthlyRent}`}
                 </h3>
                 <span>{house.mhouseNm}</span>
                 <span>{house.houseType}</span>

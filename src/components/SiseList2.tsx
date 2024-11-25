@@ -3,23 +3,24 @@ import SideBarItem from './SideBarItem';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Sise } from '../models/Sise.model';
+import { Sise, SiseOfBuilding } from '../models/Sise.model';
 import DetailList from './Detail/DetailList';
+import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 
 interface SiseList2Props {
     isCompareMode?: boolean;
-    onCompareComplete?: (compareData: Sise[]) => void;
+    onCompareComplete?: (compareData: SiseOfBuilding[]) => void;
 }
 
 const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
-    const { siseData } = useSise();
+    const { data } = useSiseWithReactQuery();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [detailInfo, setDetailInfo] = useState<Sise | null>();
-    const [compareData, setCompareData] = useState<Sise[]>([]);
+    const [detailInfo, setDetailInfo] = useState<SiseOfBuilding | null>();
+    const [compareData, setCompareData] = useState<SiseOfBuilding[]>([]);
 
     const detailId = searchParams.get('detail_id');
 
-    const openDetail = (house: Sise) => {
+    const openDetail = (house: SiseOfBuilding) => {
         const newSearchParams = new URLSearchParams(searchParams.toString());
         newSearchParams.set('detail_id', 'open');
         setSearchParams(newSearchParams);
@@ -31,7 +32,7 @@ const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
         setSearchParams(searchParams);
     };
 
-    const handleSelectForCompare = (house: Sise) => {
+    const handleSelectForCompare = (house: SiseOfBuilding) => {
         if (compareData.length < 2) {
             setCompareData((prev) => [...prev, house]);
         }
@@ -43,7 +44,7 @@ const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
 
     return (
         <StyledSiseList2>
-            {siseData.map((house, index) => (
+            {data?.map((house, index) => (
                 <SideBarItem
                     house={house}
                     index={index}

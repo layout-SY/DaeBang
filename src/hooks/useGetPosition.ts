@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Sise } from '../models/Sise.model';
+import { Sise, SiseOfBuilding } from '../models/Sise.model';
 import { Position } from '../components/Detail/DetailList';
 
-export const useGetPosition = (house: Sise) => {
+export const useGetPosition = (house: SiseOfBuilding) => {
     const [position, setPosition] = useState<Position>({
         lat: 33.450701,
         lng: 126.570667,
     });
-    const queryString = `${house.umdNm} ${house.jibun} ${house.mhouseNm}`;
+    const queryString = `${house.umdNum} ${house.jibun} ${house.mhouseNm}`;
     const fetchData = async () => {
         try {
             const response = await fetch(

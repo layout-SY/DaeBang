@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Sise } from '../../models/Sise.model';
+import { Sise, SiseOfBuilding } from '../../models/Sise.model';
 import SiseList2 from '../SiseList2';
 import styled from 'styled-components';
 
 interface IcompareData {
-    leftData: Sise[];
-    rightData: Sise[];
+    leftData: SiseOfBuilding[];
+    rightData: SiseOfBuilding[];
 }
 
 const CompareSise = () => {
@@ -15,7 +15,7 @@ const CompareSise = () => {
     });
     const [isSiseListOpened, setIsSiseListOpened] = useState<boolean>(false);
 
-    const handleCompareData = (data: Sise[]) => {
+    const handleCompareData = (data: SiseOfBuilding[]) => {
         if (data.length === 2) {
             setComparedData({
                 leftData: [data[0]],
@@ -79,35 +79,51 @@ const CompareSise = () => {
                         </tr>
                         <tr>
                             <td>층수</td>
-                            <td>{comparedData.leftData[0]?.floor || '-'}</td>
-                            <td>{comparedData.rightData[0]?.floor || '-'}</td>
+                            <td>
+                                {comparedData.leftData[0]?.contracts[0].floor ||
+                                    '-'}
+                            </td>
+                            <td>
+                                {comparedData.rightData[0]?.contracts[0]
+                                    .floor || '-'}
+                            </td>
                         </tr>
                         <tr>
                             <td>면적</td>
                             <td>
-                                {comparedData.leftData[0]?.excluUseAr || '-'}㎡
+                                {comparedData.leftData[0]?.contracts[0]
+                                    .excluUseAr || '-'}
+                                ㎡
                             </td>
                             <td>
-                                {comparedData.rightData[0]?.excluUseAr || '-'}㎡
+                                {comparedData.rightData[0]?.contracts[0]
+                                    .excluUseAr || '-'}
+                                ㎡
                             </td>
                         </tr>
                         <tr>
                             <td>보증금</td>
                             <td>
-                                {comparedData.leftData[0]?.deposit || '-'}만원
+                                {comparedData.leftData[0]?.contracts[0]
+                                    .deposit || '-'}
+                                만원
                             </td>
                             <td>
-                                {comparedData.rightData[0]?.deposit || '-'}만원
+                                {comparedData.rightData[0]?.contracts[0]
+                                    .deposit || '-'}
+                                만원
                             </td>
                         </tr>
                         <tr>
                             <td>월세 금액</td>
                             <td>
-                                {comparedData.leftData[0]?.monthlyRent || '-'}
+                                {comparedData.leftData[0]?.contracts[0]
+                                    .monthlyRent || '-'}
                                 만원
                             </td>
                             <td>
-                                {comparedData.rightData[0]?.monthlyRent || '-'}
+                                {comparedData.rightData[0]?.contracts[0]
+                                    .monthlyRent || '-'}
                                 만원
                             </td>
                         </tr>

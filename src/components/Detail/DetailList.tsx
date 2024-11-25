@@ -1,7 +1,7 @@
 import React, { act, useCallback, useEffect, useRef, useState } from 'react';
 import { FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
 import styled from 'styled-components';
-import { Sise } from '../../models/Sise.model';
+import { Sise, SiseOfBuilding } from '../../models/Sise.model';
 import DetailRoadView from './DetailRoadView';
 import { useGetPosition } from '../../hooks/useGetPosition';
 import DetailNeighbor from './DetailNeighbor';
@@ -14,7 +14,7 @@ export interface Position {
 }
 
 interface Props {
-    house: Sise;
+    house: SiseOfBuilding;
     closeDetail: () => void;
 }
 
@@ -176,9 +176,9 @@ const DetailList = ({ house, closeDetail }: Props) => {
                     <DetailRoadView position={position} />
 
                     <h2>
-                        {house.monthlyRent === 0
-                            ? `전세 ${house.deposit}`
-                            : `월세 ${house.deposit}/${house.monthlyRent}`}
+                        {house.contracts[0].monthlyRent === 0
+                            ? `전세 ${house.contracts[0].deposit}`
+                            : `월세 ${house.contracts[0].deposit}/${house.contracts[0].monthlyRent}`}
                     </h2>
                     <div className="grid">
                         <div>
@@ -188,10 +188,12 @@ const DetailList = ({ house, closeDetail }: Props) => {
                             <span>종류 : {house.houseType} </span>
                         </div>
                         <div>
-                            <span>면적 : {house.excluUseAr} ㎡</span>
+                            <span>
+                                면적 : {house.contracts[0].excluUseAr} ㎡
+                            </span>
                         </div>
                         <div>
-                            <span>층 : {house.floor}</span>
+                            <span>층 : {house.contracts[0].floor}</span>
                         </div>
                     </div>
                 </div>
