@@ -25,9 +25,6 @@ const CATEGORY_LIST: ICategory[] = [
 
 const CategoryBar = () => {
     const { category } = useParams<{ category: string }>();
-    const [searchParams] = useSearchParams();
-
-    const regionCode = searchParams.get('regionCode') || '';
 
     const location = useLocation();
 
@@ -42,7 +39,6 @@ const CategoryBar = () => {
                                     pathname: `/${item.value}`,
                                     search: location.search,
                                 }}
-                                state={{ regionCode }}
                                 $isActive={item.value === category}
                             >
                                 {item.icon}
