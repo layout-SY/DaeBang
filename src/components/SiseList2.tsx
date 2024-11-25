@@ -6,10 +6,16 @@ import { useSearchParams } from 'react-router-dom';
 import { Sise } from '../models/Sise.model';
 import DetailList from './Detail/DetailList';
 
-const SiseList2 = () => {
+interface SiseList2Props {
+    isCompareMode?: boolean;
+    onCompareComplete?: (compareData: Sise[]) => void;
+}
+
+const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
     const { siseData } = useSise();
     const [searchParams, setSearchParams] = useSearchParams();
     const [detailInfo, setDetailInfo] = useState<Sise | null>();
+    const [compareData, setCompareData] = useState<Sise[]>([]);
 
     const detailId = searchParams.get('detail_id');
 
@@ -24,17 +30,31 @@ const SiseList2 = () => {
         searchParams.delete('detail_id');
         setSearchParams(searchParams);
     };
+
+    const handleSelectForCompare = (house: Sise) => {
+        if (compareData.length < 2) {
+            setCompareData((prev) => [...prev, house]);
+        }
+
+        if (compareData.length + 1 === 2 && onCompareComplete) {
+            onCompareComplete([...compareData, house]);
+        }
+    };
+
     return (
         <StyledSiseList2>
             {siseData.map((house, index) => (
                 <SideBarItem
                     house={house}
                     index={index}
-                    key={index}
-                    onClick={openDetail}
+                    onClick={
+                        isCompareMode
+                            ? () => handleSelectForCompare(house)
+                            : () => openDetail(house)
+                    }
                 />
             ))}
-            {detailId && detailInfo && (
+            {!isCompareMode && detailId && detailInfo && (
                 <DetailList house={detailInfo} closeDetail={closeDetail} />
             )}
         </StyledSiseList2>
