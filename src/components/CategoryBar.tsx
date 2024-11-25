@@ -4,6 +4,7 @@ import { FaHome } from 'react-icons/fa';
 import { HiMiniBuildingOffice } from 'react-icons/hi2';
 import { MdApartment } from 'react-icons/md';
 import { CiBookmark } from 'react-icons/ci';
+import { GiConfrontation } from 'react-icons/gi';
 import { useSise } from '../hooks/useSise';
 import { useLocation } from 'react-router-dom';
 
@@ -18,6 +19,7 @@ const CATEGORY_LIST: ICategory[] = [
     { name: '오피스텔', value: 'officetel', icon: <HiMiniBuildingOffice /> },
     { name: '아파트', value: 'apt', icon: <MdApartment /> },
     { name: '북마크', value: 'bookmark', icon: <CiBookmark /> },
+    { name: '시세비교', value: 'comparesise', icon: <GiConfrontation /> },
 ];
 
 const CategoryBar = () => {
