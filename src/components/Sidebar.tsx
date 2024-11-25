@@ -64,7 +64,7 @@ const ToggleButton = styled.button<ToggleButtonProps>`
         $isOpen
             ? `calc(${WIDTH} +  ${CATEGORY_BAR_WIDTH})`
             : ` ${CATEGORY_BAR_WIDTH}`};
-    z-index: 1000;
+    z-index: 100;
     width: 23px;
     height: 46px;
     border: solid 1px ${({ theme }) => theme.colors.border};

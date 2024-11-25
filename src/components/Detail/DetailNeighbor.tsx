@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { Position } from './DetailList';
-import { FaSadCry } from 'react-icons/fa';
 import ErrorBox from '../common/ErrorBox';
+import { Position } from '../Map';
 
 interface Props {
     position: Position;
@@ -354,28 +353,6 @@ li{
         background :  '#007AFF';
         color : 'white;
     }
-`;
-
-const ErrorMap = styled.div`
-    width: 100%;
-    height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    background: ${({ theme }) => theme.colors.border};
-`;
-
-const DetailEmpty = styled.div`
-    width: 100%;
-    height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    background: ${({ theme }) => theme.colors.border};
 `;
 
 export default DetailNeighbor;

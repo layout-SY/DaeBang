@@ -1,22 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
 import styled from 'styled-components';
-import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import DetailRoadView from './DetailRoadView';
 import DetailNeighbor from './DetailNeighbor';
 import { WIDTH } from '../../utils/constants';
 import { throttle } from 'lodash';
-
-export interface Position {
-    lat: number;
-    lng: number;
-}
+import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
+import { setDetailOpen } from '../../store/slice/DetailSlice';
 
 interface Props {
-    house: SiseOfBuildingWithXy;
     closeDetail: () => void;
 }
-
 interface menuProps {
     data_link: string;
     name: string;
@@ -45,8 +39,11 @@ const THRESHOLD = 230;
 const DELAY = 500;
 const stairs = [0, 350, 780, 830];
 
-const DetailList = ({ house, closeDetail }: Props) => {
-    const position = { lat: house.y, lng: house.x };
+const DetailList = ({ closeDetail }: Props) => {
+    const { detailInfo, detailOpen } = useTypedSelector(
+        (state) => state.detail,
+    );
+    const position = { lat: detailInfo!.y, lng: detailInfo!.x };
     const [activeMenu, setActiveMenu] = useState<string>('header');
     const [bookmarkIndex, setBookMarkIndex] = useState<number>(-1);
     const [menuVisible, setMenuVisible] = useState(false);
@@ -58,10 +55,10 @@ const DetailList = ({ house, closeDetail }: Props) => {
             localStorage.getItem('bookmark') || '[]',
         ) as any[];
         const index = existingBookmarks.findIndex(
-            (bookmark) => bookmark === house,
+            (bookmark) => bookmark === detailInfo,
         );
         setBookMarkIndex(index);
-    }, [house]);
+    }, [detailInfo]);
 
     const handleClose = () => {
         closeDetail();
@@ -77,7 +74,7 @@ const DetailList = ({ house, closeDetail }: Props) => {
             newBookMarks = existingBookmarks.splice(bookmarkIndex, 1);
             setBookMarkIndex(-1);
         } else {
-            newBookMarks = [...existingBookmarks, house];
+            newBookMarks = [...existingBookmarks, detailInfo];
             setBookMarkIndex(newBookMarks.length - 1);
         }
 
@@ -185,24 +182,24 @@ const DetailList = ({ house, closeDetail }: Props) => {
                     <DetailRoadView position={position} />
 
                     <h2>
-                        {house.contracts[0].monthlyRent === 0
-                            ? `전세 ${house.contracts[0].deposit}`
-                            : `월세 ${house.contracts[0].deposit}/${house.contracts[0].monthlyRent}`}
+                        {detailInfo!.contracts[0].monthlyRent === 0
+                            ? `전세 ${detailInfo!.contracts[0].deposit}`
+                            : `월세 ${detailInfo!.contracts[0].deposit}/${detailInfo!.contracts[0].monthlyRent}`}
                     </h2>
                     <div className="grid">
                         <div>
-                            <span>건물명 : {house.mhouseNm}</span>
+                            <span>건물명 : {detailInfo!.mhouseNm}</span>
                         </div>
                         <div>
-                            <span>종류 : {house.huseType} </span>
+                            <span>종류 : {detailInfo!.huseType} </span>
                         </div>
                         <div>
                             <span>
-                                면적 : {house.contracts[0].excluUseAr} ㎡
+                                면적 : {detailInfo!.contracts[0].excluUseAr} ㎡
                             </span>
                         </div>
                         <div>
-                            <span>층 : {house.contracts[0].floor}</span>
+                            <span>층 : {detailInfo!.contracts[0].floor}</span>
                         </div>
                     </div>
                 </div>
@@ -248,27 +245,27 @@ const DetailListStyle = styled.div<DetailListStyleProps>`
     left: calc(10px + ${WIDTH});
     display: flex;
     flex-direction: column;
+    overflow: scroll;
     gap: 30px;
-    overflow-y: scroll;
     height: 100%;
     width: ${WIDTH};
-
-    z-index: 10;
+    z-index: 1001;
+    padding-top: 10px;
     background: #fff;
     border-right: 1px solid ${({ theme }) => theme.colors.border};
+    border-left: 1px solid ${({ theme }) => theme.colors.border};
 
     .menu {
         position: fixed;
-        left: 360px;
         top: 0;
+        left: calc(10px + ${WIDTH});
         margin: 0;
-
-        width: ${WIDTH};
+        width: 100%;
         height: 40px;
         padding: 0;
         visibility: ${({ $visible }) => ($visible ? 'visible' : 'hidden')};
         background: white;
-        z-index: 11;
+        z-index: 2000;
 
         list-style: none;
         display: grid;

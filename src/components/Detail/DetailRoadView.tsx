@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Position } from './DetailList';
 import ErrorBox from '../common/ErrorBox';
+import { Position } from '../Map';
 
 interface Props {
     position: Position;
