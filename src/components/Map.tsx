@@ -20,14 +20,25 @@ export interface Position {
 const Map = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
-    const [center, setCenter] = useState<Position>(MAP_CENTER_POSITION);
+    const [center, setCenter] = useState<Position | null>(null);
     const [address, setAddress] = useState<string>('');
     const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
 
-    // 첫 로드시 중심좌표로 주소를 검색하여 구코드를 URLSearchParams에 추가합니다.
+    // 첫 로드시 브라우저의 Geolocation API를 사용하여 현재 위치의 좌표를 가져옵니다.
+    // 좌표로 구코드를 검색하여 URLSearchParams에 추가합니다.
     useEffect(() => {
-        searchAddressFromCoordsAndSetSearchParam(center);
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                const newCenter = { lat: latitude, lng: longitude };
+                setCenter(newCenter);
+                searchAddressFromCoordsAndSetSearchParam(newCenter);
+            },
+            (error) => {
+                console.error(error);
+            },
+        );
     }, []);
 
     // 지도 드래그가 끝날 때 마다 중심좌표를 가져오고 주소를 검색합니다.
@@ -72,7 +83,7 @@ const Map = () => {
         <>
             <KakaoMap
                 id="map"
-                center={center}
+                center={center || MAP_CENTER_POSITION}
                 level={zoom}
                 onZoomChanged={(target) => setZoom(target.getLevel())}
                 keyboardShortcuts={true}
