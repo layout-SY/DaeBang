@@ -24,9 +24,8 @@ const CATEGORY_LIST: ICategory[] = [
 ];
 
 const CategoryBar = () => {
-    const { category } = useParams<{ category: string }>();
-
     const location = useLocation();
+    const currentPath = location.pathname.split('/')[1];
 
     return (
         <StyledCategoryBar>
@@ -39,7 +38,7 @@ const CategoryBar = () => {
                                     pathname: `/${item.value}`,
                                     search: location.search,
                                 }}
-                                $isActive={item.value === category}
+                                $isActive={item.value === currentPath}
                             >
                                 {item.icon}
                                 <span>{item.name}</span>
