@@ -30,6 +30,7 @@ export const fetchSiseData = async (
 
 export const fetchSiseDataThatThrowsError = async (
     params: ApiParams,
+    signal?: AbortSignal,
 ): Promise<SiseApiResponseAll> => {
     try {
         const response = await axios.get<SiseApiResponseAll>(
@@ -39,6 +40,7 @@ export const fetchSiseDataThatThrowsError = async (
                     serviceKey: process.env.REACT_APP_Sise_API_KEY,
                     ...params,
                 },
+                signal,
             },
         );
 
@@ -101,6 +103,9 @@ export const fetchSiseDataThatThrowsError = async (
         }
         return response.data;
     } catch (error) {
+        if ((error as any).message === 'canceled') {
+            console.error(`${params.LAWD_CD} 요청을 취소했습니다`);
+        }
         console.error(error);
         throw error;
     }
