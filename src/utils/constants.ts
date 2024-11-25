@@ -7,4 +7,4 @@ export const MAP_CENTER_POSITION: Position = {
     lng: 127.01446798508894,
 };
 
-export const MAP_ZOOM_LEVEL = 7;
+export const MAP_ZOOM_LEVEL = 5;
