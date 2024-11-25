@@ -1,16 +1,18 @@
 import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
+import { CATEGORY_BAR_WIDTH, WIDTH } from '../utils/constants';
 
 interface SidebarProps {
     children: ReactNode;
 }
 
 const Sidebar = ({ children }: SidebarProps) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
+        console.log(isOpen);
     };
 
     return (
@@ -58,7 +60,10 @@ const ToggleButton = styled.button<ToggleButtonProps>`
     align-items: center;
     justify-content: center;
     top: 50%;
-    left: ${({ $isOpen }) => ($isOpen ? '411px' : '79px')};
+    left: ${({ $isOpen }) =>
+        $isOpen
+            ? `calc(${WIDTH} +  ${CATEGORY_BAR_WIDTH})`
+            : ` ${CATEGORY_BAR_WIDTH}`};
     z-index: 1000;
     width: 23px;
     height: 46px;

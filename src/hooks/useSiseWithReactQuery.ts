@@ -65,7 +65,7 @@ const useSiseWithReactQuery = () => {
         }
     }, [data, isFetching, isLoading, regionCode, dataUpdatedAt]);
 
-    return { data, isPending, isError, error };
+    return { data, isPending, isError, error, isLoading };
 };
 
 export default useSiseWithReactQuery;

@@ -1,6 +1,7 @@
 import { Position } from '../components/Map';
 
 export const WIDTH = '350px';
+export const CATEGORY_BAR_WIDTH = '5rem';
 
 export const MAP_CENTER_POSITION: Position = {
     lat: 37.49436732800421,

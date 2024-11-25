@@ -6,6 +6,7 @@ import { MdApartment } from 'react-icons/md';
 import { CiBookmark } from 'react-icons/ci';
 import { useSise } from '../hooks/useSise';
 import { useLocation } from 'react-router-dom';
+import { CATEGORY_BAR_WIDTH } from '../utils/constants';
 
 interface ICategory {
     name: string;
@@ -54,7 +55,7 @@ const CategoryBar = () => {
 const StyledCategoryBar = styled.nav`
     display: flex;
     flex-direction: column;
-    width: 5rem;
+    width: ${CATEGORY_BAR_WIDTH};
     min-height: 100vh;
     padding-left: 0.2rem;
     padding-right: 0.2rem;

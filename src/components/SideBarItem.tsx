@@ -1,33 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Sise } from '../models/Sise.model';
+import { SiseOfBuildingWithXy } from '../models/Sise.model';
+import ErrorBox from './common/ErrorBox';
 
 interface Props {
-    house: Sise;
+    house: SiseOfBuildingWithXy;
     index?: number;
-    onClick: (house: Sise) => void;
+    onClick: (house: SiseOfBuildingWithXy) => void;
 }
 
 const SideBarItem = ({ house, index, onClick }: Props) => {
+    const [imageError, setImageError] = useState(false);
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         onClick(house);
     };
     return (
         <SideBarItemStyle onClick={handleClick}>
-            <img
-                src={`https://picsum.photos/id/${index}/100/100`}
-                alt={house.mhouseNm}
-            />
+            {imageError ? (
+                <ErrorBox
+                    message="이미지 로드에 실패했습니다"
+                    height={100}
+                    width={100}
+                />
+            ) : (
+                <img
+                    src={`https://picsum.photos/id/${index}/100/100`}
+                    alt={house.mhouseNm}
+                    onError={() => setImageError(true)}
+                />
+            )}
 
             <div className="content">
                 <h3>
-                    {house.monthlyRent === 0
-                        ? `전세 ${house.deposit}`
-                        : `월세 ${house.deposit}/${house.monthlyRent}`}
+                    {house.contracts[0].monthlyRent === 0
+                        ? `전세 ${house.contracts[0].deposit}`
+                        : `월세 ${house.contracts[0].deposit}/${house.contracts[0].monthlyRent}`}
                 </h3>
                 <span>{house.mhouseNm}</span>
-                <span>{house.houseType}</span>
+                <span>{house.huseType}</span>
             </div>
         </SideBarItemStyle>
     );

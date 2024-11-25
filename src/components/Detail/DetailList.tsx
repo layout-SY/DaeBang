@@ -1,9 +1,8 @@
-import React, { act, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
 import styled from 'styled-components';
-import { Sise } from '../../models/Sise.model';
+import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import DetailRoadView from './DetailRoadView';
-import { useGetPosition } from '../../hooks/useGetPosition';
 import DetailNeighbor from './DetailNeighbor';
 import { WIDTH } from '../../utils/constants';
 import { throttle } from 'lodash';
@@ -14,7 +13,7 @@ export interface Position {
 }
 
 interface Props {
-    house: Sise;
+    house: SiseOfBuildingWithXy;
     closeDetail: () => void;
 }
 
@@ -47,7 +46,7 @@ const DELAY = 500;
 const stairs = [0, 350, 780, 830];
 
 const DetailList = ({ house, closeDetail }: Props) => {
-    const { position } = useGetPosition(house);
+    const position = { lat: house.x, lng: house.y };
     const [activeMenu, setActiveMenu] = useState<string>('header');
     const [bookmarkIndex, setBookMarkIndex] = useState<number>(-1);
     const [menuVisible, setMenuVisible] = useState(false);
@@ -105,15 +104,22 @@ const DetailList = ({ house, closeDetail }: Props) => {
             } else {
                 setMenuVisible(false);
             }
-        }, DELAY), // 200ms의 스로틀링
+        }, DELAY),
         [],
     );
 
     useEffect(() => {
-        if (!wrapper) return;
-        wrapper!.current!.addEventListener('scroll', handleMenuVisible);
-        return () =>
-            wrapper!.current!.removeEventListener('scroll', handleMenuVisible);
+        const wrapperElement = wrapper.current;
+
+        if (wrapperElement) {
+            wrapperElement.addEventListener('scroll', handleMenuVisible);
+        }
+
+        return () => {
+            if (wrapperElement) {
+                wrapperElement.removeEventListener('scroll', handleMenuVisible);
+            }
+        };
     }, [handleMenuVisible]);
 
     const handleClickMenu = (e: React.MouseEvent<HTMLUListElement>) => {
@@ -142,7 +148,11 @@ const DetailList = ({ house, closeDetail }: Props) => {
 
     return (
         <>
-            <DetailListStyle $visible={menuVisible} ref={wrapper}>
+            <DetailListStyle
+                $visible={menuVisible}
+                ref={wrapper}
+                className="detailList"
+            >
                 <ul className="menu" onClick={handleClickMenu}>
                     {menus.map((menu) => (
                         <li
@@ -176,22 +186,24 @@ const DetailList = ({ house, closeDetail }: Props) => {
                     <DetailRoadView position={position} />
 
                     <h2>
-                        {house.monthlyRent === 0
-                            ? `전세 ${house.deposit}`
-                            : `월세 ${house.deposit}/${house.monthlyRent}`}
+                        {house.contracts[0].monthlyRent === 0
+                            ? `전세 ${house.contracts[0].deposit}`
+                            : `월세 ${house.contracts[0].deposit}/${house.contracts[0].monthlyRent}`}
                     </h2>
                     <div className="grid">
                         <div>
                             <span>건물명 : {house.mhouseNm}</span>
                         </div>
                         <div>
-                            <span>종류 : {house.houseType} </span>
+                            <span>종류 : {house.huseType} </span>
                         </div>
                         <div>
-                            <span>면적 : {house.excluUseAr} ㎡</span>
+                            <span>
+                                면적 : {house.contracts[0].excluUseAr} ㎡
+                            </span>
                         </div>
                         <div>
-                            <span>층 : {house.floor}</span>
+                            <span>층 : {house.contracts[0].floor}</span>
                         </div>
                     </div>
                 </div>
@@ -231,9 +243,10 @@ interface DetailListStyleProps {
 }
 
 const DetailListStyle = styled.div<DetailListStyleProps>`
-    position: absolute;
+    position: fixed;
     border-radius: ${({ theme }) => theme.borderRadius.large};
-    left: 360px;
+    top: 0;
+    left: calc(10px + ${WIDTH});
     display: flex;
     flex-direction: column;
     gap: 30px;
