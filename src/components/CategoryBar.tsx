@@ -118,19 +118,17 @@ const StyledLink = styled(Link)<StyledLinkProps>`
 `;
 
 const LogoText = styled.h1`
-    position: relative; // 이미 있음
+    position: relative;
     width: 100px;
     height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    // z-index 컨텍스트 생성
     isolation: isolate;
 
     span {
         position: relative;
-        z-index: 2; // 텍스트를 밑줄 위로 올림
+        z-index: 2;
         font-size: 1.5rem;
     }
 
