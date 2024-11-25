@@ -19,7 +19,7 @@ const CATEGORY_LIST: ICategory[] = [
     { name: '오피스텔', value: 'officetel', icon: <HiMiniBuildingOffice /> },
     { name: '아파트', value: 'apt', icon: <MdApartment /> },
     { name: '북마크', value: 'bookmark', icon: <CiBookmark /> },
-    { name: '시세비교', value: 'comparesise', icon: <GiConfrontation /> },
+    { name: '시세비교', value: 'compare', icon: <GiConfrontation /> },
 ];
 
 const CategoryBar = () => {
