@@ -43,7 +43,6 @@ const Map = () => {
 
     // 지도 드래그가 끝날 때 마다 중심좌표를 가져오고 주소를 검색합니다.
     // 검색된 주소의 법정동 코드 앞 5자리(구코드)를 URLSearchParams에 추가합니다.
-    // TODO: 후에 custom hook으로 분리할 수도 있음.
     const handleCenterChanged = useCallback(
         debounce(() => {
             const map = mapRef.current;
@@ -77,8 +76,6 @@ const Map = () => {
         );
     };
 
-    //TODO : 일정 zoom level부터 마커를 표시합니다.
-
     return (
         <>
             <KakaoMap
@@ -88,8 +85,6 @@ const Map = () => {
                 onZoomChanged={(target) => setZoom(target.getLevel())}
                 keyboardShortcuts={true}
                 onCenterChanged={handleCenterChanged}
-                // TODO : 임시 스타일링 입니다. 후에 width, height 100%로 변경해주세요.
-
                 style={{
                     display: 'flex',
                     width: '100%',
