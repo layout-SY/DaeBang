@@ -22,6 +22,7 @@ export const useGetPosition = (house: Sise) => {
             setPosition({ lat: json.documents[0].y, lng: json.documents[0].x });
         } catch (e) {
             console.log(e);
+            setPosition({ lat: -1, lng: -1 });
         }
     };
 
