@@ -189,7 +189,7 @@ const DetailList = ({ closeDetail }: Props) => {
                             <span>건물명 : {detailInfo!.mhouseNm}</span>
                         </div>
                         <div>
-                            <span>종류 : {detailInfo!.huseType} </span>
+                            <span>종류 : {detailInfo!.housetype} </span>
                         </div>
                         <div>
                             <span>

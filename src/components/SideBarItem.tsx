@@ -38,7 +38,7 @@ const SideBarItem = ({ house, index, onClick }: Props) => {
                         : `월세 ${house.contracts[0].deposit}/${house.contracts[0].monthlyRent}`}
                 </h3>
                 <span>{house.mhouseNm}</span>
-                <span>{house.huseType}</span>
+                <span>{house.housetype}</span>
             </div>
         </SideBarItemStyle>
     );
