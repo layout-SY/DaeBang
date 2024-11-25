@@ -7,6 +7,7 @@ import { CiBookmark } from 'react-icons/ci';
 import { GiConfrontation } from 'react-icons/gi';
 import { useSise } from '../hooks/useSise';
 import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 interface ICategory {
     name: string;
@@ -24,7 +25,10 @@ const CATEGORY_LIST: ICategory[] = [
 
 const CategoryBar = () => {
     const { category } = useParams<{ category: string }>();
-    const { regionCode } = useSise();
+    const [searchParams] = useSearchParams();
+
+    const regionCode = searchParams.get('regionCode') || '';
+
     const location = useLocation();
 
     return (
