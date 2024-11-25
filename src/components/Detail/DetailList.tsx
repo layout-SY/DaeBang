@@ -261,7 +261,9 @@ const DetailListStyle = styled.div<DetailListStyleProps>`
     .menu {
         position: fixed;
         left: 360px;
+        top: 0;
         margin: 0;
+
         width: ${WIDTH};
         height: 40px;
         padding: 0;
