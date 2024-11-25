@@ -29,30 +29,34 @@ const CategoryBar = () => {
 
     return (
         <StyledCategoryBar>
-            <ul>
-                {CATEGORY_LIST.map((item) => {
-                    return (
-                        <li key={item.value}>
-                            <StyledLink
-                                to={{
-                                    pathname: `/${item.value}`,
-                                    search: location.search,
-                                }}
-                                $isActive={item.value === currentPath}
-                            >
-                                {item.icon}
-                                <span>{item.name}</span>
-                            </StyledLink>
-                        </li>
-                    );
-                })}
-            </ul>
+            <StyledLink to="/" $isActive={false}>
+                <LogoText>⌂대방</LogoText>
+            </StyledLink>
+            <nav>
+                <ul>
+                    {CATEGORY_LIST.map((item) => {
+                        return (
+                            <li key={item.value}>
+                                <StyledLink
+                                    to={{
+                                        pathname: `/${item.value}`,
+                                        search: location.search,
+                                    }}
+                                    $isActive={item.value === currentPath}
+                                >
+                                    {item.icon}
+                                    <span>{item.name}</span>
+                                </StyledLink>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </nav>
         </StyledCategoryBar>
     );
 };
 
-// TODO : header tag로 이후 수정
-const StyledCategoryBar = styled.nav`
+const StyledCategoryBar = styled.header`
     display: flex;
     flex-direction: column;
     width: 5rem;
@@ -62,12 +66,14 @@ const StyledCategoryBar = styled.nav`
     background-color: white;
     z-index: 300;
 
-    ul {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        list-style: none;
+    nav {
+        ul {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            list-style: none;
+        }
     }
 `;
 
@@ -107,6 +113,16 @@ const StyledLink = styled(Link)<StyledLinkProps>`
         font-size: 0.75rem;
         text-align: center;
     }
+`;
+
+const LogoText = styled.h1`
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
 `;
 
 export default CategoryBar;
