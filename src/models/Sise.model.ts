@@ -43,7 +43,7 @@ export interface paginateByKeyResultProps {
 
 export interface SiseOfBuilding {
     buildYear: number;
-    huseType: string;
+    houseType: string;
     jibun: number;
     mhouseNm: string;
     sggCd: number;

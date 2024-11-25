@@ -54,7 +54,7 @@ export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
         if (!buildingMap[key]) {
             buildingMap[key] = {
                 buildYear: item.buildYear,
-                huseType: item.houseType,
+                houseType: item.houseType,
                 jibun: item.jibun,
                 mhouseNm: item.mhouseNm,
                 sggCd: item.sggCd,
