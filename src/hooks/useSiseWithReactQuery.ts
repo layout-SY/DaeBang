@@ -45,7 +45,7 @@ const useSiseWithReactQuery = () => {
 
             const endTime = performance.now();
             console.log(
-                `데이터 로딩 시간: ${(endTime - startTime).toFixed(2)}ms`,
+                `[${regionCode} ${result.length}건]  데이터 로딩 시간: ${(endTime - startTime).toFixed(2)}ms`,
             );
 
             return result;
