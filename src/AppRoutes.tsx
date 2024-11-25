@@ -12,14 +12,7 @@ const AppRoutes = () => (
                 path="/bookmark"
                 element={<p style={{ width: '330px' }}>북마크</p>}
             />
-            <Route
-                path="/comparesise"
-                element={
-                    <p style={{ width: '330px' }}>
-                        <CompareSise />
-                    </p>
-                }
-            />
+            <Route path="/comparesise" element={<CompareSise />} />
         </Route>
     </Routes>
 );
