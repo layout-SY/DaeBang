@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Sise, SiseOfBuilding } from '../models/Sise.model';
+import { SiseOfBuilding } from '../models/Sise.model';
 import { Position } from '../components/Detail/DetailList';
 
 export const useGetPosition = (house: SiseOfBuilding) => {

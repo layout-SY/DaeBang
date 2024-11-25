@@ -1,7 +1,7 @@
-import React, { act, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
 import styled from 'styled-components';
-import { Sise, SiseOfBuilding } from '../../models/Sise.model';
+import { SiseOfBuilding } from '../../models/Sise.model';
 import DetailRoadView from './DetailRoadView';
 import { useGetPosition } from '../../hooks/useGetPosition';
 import DetailNeighbor from './DetailNeighbor';

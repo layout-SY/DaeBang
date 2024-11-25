@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Sise, SiseOfBuilding } from '../models/Sise.model';
+import { SiseOfBuilding } from '../models/Sise.model';
 
 interface Props {
     house: SiseOfBuilding;

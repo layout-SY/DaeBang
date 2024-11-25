@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sise, SiseOfBuilding } from '../../models/Sise.model';
+import { SiseOfBuilding } from '../../models/Sise.model';
 import SiseList2 from '../SiseList2';
 import styled from 'styled-components';
 

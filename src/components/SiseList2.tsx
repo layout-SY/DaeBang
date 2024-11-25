@@ -1,9 +1,8 @@
-import { useSise } from '../hooks/useSise';
 import SideBarItem from './SideBarItem';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Sise, SiseOfBuilding } from '../models/Sise.model';
+import { SiseOfBuilding } from '../models/Sise.model';
 import DetailList from './Detail/DetailList';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 
