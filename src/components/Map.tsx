@@ -5,7 +5,7 @@ import {
     CustomOverlayMap,
 } from 'react-kakao-maps-sdk';
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
@@ -24,7 +24,6 @@ const Map = () => {
     const [address, setAddress] = useState<string>('');
     const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
-    console.log(data, isPending, isError, error);
 
     // 첫 로드시 중심좌표로 주소를 검색하여 구코드를 URLSearchParams에 추가합니다.
     useEffect(() => {
