@@ -121,8 +121,10 @@ const DetailList = ({ house, closeDetail }: Props) => {
         if (target.tagName === 'LI') {
             const link = target.dataset.link;
             if (link) {
-                setActiveMenu(link);
                 handleScroll(link);
+                setTimeout(() => {
+                    setActiveMenu(link);
+                }, 500);
             }
         }
     };

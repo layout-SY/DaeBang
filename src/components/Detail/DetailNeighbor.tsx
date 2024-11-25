@@ -248,50 +248,41 @@ const DetailNeighbor = ({ position }: Props) => {
         );
     }, [currCategory, position]);
 
-    if (position.lat === -1) {
-        return (
-            <>
-                <Empty>
-                    <FaSadCry /> 위치를 찾을 수 없습니다
-                </Empty>
-                <ul className="category-list">
-                    {categories.map((category) => (
-                        <CategoryItem
-                            key={category.id}
-                            $active={currCategory === category.id}
-                            onClick={() => setCurrCategory(category.id)}
-                        >
-                            {category.name}
-                        </CategoryItem>
-                    ))}
-                </ul>
-            </>
-        );
-    }
-
     return (
         <DetailNeighborStyle>
             <h2>주변 시설</h2>
-            <div ref={mapRef} className="map-container" />
-            <div
-                ref={contentNodeRef}
-                onMouseDown={(e) => e.preventDefault()}
-                onTouchStart={(e) => e.preventDefault()}
-                className="placeinfo_wrap"
-            >
-                <span className="placeInfo">{placeInfo}</span>
-            </div>
-            <ul className="category-list">
+            {position.lat === -1 ? (
+                <>
+                    <ErrorMap></ErrorMap>
+                    <DetailEmpty className="empty">
+                        <FaSadCry /> <span>위치를 찾을 수 없습니다</span>
+                    </DetailEmpty>
+                </>
+            ) : (
+                <>
+                    <div ref={mapRef} className="map-container" />
+                    <div
+                        ref={contentNodeRef}
+                        onMouseDown={(e) => e.preventDefault()}
+                        onTouchStart={(e) => e.preventDefault()}
+                        className="placeinfo_wrap"
+                    >
+                        <span className="placeInfo">{placeInfo}</span>
+                    </div>
+                </>
+            )}
+
+            <CategoryList>
                 {categories.map((category) => (
-                    <CategoryItem
+                    <li
                         key={category.id}
-                        $active={currCategory === category.id}
+                        className={currCategory === category.id ? 'active' : ''}
                         onClick={() => setCurrCategory(category.id)}
                     >
                         {category.name}
-                    </CategoryItem>
+                    </li>
                 ))}
-            </ul>
+            </CategoryList>
         </DetailNeighborStyle>
     );
 };
@@ -322,18 +313,6 @@ const DetailNeighborStyle = styled.div`
         padding: 4px;
     }
 
-    .category-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        gap: 8px;
-        background: white;
-        padding: 8px;
-        border-radius: 6px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
     h2 {
         padding: 0 10px;
         padding-bottom: 10px;
@@ -344,21 +323,50 @@ interface CategoryItemProps {
     $active?: boolean;
 }
 
-const CategoryItem = styled.li<CategoryItemProps>`
+const CategoryList = styled.ul<CategoryItemProps>`
+     
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 8px;
+        background: white;
+        padding: 8px;
+        border-radius: 6px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+
+li{
     font-size: 14px;
     padding: 4px 8px;
     cursor: pointer;
     border-radius: 4px;
-    background: ${(props) => (props.$active ? '#007AFF' : 'white')};
-    color: ${(props) => (props.$active ? 'white' : 'black')};
+    background: 'white';
+    color: 'black';
     transition: all 0.2s;
 
     &:hover {
         background: ${(props) => (props.$active ? '#007AFF' : '#f0f0f0')};
     }
+
+    &.active{
+        background :  '#007AFF';
+        color : 'white;
+    }
 `;
 
-const Empty = styled.div`
+const ErrorMap = styled.div`
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: ${({ theme }) => theme.colors.border};
+`;
+
+const DetailEmpty = styled.div`
     width: 100%;
     height: 300px;
     display: flex;
