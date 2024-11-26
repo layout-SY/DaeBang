@@ -90,7 +90,6 @@ const useSiseWithReactQuery = () => {
             console.log(
                 `[${result.length}건] 데이터 로딩 시간: ${(endTime - startTime).toFixed(2)}ms`,
             );
-
             return result;
         },
     });

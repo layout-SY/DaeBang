@@ -5,6 +5,7 @@ import {
     SiseOfBuilding,
     Contract,
     GroupedSiseDataWithAverage,
+    SiseOfBuildingWithXy,
 } from '../models/Sise.model';
 
 export const groupAndSortByDate = (
@@ -32,21 +33,21 @@ export const groupAndSortByDate = (
     }));
 };
 
-export const paginateByKey = (
-    groupedData: { key: string; items: Sise[] }[],
-    itemCount: number,
-): paginateByKeyResultProps[] => {
-    const paginatedData = [];
+// export const paginateByKey = (
+//     groupedData: { key: string; items: Sise[] }[],
+//     itemCount: number,
+// ): paginateByKeyResultProps[] => {
+//     const paginatedData = [];
 
-    for (let i = 0; i < groupedData.length; i += itemCount) {
-        paginatedData.push({
-            index: i / itemCount + 1,
-            data: groupedData.slice(i, i + itemCount),
-        });
-    }
+//     for (let i = 0; i < groupedData.length; i += itemCount) {
+//         paginatedData.push({
+//             index: i / itemCount + 1,
+//             data: groupedData.slice(i, i + itemCount),
+//         });
+//     }
 
-    return paginatedData;
-};
+//     return paginatedData;
+// };
 
 export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
     const buildingMap: { [key: string]: SiseOfBuilding } = {};
@@ -120,9 +121,7 @@ export const groupSiseByUmdnumWithAverages = (
         const averageDeposit = count > 0 ? totalDeposit / count : 0;
 
         return {
-            key: `${umdNm} (평균 월세: ${averageMonthlyRent.toFixed(
-                2,
-            )} 만원, 평균 전세: ${averageDeposit.toFixed(2)} 만원)`,
+            key: `${umdNm}`,
             averageMonthlyRent,
             averageDeposit,
             SiseData,

@@ -37,8 +37,8 @@ export interface Sise {
 }
 
 export interface paginateByKeyResultProps {
-    index: number;
-    data: { key: string; items: Sise[] }[];
+    key: string;
+    items: Sise[];
 }
 
 export interface SiseOfBuilding {

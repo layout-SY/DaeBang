@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { paginateByKeyResultProps, Sise } from '../models/Sise.model';
 import { fetchSiseDataForPastMonths } from '../components/Sise/SiseServices';
 import { useSearchParams } from 'react-router-dom';
-import { groupAndSortByDate, paginateByKey } from '../utils/sortUtils';
+import { groupAndSortByDate } from '../utils/sortUtils';
 
 export const useSise = () => {
     const [searchParams] = useSearchParams();
@@ -30,11 +30,8 @@ export const useSise = () => {
                 // 그룹화 및 정렬
                 const grouped = groupAndSortByDate(data);
 
-                // 그룹 데이터 -> 페이지네이션
-                const pagedGrouped = paginateByKey(grouped, 10);
-
                 setSiseData(data);
-                setGroupedByAddrSiseData(pagedGrouped);
+                setGroupedByAddrSiseData(grouped);
             } catch (err) {
                 setError('Failed to fetch data.');
             } finally {
