@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { Position } from './DetailList';
-import { FaSadCry } from 'react-icons/fa';
+import ErrorBox from '../common/ErrorBox';
+import { Position } from '../Map';
 
 interface Props {
     position: Position;
@@ -253,10 +253,10 @@ const DetailNeighbor = ({ position }: Props) => {
             <h2>주변 시설</h2>
             {position.lat === -1 ? (
                 <>
-                    <ErrorMap></ErrorMap>
-                    <DetailEmpty className="empty">
-                        <FaSadCry /> <span>위치를 찾을 수 없습니다</span>
-                    </DetailEmpty>
+                    <ErrorBox
+                        message="주변 정보 검색에 실패했습니다"
+                        height={300}
+                    />
                 </>
             ) : (
                 <>
@@ -353,28 +353,6 @@ li{
         background :  '#007AFF';
         color : 'white;
     }
-`;
-
-const ErrorMap = styled.div`
-    width: 100%;
-    height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    background: ${({ theme }) => theme.colors.border};
-`;
-
-const DetailEmpty = styled.div`
-    width: 100%;
-    height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    background: ${({ theme }) => theme.colors.border};
 `;
 
 export default DetailNeighbor;
