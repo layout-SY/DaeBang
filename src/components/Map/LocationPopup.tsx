@@ -27,7 +27,7 @@ const StyledLocationPopup = styled.div`
     text-align: center;
     justify-content: center;
     align-items: center;
-    background-color: #3b82f6;
+    background-color: ${({ theme }) => theme.colors.blue};
     color: white;
     z-index: 60;
 `;

@@ -199,7 +199,7 @@ const SearchIcon = styled.div`
     position: absolute;
     top: 17%;
     left: 10px;
-    color: #3b82f6;
+    color: ${({ theme }) => theme.colors.blue};
     cursor: pointer;
     border-radius: 50%;
 
@@ -211,13 +211,13 @@ const SearchIcon = styled.div`
 const Input = styled.input`
     width: 100%;
     padding: 10px 10px 10px 35px;
-    border: 2px solid #3b82f6;
+    border: 2px solid ${({ theme }) => theme.colors.blue};
     border-radius: 8px;
     font-size: 14px;
 
     &:focus {
         outline: none;
-        border-color: #3b82f6;
+        border-color: ${({ theme }) => theme.colors.blue};
     }
 `;
 
@@ -257,7 +257,7 @@ const DropdownItem = styled.li`
 `;
 
 const Highlight = styled.span`
-    color: #3b82f6;
+    color: ${({ theme }) => theme.colors.blue};
 `;
 
 export default Search;
