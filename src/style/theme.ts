@@ -8,7 +8,14 @@ type Colorkey =
     | 'darkBackground'
     | 'text'
     | 'border'
-    | 'hover';
+    | 'hover'
+    | 'blue'
+    | 'dark'
+    | 'gray'
+    | 'pink'
+    | 'red'
+    | 'green'
+    | 'yellow';
 
 type HeadingSize = 'large' | 'medium' | 'small';
 type LayoutWidth = 'small' | 'medium' | 'large';
@@ -45,6 +52,13 @@ export const theme: Theme = {
         text: '#3B4856',
         border: '#EDEDED',
         hover: '#EFF4FA',
+        blue: '#3b82f6',
+        dark: '#434656',
+        gray: '#a7aabc',
+        pink: '#ec486a',
+        red: '#ae003c',
+        green: '#39726f',
+        yellow: '#eee8a9',
     },
     heading: {
         large: {
