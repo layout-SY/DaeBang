@@ -5,6 +5,7 @@ import univ from '../data/univ.json';
 import sub from '../data/sub.json';
 import { escapeRegExp } from '../utils/string';
 import { useSearchParams } from 'react-router-dom';
+import { set } from 'lodash';
 
 interface Item {
     name: string;
@@ -98,6 +99,12 @@ const Search = () => {
     const handleSearch = () => {
         if (searchTerm === '') {
             alert('검색어를 입력해주세요.');
+            return;
+        }
+
+        if (suggestions.length === 0) {
+            alert('검색 결과가 없습니다.');
+            setSearchTerm('');
             return;
         }
 
