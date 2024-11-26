@@ -5,8 +5,9 @@ import { HiMiniBuildingOffice } from 'react-icons/hi2';
 import { MdApartment } from 'react-icons/md';
 import { CiBookmark } from 'react-icons/ci';
 import { GiConfrontation } from 'react-icons/gi';
-import { useSise } from '../hooks/useSise';
 import { useLocation } from 'react-router-dom';
+import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
+import { toggleFilter } from '../store/slice/filterSlice';
 
 interface ICategory {
     name: string;
@@ -24,8 +25,13 @@ const CATEGORY_LIST: ICategory[] = [
 
 const CategoryBar = () => {
     const { category } = useParams<{ category: string }>();
-    const { regionCode } = useSise();
     const location = useLocation();
+    const dispatch = useTypedDispatch();
+    const filters = useTypedSelector((state) => state.filters);
+
+    const handleCheckboxChange = (filter: string) => {
+        dispatch(toggleFilter(filter));
+    };
 
     return (
         <StyledCategoryBar>
@@ -38,7 +44,9 @@ const CategoryBar = () => {
                                     pathname: `/${item.value}`,
                                     search: location.search,
                                 }}
-                                state={{ regionCode }}
+                                state={{
+                                    regionCode: location.state?.regionCode,
+                                }}
                                 $isActive={item.value === category}
                             >
                                 {item.icon}
@@ -48,6 +56,26 @@ const CategoryBar = () => {
                     );
                 })}
             </ul>
+
+            {/* 체크박스 섹션 */}
+            <FilterSection>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={filters.includes('월세')}
+                        onChange={() => handleCheckboxChange('월세')}
+                    />
+                    월세
+                </label>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={filters.includes('전세')}
+                        onChange={() => handleCheckboxChange('전세')}
+                    />
+                    전세
+                </label>
+            </FilterSection>
         </StyledCategoryBar>
     );
 };
@@ -69,6 +97,26 @@ const StyledCategoryBar = styled.nav`
         align-items: center;
         gap: 1rem;
         list-style: none;
+    }
+`;
+
+const FilterSection = styled.div`
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    label {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    input[type='checkbox'] {
+        margin-right: 0.5rem;
+        cursor: pointer;
     }
 `;
 
