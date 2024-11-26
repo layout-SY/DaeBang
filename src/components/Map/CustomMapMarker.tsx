@@ -56,7 +56,7 @@ const StyledCustomMapMarker = styled.div`
         transform: translate(30%, -60%);
 
         .marker {
-            background: #3b82f6;
+            background: ${({ theme }) => theme.colors.blue};
             color: white;
             padding: 8px 12px;
             border-radius: 3px;
@@ -77,7 +77,7 @@ const StyledCustomMapMarker = styled.div`
                 height: 0;
                 border-left: 8px solid transparent;
                 border-right: 8px solid transparent;
-                border-top: 8px solid #3b82f6;
+                border-top: 8px solid ${({ theme }) => theme.colors.blue};
             }
         }
 

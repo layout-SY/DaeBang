@@ -92,14 +92,15 @@ const StyledLink = styled(Link)<StyledLinkProps>`
     height: 4.5rem;
     border-radius: ${({ theme }) => theme.borderRadius.default};
     color: ${({ $isActive }) => ($isActive ? 'white' : '#4b5563')};
-    background-color: ${({ $isActive }) => ($isActive ? '#3b82f6' : 'white')};
+    background-color: ${({ $isActive, theme }) =>
+        $isActive ? theme.colors.blue : 'white'};
     gap: 0.25rem;
     transition: color 0.3s ease;
     font-weight: 700;
     font-size: 1.5rem;
 
     &:hover {
-        color: #3b82f6;
+        color: ${({ theme }) => theme.colors.blue};
         font-weight: 800;
         background-color: rgb(237, 237, 237);
     }

@@ -5,6 +5,7 @@ import univ from '../data/univ.json';
 import sub from '../data/sub.json';
 import { escapeRegExp } from '../utils/string';
 import { useSearchParams } from 'react-router-dom';
+import { set } from 'lodash';
 
 interface Item {
     name: string;
@@ -98,6 +99,12 @@ const Search = () => {
     const handleSearch = () => {
         if (searchTerm === '') {
             alert('검색어를 입력해주세요.');
+            return;
+        }
+
+        if (suggestions.length === 0) {
+            alert('검색 결과가 없습니다.');
+            setSearchTerm('');
             return;
         }
 
@@ -199,7 +206,7 @@ const SearchIcon = styled.div`
     position: absolute;
     top: 17%;
     left: 10px;
-    color: #3b82f6;
+    color: ${({ theme }) => theme.colors.blue};
     cursor: pointer;
     border-radius: 50%;
 
@@ -211,13 +218,13 @@ const SearchIcon = styled.div`
 const Input = styled.input`
     width: 100%;
     padding: 10px 10px 10px 35px;
-    border: 2px solid #3b82f6;
+    border: 2px solid ${({ theme }) => theme.colors.blue};
     border-radius: 8px;
     font-size: 14px;
 
     &:focus {
         outline: none;
-        border-color: #3b82f6;
+        border-color: ${({ theme }) => theme.colors.blue};
     }
 `;
 
@@ -257,7 +264,7 @@ const DropdownItem = styled.li`
 `;
 
 const Highlight = styled.span`
-    color: #3b82f6;
+    color: ${({ theme }) => theme.colors.blue};
 `;
 
 export default Search;

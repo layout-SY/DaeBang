@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SiseOfBuilding } from '../../models/Sise.model';
-import SiseList2 from '../SiseList2';
+import SiseList from '../SiseList';
 import styled from 'styled-components';
 
 interface IcompareData {
@@ -29,7 +29,7 @@ const CompareSise = () => {
         <CompareSiseContainer>
             {isSiseListOpened && (
                 <SiseListContainer>
-                    <SiseList2
+                    <SiseList
                         isCompareMode={true}
                         onCompareComplete={handleCompareData}
                     />
