@@ -5,7 +5,7 @@ import {
     CustomOverlayMap,
 } from 'react-kakao-maps-sdk';
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
@@ -20,67 +20,97 @@ export interface Position {
 const Map = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
-    const [center, setCenter] = useState<Position | null>(null);
     const [address, setAddress] = useState<string>('');
     const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
 
-    // 첫 로드시 브라우저의 Geolocation API를 사용하여 현재 위치의 좌표를 가져옵니다.
-    // 좌표로 구코드를 검색하여 URLSearchParams에 추가합니다.
+    // 좌표를 받아서 서치파람에 저장하고
+    // 주소를 검색해서
+    // 주소이름을 업데이트하고
+    // URLSearchParams에 구코드를 저장합니다.
+    const searchAddressFromCoordsAndSetRegion = useCallback(
+        (position: Position) => {
+            const geocoder = new kakao.maps.services.Geocoder();
+            geocoder.coord2RegionCode(
+                position.lng,
+                position.lat,
+                (result, status) => {
+                    if (status === kakao.maps.services.Status.OK) {
+                        const address = result[0].address_name;
+                        const code = result[0].code.toString().substring(0, 5);
+                        setAddress(address);
+
+                        const newSearchParams = new URLSearchParams(
+                            searchParams,
+                        );
+                        newSearchParams.set('lat', position.lat.toString());
+                        newSearchParams.set('lng', position.lng.toString());
+                        newSearchParams.set('region', code);
+                        setSearchParams(newSearchParams);
+                    }
+                },
+            );
+        },
+        [searchParams, setSearchParams],
+    );
+
+    // 첫 로딩시 좌표가 있다면 그 좌표로 설정합니다.
+    // 없다면 현재 위치를 가져와서 설정합니다.
+    // 현재위치를 가져오는데 실패하면 기본 좌표로 설정합니다.
     useEffect(() => {
+        if (searchParams.get('lat') && searchParams.get('lng')) {
+            const lat = parseFloat(searchParams.get('lat')!);
+            const lng = parseFloat(searchParams.get('lng')!);
+            searchAddressFromCoordsAndSetRegion({ lat, lng });
+            return;
+        }
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                const { latitude, longitude } = position.coords;
-                const newCenter = { lat: latitude, lng: longitude };
-                setCenter(newCenter);
-                searchAddressFromCoordsAndSetSearchParam(newCenter);
+                const newPosition = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                searchAddressFromCoordsAndSetRegion(newPosition);
             },
-            (error) => {
-                console.error(error);
+            () => {
+                searchAddressFromCoordsAndSetRegion(MAP_CENTER_POSITION);
             },
         );
     }, []);
 
-    // 지도 드래그가 끝날 때 마다 중심좌표를 가져오고 주소를 검색합니다.
-    // 검색된 주소의 법정동 코드 앞 5자리(구코드)를 URLSearchParams에 추가합니다.
+    // 지도 드래그가 끝날 때 마다 중심좌표를 가져옵니다
+    // 그 좌표를를 바탕으로 서치파람을 업데이트 합니다.
     const handleCenterChanged = useCallback(
         debounce(() => {
             const map = mapRef.current;
             if (!map) return;
+
             const center = map.getCenter();
-            setCenter({ lat: center.getLat(), lng: center.getLng() });
-            searchAddressFromCoordsAndSetSearchParam({
+            const newPosition = {
                 lat: center.getLat(),
                 lng: center.getLng(),
-            });
-        }, 200),
-        [searchParams, setSearchParams],
-    );
+            };
 
-    const searchAddressFromCoordsAndSetSearchParam = (position: Position) => {
-        // 좌표로 행정동 주소 정보를 요청합니다
-        const geocoder = new kakao.maps.services.Geocoder();
-        geocoder.coord2RegionCode(
-            position.lng,
-            position.lat,
-            (result, status) => {
-                if (status === kakao.maps.services.Status.OK) {
-                    const address = result[0].address_name;
-                    const code = result[0].code.toString().substring(0, 5);
-                    setAddress(address);
-                    const newSearchParams = new URLSearchParams(searchParams);
-                    newSearchParams.set('region', code);
-                    setSearchParams(newSearchParams);
-                }
-            },
-        );
-    };
+            searchAddressFromCoordsAndSetRegion(newPosition);
+        }, 200),
+        [searchAddressFromCoordsAndSetRegion],
+    );
 
     return (
         <>
             <KakaoMap
                 id="map"
-                center={center || MAP_CENTER_POSITION}
+                center={{
+                    lat: parseFloat(
+                        searchParams.get('lat') ||
+                            MAP_CENTER_POSITION.lat.toString(),
+                    ),
+                    lng: parseFloat(
+                        searchParams.get('lng') ||
+                            MAP_CENTER_POSITION.lng.toString(),
+                    ),
+                }}
                 level={zoom}
                 onZoomChanged={(target) => setZoom(target.getLevel())}
                 keyboardShortcuts={true}
