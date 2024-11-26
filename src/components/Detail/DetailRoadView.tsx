@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Position } from './DetailList';
-import { FaSadCry } from 'react-icons/fa';
+import ErrorBox from '../common/ErrorBox';
+import { Position } from '../Map';
 
 interface Props {
     position: Position;
@@ -30,9 +30,10 @@ const DetailRoadView = ({ position }: Props) => {
 
     if (!hasRoadView) {
         return (
-            <Empty>
-                <FaSadCry /> 로드뷰가 제공되지 않는 곳입니다
-            </Empty>
+            <ErrorBox
+                message="로드뷰가 제공되지 않는 지역입니다"
+                height={200}
+            />
         );
     }
 
@@ -45,14 +46,4 @@ const DetailRoadViewStyle = styled.div`
     height: 200px;
 `;
 
-const Empty = styled.div`
-    width: 100%;
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    background: ${({ theme }) => theme.colors.border};
-`;
 export default DetailRoadView;
