@@ -7,6 +7,7 @@ import { CiBookmark } from 'react-icons/ci';
 import { GiConfrontation } from 'react-icons/gi';
 import { useSise } from '../hooks/useSise';
 import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 interface ICategory {
     name: string;
@@ -19,41 +20,45 @@ const CATEGORY_LIST: ICategory[] = [
     { name: '오피스텔', value: 'officetel', icon: <HiMiniBuildingOffice /> },
     { name: '아파트', value: 'apt', icon: <MdApartment /> },
     { name: '북마크', value: 'bookmark', icon: <CiBookmark /> },
-    { name: '시세비교', value: 'comparesise', icon: <GiConfrontation /> },
+    { name: '시세비교', value: 'compare', icon: <GiConfrontation /> },
 ];
 
 const CategoryBar = () => {
-    const { category } = useParams<{ category: string }>();
-    const { regionCode } = useSise();
     const location = useLocation();
+    const currentPath = location.pathname.split('/')[1];
 
     return (
         <StyledCategoryBar>
-            <ul>
-                {CATEGORY_LIST.map((item) => {
-                    return (
-                        <li key={item.value}>
-                            <StyledLink
-                                to={{
-                                    pathname: `/${item.value}`,
-                                    search: location.search,
-                                }}
-                                state={{ regionCode }}
-                                $isActive={item.value === category}
-                            >
-                                {item.icon}
-                                <span>{item.name}</span>
-                            </StyledLink>
-                        </li>
-                    );
-                })}
-            </ul>
+            <StyledLink to="/" $isActive={false}>
+                <LogoText>
+                    <span>⌂대방</span>
+                </LogoText>
+            </StyledLink>
+            <nav>
+                <ul>
+                    {CATEGORY_LIST.map((item) => {
+                        return (
+                            <li key={item.value}>
+                                <StyledLink
+                                    to={{
+                                        pathname: `/${item.value}`,
+                                        search: location.search,
+                                    }}
+                                    $isActive={item.value === currentPath}
+                                >
+                                    {item.icon}
+                                    <span>{item.name}</span>
+                                </StyledLink>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </nav>
         </StyledCategoryBar>
     );
 };
 
-// TODO : header tag로 이후 수정
-const StyledCategoryBar = styled.nav`
+const StyledCategoryBar = styled.header`
     display: flex;
     flex-direction: column;
     width: 5rem;
@@ -63,12 +68,14 @@ const StyledCategoryBar = styled.nav`
     background-color: white;
     z-index: 300;
 
-    ul {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        list-style: none;
+    nav {
+        ul {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            list-style: none;
+        }
     }
 `;
 
@@ -107,6 +114,40 @@ const StyledLink = styled(Link)<StyledLinkProps>`
         color: inherit;
         font-size: 0.75rem;
         text-align: center;
+    }
+`;
+
+const LogoText = styled.h1`
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    isolation: isolate;
+
+    span {
+        position: relative;
+        z-index: 2;
+        font-size: 1.5rem;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 35%;
+        transform: translateX(-50%) skew(-12deg);
+        width: 55px;
+        height: 10px;
+        background-color: rgba(59, 130, 246, 0.3);
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    &:hover::after {
+        background-color: rgba(59, 130, 246, 0.5);
+        transform: translateX(-50%) skew(-43deg);
     }
 `;
 
