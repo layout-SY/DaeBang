@@ -5,7 +5,7 @@ import {
     CustomOverlayMap,
 } from 'react-kakao-maps-sdk';
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { debounce } from 'lodash';
+import { debounce, map } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
@@ -23,6 +23,13 @@ const Map = () => {
     const [address, setAddress] = useState<string>('');
     const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
+
+    // ref를 전역적으로 접근 가능하게 만들기
+    useEffect(() => {
+        if (mapRef.current) {
+            (window as any).mapInstance = mapRef.current;
+        }
+    }, [mapRef.current]);
 
     // 좌표를 받아서 서치파람에 저장하고
     // 주소를 검색해서
