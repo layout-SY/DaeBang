@@ -1,8 +1,10 @@
+import { FiltersState } from './../store/slice/filterSlice';
 import {
     paginateByKeyResultProps,
     Sise,
     SiseOfBuilding,
     Contract,
+    GroupedSiseDataWithAverage,
 } from '../models/Sise.model';
 
 export const groupAndSortByDate = (
@@ -51,6 +53,7 @@ export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
 
     data.forEach((item) => {
         const key = `${item.umdNm} ${item.jibun}`;
+
         if (!buildingMap[key]) {
             buildingMap[key] = {
                 buildYear: item.buildYear,
@@ -82,4 +85,49 @@ export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
     });
 
     return Object.values(buildingMap);
+};
+
+export const groupSiseByUmdnumWithAverages = (
+    data: Sise[],
+    activeFilters: FiltersState,
+): GroupedSiseDataWithAverage[] => {
+    const buildingMap: { [key: string]: Sise[] } = {};
+
+    // 동별로 데이터를 그룹화
+    data.forEach((item) => {
+        const key = item.umdNm;
+        if (!buildingMap[key]) {
+            buildingMap[key] = [];
+        }
+        buildingMap[key].push(item);
+    });
+
+    // 그룹화된 데이터를 기반으로 평균 월세와 전세 계산
+    const groupedData: GroupedSiseDataWithAverage[] = Object.entries(
+        buildingMap,
+    ).map(([umdNm, SiseData]) => {
+        const totalMonthlyRent = SiseData.reduce(
+            (acc, curr) => acc + curr.monthlyRent,
+            0,
+        );
+        const totalDeposit = SiseData.reduce(
+            (acc, curr) => acc + parseInt(curr.deposit),
+            0,
+        );
+        const count = SiseData.length;
+
+        const averageMonthlyRent = count > 0 ? totalMonthlyRent / count : 0;
+        const averageDeposit = count > 0 ? totalDeposit / count : 0;
+
+        return {
+            key: `${umdNm} (평균 월세: ${averageMonthlyRent.toFixed(
+                2,
+            )} 만원, 평균 전세: ${averageDeposit.toFixed(2)} 만원)`,
+            averageMonthlyRent,
+            averageDeposit,
+            SiseData,
+        };
+    });
+
+    return groupedData;
 };

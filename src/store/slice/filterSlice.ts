@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type FiltersState = string[]; // 필터는 "월세", "전세" 문자열 배열로 관리
+export type FiltersState = string[]; // 필터는 "월세", "전세" 문자열 배열로 관리
 
 const initialState: FiltersState = ['월세']; // 기본값으로 "월세" 필터 설정
 

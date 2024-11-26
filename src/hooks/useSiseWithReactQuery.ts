@@ -2,9 +2,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useTypedSelector } from '../hooks/redux';
 import { fetchSiseDataThatThrowsError } from '../api/Sise.api';
-import { groupSiseByAddress } from '../utils/sortUtils';
+import {
+    groupSiseByAddress,
+    groupSiseByUmdnumWithAverages,
+} from '../utils/sortUtils';
 import { addXyToSiseOfBuilding } from '../utils/adress';
-import { SiseOfBuilding } from '../models/Sise.model';
 import { useSearchParams } from 'react-router-dom';
 
 const useSiseWithReactQuery = () => {
@@ -73,6 +75,12 @@ const useSiseWithReactQuery = () => {
 
             // 그룹화 및 좌표 추가
             const groupedByAddress = groupSiseByAddress(filteredItems);
+
+            const dada = groupSiseByUmdnumWithAverages(
+                filteredItems,
+                activeFilters,
+            );
+
             const result = await addXyToSiseOfBuilding(
                 groupedByAddress,
                 signal,
