@@ -7,12 +7,12 @@ import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
 import { setDetail, setDetailOpen } from '../store/slice/DetailSlice';
 
-interface SiseList2Props {
+interface SiseListProps {
     isCompareMode?: boolean;
     onCompareComplete?: (compareData: SiseOfBuilding[]) => void;
 }
 
-const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
+const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
     const { data } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
@@ -38,7 +38,7 @@ const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
     };
 
     return (
-        <StyledSiseList2>
+        <StyledSiseList>
             {data?.map((house, index) => (
                 <SideBarItem
                     house={house}
@@ -53,11 +53,11 @@ const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
             {!isCompareMode && detailOpen && (
                 <DetailList closeDetail={closeDetail} />
             )}
-        </StyledSiseList2>
+        </StyledSiseList>
     );
 };
 
-const StyledSiseList2 = styled.div`
+const StyledSiseList = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -65,4 +65,4 @@ const StyledSiseList2 = styled.div`
     overflow-y: scroll;
 `;
 
-export default SiseList2;
+export default SiseList;
