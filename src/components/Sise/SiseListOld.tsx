@@ -4,11 +4,11 @@ import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { Sise } from '../../models/Sise.model';
 
-interface SiseListProps {
+interface SiseListOldProps {
     onClick: (house: Sise) => void;
 }
 
-const SiseList = ({ onClick }: SiseListProps) => {
+const SiseListOld = ({ onClick }: SiseListOldProps) => {
     const { groupedByAddrSiseData, error, isLoading } = useSise();
     const [ref, inView] = useInView({
         threshold: 0.5, // 화면의 50%가 보일 때 감지
@@ -37,7 +37,7 @@ const SiseList = ({ onClick }: SiseListProps) => {
     }
 
     return (
-        <SiseListStyle ref={ref}>
+        <SiseListOldStyle ref={ref}>
             {groupedByAddrSiseData.map((page) => (
                 <div key={page.index}>
                     {page.data.map((data) => (
@@ -63,11 +63,11 @@ const SiseList = ({ onClick }: SiseListProps) => {
                     ))}
                 </div>
             ))}
-        </SiseListStyle>
+        </SiseListOldStyle>
     );
 };
 
-const SiseListStyle = styled.div`
+const SiseListOldStyle = styled.div`
     padding: 20px;
     font-size: 16px;
     background-color: #f9f9f9;
@@ -75,4 +75,4 @@ const SiseListStyle = styled.div`
     border-radius: 5px;
 `;
 
-export default SiseList;
+export default SiseListOld;
