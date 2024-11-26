@@ -5,7 +5,7 @@ import {
     CustomOverlayMap,
 } from 'react-kakao-maps-sdk';
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
@@ -53,6 +53,21 @@ const Map = () => {
         },
         [searchParams, setSearchParams],
     );
+
+    // searchParams 변경 시 region 코드 업데이트
+    useEffect(() => {
+        const latParam = searchParams.get('lat');
+        const lngParam = searchParams.get('lng');
+
+        if (latParam && lngParam) {
+            const lat = parseFloat(latParam);
+            const lng = parseFloat(lngParam);
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                searchAddressFromCoordsAndSetRegion({ lat, lng });
+            }
+        }
+    }, [searchParams]);
 
     // 첫 로딩시 좌표가 있다면 그 좌표로 설정합니다.
     // 없다면 현재 위치를 가져와서 설정합니다.
