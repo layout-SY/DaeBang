@@ -1,23 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaHeart, FaPlus, FaRegHeart } from 'react-icons/fa';
 import styled from 'styled-components';
-import { SiseOfBuilding } from '../../models/Sise.model';
 import DetailRoadView from './DetailRoadView';
-import { useGetPosition } from '../../hooks/useGetPosition';
 import DetailNeighbor from './DetailNeighbor';
 import { WIDTH } from '../../utils/constants';
 import { throttle } from 'lodash';
-
-export interface Position {
-    lat: number;
-    lng: number;
-}
+import { useTypedSelector } from '../../hooks/redux';
 
 interface Props {
-    house: SiseOfBuilding;
     closeDetail: () => void;
 }
-
 interface menuProps {
     data_link: string;
     name: string;
@@ -44,10 +36,11 @@ const menus: menuProps[] = [
 
 const THRESHOLD = 230;
 const DELAY = 500;
-const stairs = [0, 350, 780, 830];
+const HEIGHTS = [0, 350, 780, 888];
 
-const DetailList = ({ house, closeDetail }: Props) => {
-    const { position } = useGetPosition(house);
+const DetailList = ({ closeDetail }: Props) => {
+    const { detailInfo } = useTypedSelector((state) => state.detail);
+    const position = { lat: detailInfo!.y, lng: detailInfo!.x };
     const [activeMenu, setActiveMenu] = useState<string>('header');
     const [bookmarkIndex, setBookMarkIndex] = useState<number>(-1);
     const [menuVisible, setMenuVisible] = useState(false);
@@ -59,10 +52,10 @@ const DetailList = ({ house, closeDetail }: Props) => {
             localStorage.getItem('bookmark') || '[]',
         ) as any[];
         const index = existingBookmarks.findIndex(
-            (bookmark) => bookmark === house,
+            (bookmark) => bookmark === detailInfo,
         );
         setBookMarkIndex(index);
-    }, [house]);
+    }, [detailInfo]);
 
     const handleClose = () => {
         closeDetail();
@@ -78,7 +71,7 @@ const DetailList = ({ house, closeDetail }: Props) => {
             newBookMarks = existingBookmarks.splice(bookmarkIndex, 1);
             setBookMarkIndex(-1);
         } else {
-            newBookMarks = [...existingBookmarks, house];
+            newBookMarks = [...existingBookmarks, detailInfo];
             setBookMarkIndex(newBookMarks.length - 1);
         }
 
@@ -88,15 +81,14 @@ const DetailList = ({ house, closeDetail }: Props) => {
     const handleMenuVisible = useCallback(
         throttle(() => {
             const scrollY = wrapper!.current!.scrollTop;
-            console.log(scrollY);
 
-            if (scrollY >= stairs[3]) {
+            if (scrollY >= HEIGHTS[3]) {
                 setActiveMenu(menus[3].data_link);
-            } else if (scrollY >= stairs[2]) {
+            } else if (scrollY >= HEIGHTS[2]) {
                 setActiveMenu(menus[2].data_link);
-            } else if (scrollY >= stairs[1]) {
+            } else if (scrollY >= HEIGHTS[1]) {
                 setActiveMenu(menus[1].data_link);
-            } else {
+            } else if (scrollY >= HEIGHTS[0]) {
                 setActiveMenu(menus[0].data_link);
             }
 
@@ -105,15 +97,22 @@ const DetailList = ({ house, closeDetail }: Props) => {
             } else {
                 setMenuVisible(false);
             }
-        }, DELAY), // 200ms의 스로틀링
+        }, DELAY),
         [],
     );
 
     useEffect(() => {
-        if (!wrapper) return;
-        wrapper!.current!.addEventListener('scroll', handleMenuVisible);
-        return () =>
-            wrapper!.current!.removeEventListener('scroll', handleMenuVisible);
+        const wrapperElement = wrapper.current;
+
+        if (wrapperElement) {
+            wrapperElement.addEventListener('scroll', handleMenuVisible);
+        }
+
+        return () => {
+            if (wrapperElement) {
+                wrapperElement.removeEventListener('scroll', handleMenuVisible);
+            }
+        };
     }, [handleMenuVisible]);
 
     const handleClickMenu = (e: React.MouseEvent<HTMLUListElement>) => {
@@ -134,15 +133,19 @@ const DetailList = ({ house, closeDetail }: Props) => {
         if (scroll && wrapper.current) {
             const index = menus.findIndex((menu) => menu.data_link === name);
             wrapper.current.scrollTo({
-                top: stairs[index],
+                top: HEIGHTS[index],
                 behavior: 'smooth',
             });
         }
     };
 
     return (
-        <>
-            <DetailListStyle $visible={menuVisible} ref={wrapper}>
+        <TEST>
+            <DetailListStyle
+                $visible={menuVisible}
+                ref={wrapper}
+                className="detailList"
+            >
                 <ul className="menu" onClick={handleClickMenu}>
                     {menus.map((menu) => (
                         <li
@@ -176,24 +179,24 @@ const DetailList = ({ house, closeDetail }: Props) => {
                     <DetailRoadView position={position} />
 
                     <h2>
-                        {house.contracts[0].monthlyRent === 0
-                            ? `전세 ${house.contracts[0].deposit}`
-                            : `월세 ${house.contracts[0].deposit}/${house.contracts[0].monthlyRent}`}
+                        {detailInfo!.contracts[0].monthlyRent === 0
+                            ? `전세 ${detailInfo!.contracts[0].deposit}`
+                            : `월세 ${detailInfo!.contracts[0].deposit}/${detailInfo!.contracts[0].monthlyRent}`}
                     </h2>
                     <div className="grid">
                         <div>
-                            <span>건물명 : {house.mhouseNm}</span>
+                            <span>건물명 : {detailInfo!.mhouseNm}</span>
                         </div>
                         <div>
-                            <span>종류 : {house.houseType} </span>
+                            <span>종류 : {detailInfo!.houseType} </span>
                         </div>
                         <div>
                             <span>
-                                면적 : {house.contracts[0].excluUseAr} ㎡
+                                면적 : {detailInfo!.contracts[0].excluUseAr} ㎡
                             </span>
                         </div>
                         <div>
-                            <span>층 : {house.contracts[0].floor}</span>
+                            <span>층 : {detailInfo!.contracts[0].floor}</span>
                         </div>
                     </div>
                 </div>
@@ -224,7 +227,7 @@ const DetailList = ({ house, closeDetail }: Props) => {
                     />
                 </div>
             </DetailListStyle>
-        </>
+        </TEST>
     );
 };
 
@@ -232,31 +235,52 @@ interface DetailListStyleProps {
     $visible: boolean;
 }
 
-const DetailListStyle = styled.div<DetailListStyleProps>`
-    position: absolute;
+const TEST = styled.div`
+    position: fixed;
     border-radius: ${({ theme }) => theme.borderRadius.large};
-    left: 360px;
+    top: 0;
+    left: calc(10px + ${WIDTH});
     display: flex;
     flex-direction: column;
+    overflow: scroll;
     gap: 30px;
-    overflow-y: scroll;
     height: 100%;
     width: ${WIDTH};
-
-    z-index: 10;
+    z-index: 1001;
+    padding-top: 10px;
     background: #fff;
     border-right: 1px solid ${({ theme }) => theme.colors.border};
+    border-left: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const DetailListStyle = styled.div<DetailListStyleProps>`
+    position: fixed;
+    border-radius: ${({ theme }) => theme.borderRadius.large};
+    top: 0;
+    left: calc(10px + ${WIDTH});
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    gap: 30px;
+    height: 100%;
+    width: ${WIDTH};
+    z-index: 1001;
+    padding-top: 10px;
+    background: #fff;
+    border-right: 1px solid ${({ theme }) => theme.colors.border};
+    border-left: 1px solid ${({ theme }) => theme.colors.border};
 
     .menu {
         position: fixed;
-        left: 360px;
+        top: 0;
+        left: calc(20px + ${WIDTH});
         margin: 0;
-        width: ${WIDTH};
+        width: 100%;
         height: 40px;
         padding: 0;
         visibility: ${({ $visible }) => ($visible ? 'visible' : 'hidden')};
         background: white;
-        z-index: 11;
+        z-index: 2000;
 
         list-style: none;
         display: grid;
