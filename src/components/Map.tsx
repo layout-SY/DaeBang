@@ -151,7 +151,7 @@ const Map = () => {
                 <ZoomControl position={'BOTTOMRIGHT'} />
                 <MarkerClusterer
                     averageCenter={true}
-                    minLevel={5}
+                    minLevel={4}
                     disableClickZoom={false} // 클릭시 부드럽게 줌인되었으면 좋겠다.
                     calculator={[]} // 사이즈에 상관없이 모무 같은 스타일입니다.
                     styles={[
@@ -167,6 +167,7 @@ const Map = () => {
                             color: 'white',
                             textAlign: 'center',
                             fontWeight: 'bold',
+                            // 인라인 스타일에서 호버속성은 사용할 수 없습니다 ㅠㅠ
                         },
                     ]}
                 >
