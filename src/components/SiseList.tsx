@@ -108,9 +108,7 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
             </ButtonContainer>
             <AveragePriceContainer>
                 {activeKey === '전체' ? (
-                    <AveragePriceText>
-                        전체 평균 월세와 전세 데이터를 표시합니다.
-                    </AveragePriceText>
+                    <AveragePriceText>평균 월세와 전세 데이터</AveragePriceText>
                 ) : (
                     filteredData
                         ?.filter((group) => group.key === activeKey)
@@ -118,7 +116,7 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
                             <AveragePriceText key={group.key}>
                                 {`${group.key}: 평균 월세 ${formatPrice(
                                     group.averageMonthlyRent,
-                                )}, 평균 전세 ${formatPrice(
+                                )}, 평균 보증금 ${formatPrice(
                                     group.averageDeposit,
                                 )}`}
                             </AveragePriceText>
