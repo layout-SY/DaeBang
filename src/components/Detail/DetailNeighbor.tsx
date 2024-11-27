@@ -79,7 +79,6 @@ const DetailNeighbor = () => {
         const placesSearchCB = (data: PlacesSearchResult, status: Status) => {
             if (status === Status.OK) {
                 setData(data);
-                console.log(data);
             } else {
                 setData([]);
             }

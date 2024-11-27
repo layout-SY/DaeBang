@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { SiseOfBuilding } from '../models/Sise.model';
+import { SiseOfBuildingWithXy } from '../models/Sise.model';
 
 interface Props {
-    house: SiseOfBuilding;
+    house: SiseOfBuildingWithXy;
     index?: number;
-    onClick: (house: SiseOfBuilding) => void;
+    onClick: (house: SiseOfBuildingWithXy) => void;
 }
 
 const SideBarItem = ({ house, index, onClick }: Props) => {
@@ -28,7 +28,7 @@ const SideBarItem = ({ house, index, onClick }: Props) => {
     );
 };
 
-const SideBarItemStyle = styled.div`
+export const SideBarItemStyle = styled.div`
     display: flex;
     gap: 10px;
     padding: 10px;
