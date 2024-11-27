@@ -50,14 +50,12 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
                     }
                 />
             ))}
-            {!isCompareMode && detailOpen && (
-                <DetailList closeDetail={closeDetail} />
-            )}
+            {detailOpen && <DetailList closeDetail={closeDetail} />}
         </StyledSiseList>
     );
 };
 
-const StyledSiseList = styled.div`
+export const StyledSiseList = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
