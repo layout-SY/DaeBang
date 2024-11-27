@@ -67,7 +67,7 @@ export interface AptSise extends BaseSise {
 }
 
 export interface OfficetelSise extends BaseSise {
-    offiname: string;
+    offiNm: string;
 }
 
 export type AnySise = OneTwoSise | AptSise | OfficetelSise;

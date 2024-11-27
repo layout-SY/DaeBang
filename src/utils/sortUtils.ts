@@ -62,10 +62,10 @@ export const groupSiseByAddress = (
         const buildingName =
             'mhouseNm' in item
                 ? item.mhouseNm
-                : 'aptName' in item
-                  ? item.aptName
-                  : 'offName' in item
-                    ? item.offName
+                : 'aptNm' in item
+                  ? item.aptNm
+                  : 'offiNm' in item
+                    ? item.offiNm
                     : '';
 
         if (!buildingMap[key]) {
@@ -73,7 +73,7 @@ export const groupSiseByAddress = (
                 buildYear: item.buildYear,
                 houseType: 'houseType' in item ? item.houseType : '',
                 jibun: item.jibun,
-                mhouseNm: buildingName as string,
+                mhouseNm: buildingName,
                 sggCd: item.sggCd,
                 umdNum: item.umdNm,
                 contracts: [],
