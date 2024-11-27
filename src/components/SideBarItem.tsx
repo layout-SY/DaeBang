@@ -4,7 +4,7 @@ import { SiseOfBuildingWithXy } from '../models/Sise.model';
 
 interface Props {
     house: SiseOfBuildingWithXy;
-    index?: number;
+    index: number;
     onClick: (house: SiseOfBuildingWithXy) => void;
 }
 
@@ -12,7 +12,7 @@ const SideBarItem = ({ house, index, onClick }: Props) => {
     return (
         <SideBarItemStyle onClick={() => onClick(house)}>
             <img
-                src={`https://picsum.photos/id/${index}/100/100`}
+                src={`/dummyImg/dummy_${index % 20}.jpeg`}
                 alt={house.mhouseNm}
             />
             <div className="content">
@@ -36,6 +36,12 @@ export const SideBarItemStyle = styled.div`
     &:hover {
         background: ${({ theme }) => theme.colors.hover};
     }
+
+    img {
+        width: 100px;
+        height: 100px;
+    }
+
     .content {
         display: flex;
         flex-direction: column;
