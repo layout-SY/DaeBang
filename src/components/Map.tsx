@@ -22,13 +22,21 @@ const Map = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
     const [address, setAddress] = useState<string>('');
-    const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
+    // const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
 
     // ref를 전역적으로 접근 가능하게 만들기
     useEffect(() => {
         if (mapRef.current) {
             (window as any).mapInstance = mapRef.current;
+
+            const pantoAndZoom = (lat: number, lng: number) => {
+                mapRef.current?.panTo(new kakao.maps.LatLng(lat, lng));
+                setTimeout(() => {
+                    mapRef.current?.setLevel(1);
+                }, 500);
+            };
+            (window as any).mapInstance.pantoAndZoom = pantoAndZoom;
         }
     }, [mapRef.current]);
 
@@ -134,8 +142,8 @@ const Map = () => {
                             MAP_CENTER_POSITION.lng.toString(),
                     ),
                 }}
-                level={zoom}
-                onZoomChanged={(target) => setZoom(target.getLevel())}
+                // level={zoom}
+                // onZoomChanged={(target) => setZoom(target.getLevel())}
                 keyboardShortcuts={true}
                 onCenterChanged={handleCenterChanged}
                 style={{
@@ -172,7 +180,7 @@ const Map = () => {
                     ]}
                 >
                     {data &&
-                        zoom <= 7 &&
+                        // zoom <= 7 &&
                         data.map((item) => {
                             return (
                                 <CustomOverlayMap
