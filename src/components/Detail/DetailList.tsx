@@ -54,7 +54,7 @@ const DetailList = ({ closeDetail }: Props) => {
     const wrapper = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        console.log('검사');
+        // console.log('검사');
         if (detailInfo) {
             setBookmarked(isBookMarked(detailInfo));
             console.log(isBookMarked(detailInfo));
@@ -205,7 +205,7 @@ const DetailList = ({ closeDetail }: Props) => {
 
                 <div className="detail_graph">
                     <h2>시세 정보</h2>
-                    <DetailSise detailInfo={detailInfo} />
+                    {/* <DetailSise detailInfo={detailInfo} /> */}
                 </div>
 
                 <div className="detail_navigation">
