@@ -72,7 +72,7 @@ const StyledCustomMapMarker = styled.div`
                 content: '';
                 position: absolute;
                 bottom: -8px;
-                left: 18px;
+                left: 10px;
                 width: 0;
                 height: 0;
                 border-left: 8px solid transparent;
@@ -102,7 +102,6 @@ const StyledCustomMapMarker = styled.div`
                 content: '';
                 position: absolute;
                 bottom: -8px;
-                left: 18px;
                 width: 0;
                 height: 0;
                 border-left: 8px solid transparent;
