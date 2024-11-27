@@ -76,11 +76,6 @@ const useSiseWithReactQuery = () => {
             // 그룹화 및 좌표 추가
             const groupedByAddress = groupSiseByAddress(filteredItems);
 
-            const dada = groupSiseByUmdnumWithAverages(
-                filteredItems,
-                activeFilters,
-            );
-
             const result = await addXyToSiseOfBuilding(
                 groupedByAddress,
                 signal,

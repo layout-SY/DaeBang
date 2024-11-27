@@ -38,7 +38,7 @@ const SiseListOld = ({ onClick }: SiseListOldProps) => {
 
     return (
         <SiseListOldStyle ref={ref}>
-            {groupedByAddrSiseData.map((page) => (
+            {/* {groupedByAddrSiseData.map((page) => (
                 <div key={page.index}>
                     {page.data.map((data) => (
                         <div
@@ -62,7 +62,7 @@ const SiseListOld = ({ onClick }: SiseListOldProps) => {
                         </div>
                     ))}
                 </div>
-            ))}
+            ))} */}
         </SiseListOldStyle>
     );
 };

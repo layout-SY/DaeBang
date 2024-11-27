@@ -8,7 +8,6 @@ import { GiConfrontation } from 'react-icons/gi';
 import { useLocation } from 'react-router-dom';
 import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
 import { toggleFilter } from '../store/slice/filterSlice';
-import { useSearchParams } from 'react-router-dom';
 
 interface ICategory {
     name: string;

@@ -89,14 +89,13 @@ export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
 };
 
 export const groupSiseByUmdnumWithAverages = (
-    data: Sise[],
-    activeFilters: FiltersState,
+    data: SiseOfBuildingWithXy[] | undefined,
 ): GroupedSiseDataWithAverage[] => {
-    const buildingMap: { [key: string]: Sise[] } = {};
+    const buildingMap: { [key: string]: SiseOfBuildingWithXy[] } = {};
 
     // 동별로 데이터를 그룹화
-    data.forEach((item) => {
-        const key = item.umdNm;
+    data?.forEach((item) => {
+        const key = item.umdNum; // umdNum을 기준으로 그룹화
         if (!buildingMap[key]) {
             buildingMap[key] = [];
         }
@@ -106,25 +105,37 @@ export const groupSiseByUmdnumWithAverages = (
     // 그룹화된 데이터를 기반으로 평균 월세와 전세 계산
     const groupedData: GroupedSiseDataWithAverage[] = Object.entries(
         buildingMap,
-    ).map(([umdNm, SiseData]) => {
-        const totalMonthlyRent = SiseData.reduce(
-            (acc, curr) => acc + curr.monthlyRent,
-            0,
-        );
-        const totalDeposit = SiseData.reduce(
-            (acc, curr) => acc + parseInt(curr.deposit),
-            0,
-        );
-        const count = SiseData.length;
+    ).map(([umdNum, SiseData]) => {
+        let totalMonthlyRent = 0;
+        let totalDeposit = 0;
+        let totalContracts = 0;
 
-        const averageMonthlyRent = count > 0 ? totalMonthlyRent / count : 0;
-        const averageDeposit = count > 0 ? totalDeposit / count : 0;
+        // 모든 contracts를 순회하며 평균값 계산
+        SiseData.forEach((building) => {
+            building.contracts.forEach((contract) => {
+                totalMonthlyRent += contract.monthlyRent;
+
+                // deposit이 문자열인지 확인 후 콤마 제거
+                const depositValue =
+                    typeof contract.deposit === 'string'
+                        ? parseInt(contract.deposit.replace(/,/g, ''), 10)
+                        : contract.deposit || 0;
+
+                totalDeposit += depositValue;
+                totalContracts += 1;
+            });
+        });
+
+        const averageMonthlyRent =
+            totalContracts > 0 ? totalMonthlyRent / totalContracts : 0;
+        const averageDeposit =
+            totalContracts > 0 ? totalDeposit / totalContracts : 0;
 
         return {
-            key: `${umdNm}`,
+            key: `${umdNum}`, // 그룹의 이름
             averageMonthlyRent,
             averageDeposit,
-            SiseData,
+            SiseData, // 원본 데이터 포함
         };
     });
 
