@@ -1,6 +1,6 @@
 import SideBarItem from './SideBarItem';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SiseOfBuilding, SiseOfBuildingWithXy } from '../models/Sise.model';
 import DetailList from './Detail/DetailList';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
@@ -16,7 +16,30 @@ const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
     const { data } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
+    const [visibleData, setVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
     const [compareData, setCompareData] = useState<SiseOfBuilding[]>([]);
+
+    // 첫 렌더링 및 data 변경 시 visibleData 초기화
+    useEffect(() => {
+        if (data) {
+            setVisibleData(data.slice(0, 10));
+        }
+    }, [data]);
+
+    const loadMoreData = () => {
+        if (data && visibleData.length < data.length) {
+            const currentLength = visibleData.length;
+            const nextData = data.slice(currentLength, currentLength + 10);
+            setVisibleData((prev) => [...prev, ...nextData]);
+        }
+    };
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLElement;
+        if (target.scrollHeight - target.scrollTop <= target.clientHeight + 5) {
+            loadMoreData();
+        }
+    };
 
     const openDetail = (house: SiseOfBuildingWithXy) => {
         dispatch(setDetail(house));
@@ -38,9 +61,10 @@ const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
     };
 
     return (
-        <StyledSiseList2>
-            {data?.map((house, index) => (
+        <StyledSiseList2 onScroll={handleScroll}>
+            {visibleData.map((house, index) => (
                 <SideBarItem
+                    key={`${house.umdNum}-${index}`}
                     house={house}
                     index={index}
                     onClick={
