@@ -8,12 +8,12 @@ const Layout = () => {
     return (
         <StyledLayout>
             <CategoryBar />
-            <div className="sidebar-layout">
+            <main className="sidebar-layout">
                 <Sidebar>
                     <Outlet />
                 </Sidebar>
                 <Map />
-            </div>
+            </main>
         </StyledLayout>
     );
 };
