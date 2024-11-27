@@ -14,6 +14,8 @@ const SideBarItem = ({ house, index, onClick }: Props) => {
             <img
                 src={`https://picsum.photos/id/${index}/100/100`}
                 alt={house.mhouseNm}
+                width={100}
+                height={100}
             />
             <div className="content">
                 <h3>
