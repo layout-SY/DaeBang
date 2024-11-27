@@ -178,7 +178,7 @@ const DetailList = ({ closeDetail }: Props) => {
                     </div>
                 </div>
                 <div className="detail_content">
-                    <DetailRoadView position={position} />
+                    <DetailRoadView />
 
                     <h2>
                         {detailInfo!.contracts[0].monthlyRent === 0
@@ -204,7 +204,7 @@ const DetailList = ({ closeDetail }: Props) => {
                 </div>
 
                 <div className="detail_neighbor">
-                    <DetailNeighbor position={position} />
+                    <DetailNeighbor />
                 </div>
 
                 <div className="detail_graph">
