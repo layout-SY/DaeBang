@@ -7,12 +7,15 @@ import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
 import { setDetail, setDetailOpen } from '../store/slice/DetailSlice';
 import SiseItemSkeleton from './Sise/SiseItemSkeleton';
+import { useParams } from 'react-router';
+import NotFound from './common/NotFound';
 
 const SiseList = () => {
     const { data, isPending } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
     const [visibleData, setVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
+    const { category } = useParams();
 
     // 첫 렌더링 및 data 변경 시 visibleData 초기화
     useEffect(() => {
@@ -20,6 +23,18 @@ const SiseList = () => {
             setVisibleData(data.slice(0, 10));
         }
     }, [data]);
+
+    if (
+        category !== 'apt' &&
+        category !== 'officetel' &&
+        category !== 'onetwo'
+    ) {
+        return (
+            <StyledSiseList>
+                <NotFound />
+            </StyledSiseList>
+        );
+    }
 
     const loadMoreData = () => {
         if (data && visibleData.length < data.length) {
