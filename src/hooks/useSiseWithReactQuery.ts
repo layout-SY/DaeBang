@@ -1,21 +1,27 @@
-import { useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchSiseDataThatThrowsError } from '../api/Sise.api';
-import { groupSiseByAddress } from '../utils/sortUtils';
-import { addXyToSiseOfBuilding } from '../utils/adress';
 import { useEffect } from 'react';
+import { useTypedSelector } from '../hooks/redux';
+import { fetchSiseDataThatThrowsError } from '../api/Sise.api';
+import {
+    groupSiseByAddress,
+    groupSiseByUmdnumWithAverages,
+} from '../utils/sortUtils';
+import { addXyToSiseOfBuilding } from '../utils/adress';
+import { useSearchParams } from 'react-router-dom';
 
-// 이 훅을 사용하면 앱에서 데이터를 쉽게 공유할 수 있습니다.
 const useSiseWithReactQuery = () => {
     const [searchParams] = useSearchParams();
+    const filters = useTypedSelector((state) => state.filters);
     const regionCode = parseInt(searchParams.get('region') || '0', 10);
+    const queryClient = useQueryClient();
+
+    // 기본 필터링 상태를 "월세"로 설정
+    const activeFilters = filters.length > 0 ? filters : ['월세'];
 
     // 현재 월의 데이터를 조회합니다.
     const currentYYYYMM = new Date().toISOString().slice(0, 7).replace('-', '');
 
-    const queryClient = useQueryClient();
-
-    // regionCode가 변경될 때 이전 쿼리 취소
+    // 캐시 초기화
     useEffect(() => {
         return () => {
             queryClient.cancelQueries({
@@ -33,12 +39,13 @@ const useSiseWithReactQuery = () => {
         isLoading,
         dataUpdatedAt,
     } = useQuery({
-        queryKey: ['siseData', regionCode, currentYYYYMM],
+        queryKey: ['siseData', regionCode, currentYYYYMM, activeFilters],
         queryFn: async ({ signal }) => {
             const startTime = performance.now();
             console.log(
                 `[${regionCode}]🔄 새로운 데이터 fetch 요청 발생 [${new Date().toLocaleTimeString()}]`,
             );
+
             const data = await fetchSiseDataThatThrowsError(
                 {
                     LAWD_CD: regionCode,
@@ -49,27 +56,45 @@ const useSiseWithReactQuery = () => {
                 signal,
             );
 
-            let item = data.response.body.items.item;
+            let items = data.response.body.items.item;
 
-            if (!Array.isArray(item)) {
-                item = [item];
+            if (!Array.isArray(items)) {
+                items = [items];
             }
-            const groupedByAdressItems = groupSiseByAddress(item);
+
+            // 필터 적용
+            const filteredItems = items.filter((item) => {
+                const isJeonse = item.monthlyRent === 0; // 전세 조건
+                const isWolse = item.monthlyRent > 0; // 월세 조건
+
+                // activeFilters에 따라 데이터 필터링
+                if (activeFilters.includes('전세') && isJeonse) return true;
+                if (activeFilters.includes('월세') && isWolse) return true;
+                return false;
+            });
+
+            // 그룹화 및 좌표 추가
+            const groupedByAddress = groupSiseByAddress(filteredItems);
+
+            const dada = groupSiseByUmdnumWithAverages(
+                filteredItems,
+                activeFilters,
+            );
+
             const result = await addXyToSiseOfBuilding(
-                groupedByAdressItems,
+                groupedByAddress,
                 signal,
             );
 
             const endTime = performance.now();
             console.log(
-                `[${regionCode} ${result.length}건]  데이터 로딩 시간: ${(endTime - startTime).toFixed(2)}ms`,
+                `[${result.length}건] 데이터 로딩 시간: ${(endTime - startTime).toFixed(2)}ms`,
             );
-
             return result;
         },
     });
 
-    // 캐시된 데이터 사용 여부를 확인하고 로깅
+    // 캐시된 데이터 확인
     useEffect(() => {
         if (data) {
             const isFromCache = !isFetching && !isLoading;
@@ -77,10 +102,10 @@ const useSiseWithReactQuery = () => {
                 ? '📦 캐시된 데이터 사용'
                 : '🔄 새로운 데이터 수신';
             console.log(
-                `[${regionCode}] ${consoleMessage} [${new Date().toLocaleTimeString()}]`,
+                `[🔍 ${consoleMessage} - ${new Date().toLocaleTimeString()}]`,
             );
         }
-    }, [data, isFetching, isLoading, regionCode, dataUpdatedAt]);
+    }, [data, isFetching, isLoading, dataUpdatedAt]);
 
     return { data, isPending, isError, error };
 };

@@ -37,8 +37,8 @@ export interface Sise {
 }
 
 export interface paginateByKeyResultProps {
-    index: number;
-    data: { key: string; items: Sise[] }[];
+    key: string;
+    items: Sise[];
 }
 
 export interface SiseOfBuilding {
@@ -70,4 +70,11 @@ export interface Contract {
 export interface SiseOfBuildingWithXy extends SiseOfBuilding {
     x: number;
     y: number;
+}
+
+export interface GroupedSiseDataWithAverage {
+    key: string; // 동 이름 + 평균 월세/전세
+    averageMonthlyRent: number;
+    averageDeposit: number;
+    SiseData: Sise[];
 }

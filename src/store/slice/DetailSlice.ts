@@ -3,12 +3,12 @@ import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 
 type TDetailState = {
     detailOpen: boolean;
-    detailInfo: SiseOfBuildingWithXy | null;
+    detailInfo: SiseOfBuildingWithXy | undefined;
 };
 
 const initialState: TDetailState = {
     detailOpen: false,
-    detailInfo: null,
+    detailInfo: undefined,
 };
 
 const detailSlice = createSlice({

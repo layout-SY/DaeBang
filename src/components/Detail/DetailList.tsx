@@ -6,6 +6,7 @@ import DetailNeighbor from './DetailNeighbor';
 import { WIDTH } from '../../utils/constants';
 import { throttle } from 'lodash';
 import { useTypedSelector } from '../../hooks/redux';
+import DetailSise from './DetailSise';
 import DetailViewOnMapButton from './DetailViewOnMapButton';
 import {
     addBookMark,
@@ -204,13 +205,7 @@ const DetailList = ({ closeDetail }: Props) => {
 
                 <div className="detail_graph">
                     <h2>시세 정보</h2>
-                    <div
-                        style={{
-                            background: 'gray',
-                            width: '100%',
-                            height: '300px',
-                        }}
-                    />
+                    <DetailSise detailInfo={detailInfo} />
                 </div>
 
                 <div className="detail_navigation">

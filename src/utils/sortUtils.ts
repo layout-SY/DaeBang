@@ -1,8 +1,11 @@
+import { FiltersState } from './../store/slice/filterSlice';
 import {
     paginateByKeyResultProps,
     Sise,
     SiseOfBuilding,
     Contract,
+    GroupedSiseDataWithAverage,
+    SiseOfBuildingWithXy,
 } from '../models/Sise.model';
 
 export const groupAndSortByDate = (
@@ -30,27 +33,28 @@ export const groupAndSortByDate = (
     }));
 };
 
-export const paginateByKey = (
-    groupedData: { key: string; items: Sise[] }[],
-    itemCount: number,
-): paginateByKeyResultProps[] => {
-    const paginatedData = [];
+// export const paginateByKey = (
+//     groupedData: { key: string; items: Sise[] }[],
+//     itemCount: number,
+// ): paginateByKeyResultProps[] => {
+//     const paginatedData = [];
 
-    for (let i = 0; i < groupedData.length; i += itemCount) {
-        paginatedData.push({
-            index: i / itemCount + 1,
-            data: groupedData.slice(i, i + itemCount),
-        });
-    }
+//     for (let i = 0; i < groupedData.length; i += itemCount) {
+//         paginatedData.push({
+//             index: i / itemCount + 1,
+//             data: groupedData.slice(i, i + itemCount),
+//         });
+//     }
 
-    return paginatedData;
-};
+//     return paginatedData;
+// };
 
 export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
     const buildingMap: { [key: string]: SiseOfBuilding } = {};
 
     data.forEach((item) => {
         const key = `${item.umdNm} ${item.jibun}`;
+
         if (!buildingMap[key]) {
             buildingMap[key] = {
                 buildYear: item.buildYear,
@@ -82,4 +86,47 @@ export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
     });
 
     return Object.values(buildingMap);
+};
+
+export const groupSiseByUmdnumWithAverages = (
+    data: Sise[],
+    activeFilters: FiltersState,
+): GroupedSiseDataWithAverage[] => {
+    const buildingMap: { [key: string]: Sise[] } = {};
+
+    // 동별로 데이터를 그룹화
+    data.forEach((item) => {
+        const key = item.umdNm;
+        if (!buildingMap[key]) {
+            buildingMap[key] = [];
+        }
+        buildingMap[key].push(item);
+    });
+
+    // 그룹화된 데이터를 기반으로 평균 월세와 전세 계산
+    const groupedData: GroupedSiseDataWithAverage[] = Object.entries(
+        buildingMap,
+    ).map(([umdNm, SiseData]) => {
+        const totalMonthlyRent = SiseData.reduce(
+            (acc, curr) => acc + curr.monthlyRent,
+            0,
+        );
+        const totalDeposit = SiseData.reduce(
+            (acc, curr) => acc + parseInt(curr.deposit),
+            0,
+        );
+        const count = SiseData.length;
+
+        const averageMonthlyRent = count > 0 ? totalMonthlyRent / count : 0;
+        const averageDeposit = count > 0 ? totalDeposit / count : 0;
+
+        return {
+            key: `${umdNm}`,
+            averageMonthlyRent,
+            averageDeposit,
+            SiseData,
+        };
+    });
+
+    return groupedData;
 };
