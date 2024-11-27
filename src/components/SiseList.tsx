@@ -7,17 +7,11 @@ import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
 import { setDetail, setDetailOpen } from '../store/slice/DetailSlice';
 
-interface SiseListProps {
-    isCompareMode?: boolean;
-    onCompareComplete?: (compareData: SiseOfBuilding[]) => void;
-}
-
-const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
+const SiseList = () => {
     const { data } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
     const [visibleData, setVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
-    const [compareData, setCompareData] = useState<SiseOfBuilding[]>([]);
 
     // 첫 렌더링 및 data 변경 시 visibleData 초기화
     useEffect(() => {
@@ -50,16 +44,6 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
         dispatch(setDetailOpen(false));
     };
 
-    const handleSelectForCompare = (house: SiseOfBuilding) => {
-        if (compareData.length < 2) {
-            setCompareData((prev) => [...prev, house]);
-        }
-
-        if (compareData.length + 1 === 2 && onCompareComplete) {
-            onCompareComplete([...compareData, house]);
-        }
-    };
-
     return (
         <StyledSiseList onScroll={handleScroll}>
             {visibleData.map((house, index) => (
@@ -67,16 +51,10 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
                     key={`${house.umdNum}-${index}`}
                     house={house}
                     index={index}
-                    onClick={
-                        isCompareMode
-                            ? () => handleSelectForCompare(house)
-                            : () => openDetail(house)
-                    }
+                    onClick={() => openDetail(house)}
                 />
             ))}
-            {!isCompareMode && detailOpen && (
-                <DetailList closeDetail={closeDetail} />
-            )}
+            {detailOpen && <DetailList closeDetail={closeDetail} />}
         </StyledSiseList>
     );
 };
