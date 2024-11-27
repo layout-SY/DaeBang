@@ -112,12 +112,7 @@ const Search = () => {
     };
 
     const handleMove = (item: Item) => {
-        const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set('lat', String(item.y));
-        newSearchParams.set('lng', String(item.x));
-        setSearchParams(newSearchParams);
-
-        setSearchTerm('');
+        window.mapInstance.panTo(new kakao.maps.LatLng(item.y, item.x));
     };
 
     return (
