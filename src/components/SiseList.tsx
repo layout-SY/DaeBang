@@ -46,10 +46,6 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
         dispatch(setDetail(house));
     };
 
-    const closeDetail = () => {
-        dispatch(setDetailOpen(false));
-    };
-
     const handleSelectForCompare = (house: SiseOfBuilding) => {
         if (compareData.length < 2) {
             setCompareData((prev) => [...prev, house]);
@@ -74,9 +70,7 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
                     }
                 />
             ))}
-            {!isCompareMode && detailOpen && (
-                <DetailList closeDetail={closeDetail} />
-            )}
+            {!isCompareMode && detailOpen && <DetailList />}
         </StyledSiseList>
     );
 };

@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
+import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
+import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
 
 interface CustomMapMarkerProps {
     sise: SiseOfBuildingWithXy;
 }
 
 const CustomMapMarker = ({ sise }: CustomMapMarkerProps) => {
+    const { detailOpen } = useTypedSelector((state) => state.detail);
+    const dispatch = useTypedDispatch();
     // TODO : 현재는 첫번째 계약 정보를 보여주고 있으나, 추후에 평균계약 정보를 조여주면 좋을 것 같음.
     // 이는 전세 월세  필터가 생긴다음 구현하는게 좋을 것 같음.
 
@@ -13,10 +17,15 @@ const CustomMapMarker = ({ sise }: CustomMapMarkerProps) => {
 
     //TODO : 마커 클릭시 상세 정보를 보여주어야 함.
     const contractType = sise.contracts[0].monthlyRent ? '월세' : '전세';
+
+    const openDetail = (house: SiseOfBuildingWithXy) => {
+        dispatch(setDetailOpen(true));
+        dispatch(setDetail(house));
+    };
     return (
         <StyledCustomMapMarker
             onClick={() => {
-                console.log(sise);
+                openDetail(sise);
             }}
         >
             <div className="container">

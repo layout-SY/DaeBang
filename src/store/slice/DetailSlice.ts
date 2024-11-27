@@ -3,12 +3,12 @@ import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 
 type TDetailState = {
     detailOpen: boolean;
-    detailInfo: SiseOfBuildingWithXy | undefined;
+    detailInfo: SiseOfBuildingWithXy | null;
 };
 
 const initialState: TDetailState = {
     detailOpen: false,
-    detailInfo: undefined,
+    detailInfo: null,
 };
 
 const detailSlice = createSlice({
@@ -24,8 +24,11 @@ const detailSlice = createSlice({
         ) => {
             state.detailInfo = payload;
         },
+        removeDetail: (state) => {
+            state.detailInfo = null;
+        },
     },
 });
 
-export const { setDetail, setDetailOpen } = detailSlice.actions;
+export const { setDetail, setDetailOpen, removeDetail } = detailSlice.actions;
 export const detailReducer = detailSlice.reducer;

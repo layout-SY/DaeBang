@@ -1,11 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import { SideBarItemStyle } from '../SideBarItem';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 
 interface Props {
     house: SiseOfBuildingWithXy;
-    index?: number;
+    index: number;
     onClick: (house: SiseOfBuildingWithXy) => void;
 }
 
@@ -13,7 +12,7 @@ const BookmarkItem = ({ house, index, onClick }: Props) => {
     return (
         <BookmarkItemStyle onClick={() => onClick(house)}>
             <img
-                src={`https://picsum.photos/id/${index}/100/100`}
+                src={`/dummyImg/dummy_${index % 20}.jpeg`}
                 alt={house.mhouseNm}
             />
             <div className="content">
