@@ -24,7 +24,6 @@ const CATEGORY_LIST: ICategory[] = [
 ];
 
 const CategoryBar = () => {
-    const { category } = useParams<{ category: string }>();
     const location = useLocation();
     const dispatch = useTypedDispatch();
     const filters = useTypedSelector((state) => state.filters);

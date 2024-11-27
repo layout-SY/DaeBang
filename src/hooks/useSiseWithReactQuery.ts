@@ -1,21 +1,30 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useTypedSelector } from '../hooks/redux';
-import { fetchSiseDataThatThrowsError } from '../api/Sise.api';
 import {
-    groupSiseByAddress,
-    groupSiseByUmdnumWithAverages,
-} from '../utils/sortUtils';
+    fetchOneTwoSiseData,
+    fetchOfficetelSiseData,
+    fetchAptSiseData,
+} from '../api/Sise.api';
+import { groupSiseByAddress } from '../utils/sortUtils';
 import { addXyToSiseOfBuilding } from '../utils/adress';
 import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import {
+    SiseCaegory,
+    OneTwoSise,
+    OfficetelSise,
+    AptSise,
+} from '../models/Sise.model';
 
 const useSiseWithReactQuery = () => {
     const [searchParams] = useSearchParams();
     const filters = useTypedSelector((state) => state.filters);
     const regionCode = parseInt(searchParams.get('region') || '0', 10);
     const queryClient = useQueryClient();
+    const { category } = useParams<{ category: SiseCaegory }>();
 
-    // 기본 필터링 상태를 "월세"로 설정
+    //기본 필터링 상태를 "월세"로 설정
     const activeFilters = filters.length > 0 ? filters : ['월세'];
 
     // 현재 월의 데이터를 조회합니다.
@@ -25,10 +34,10 @@ const useSiseWithReactQuery = () => {
     useEffect(() => {
         return () => {
             queryClient.cancelQueries({
-                queryKey: ['siseData', regionCode, currentYYYYMM],
+                queryKey: [category, regionCode, currentYYYYMM, activeFilters],
             });
         };
-    }, [regionCode, queryClient]);
+    }, [regionCode, queryClient, currentYYYYMM, activeFilters]);
 
     const {
         data,
@@ -39,28 +48,65 @@ const useSiseWithReactQuery = () => {
         isLoading,
         dataUpdatedAt,
     } = useQuery({
-        queryKey: ['siseData', regionCode, currentYYYYMM, activeFilters],
+        queryKey: [category, regionCode, currentYYYYMM, activeFilters],
         queryFn: async ({ signal }) => {
             const startTime = performance.now();
             console.log(
                 `[${regionCode}]🔄 새로운 데이터 fetch 요청 발생 [${new Date().toLocaleTimeString()}]`,
             );
 
-            const data = await fetchSiseDataThatThrowsError(
-                {
-                    LAWD_CD: regionCode,
-                    DEAL_YMD: Number(currentYYYYMM),
-                    pageNo: 1,
-                    numOfRows: 1000,
-                },
-                signal,
-            );
+            let data;
+            let items;
+            if (category === 'onetwo') {
+                data = await fetchOneTwoSiseData(
+                    {
+                        LAWD_CD: regionCode,
+                        DEAL_YMD: Number(currentYYYYMM),
+                        pageNo: 1,
+                        numOfRows: 1000,
+                    },
+                    signal,
+                );
+                items = data.response.body.items.item;
 
-            let items = data.response.body.items.item;
+                if (!Array.isArray(items)) {
+                    items = [items];
+                }
+            } else if (category === 'officetel') {
+                data = await fetchOfficetelSiseData(
+                    {
+                        LAWD_CD: regionCode,
+                        DEAL_YMD: Number(currentYYYYMM),
+                        pageNo: 1,
+                        numOfRows: 1000,
+                    },
+                    signal,
+                );
+                items = data.response.body.items.item;
 
-            if (!Array.isArray(items)) {
-                items = [items];
+                if (!Array.isArray(items)) {
+                    items = [items];
+                }
+            } else if (category === 'apt') {
+                data = await fetchAptSiseData(
+                    {
+                        LAWD_CD: regionCode,
+                        DEAL_YMD: Number(currentYYYYMM),
+                        pageNo: 1,
+                        numOfRows: 1000,
+                    },
+                    signal,
+                );
+                items = data.response.body.items.item;
+
+                if (!Array.isArray(items)) {
+                    items = [items];
+                }
+            } else {
+                throw new Error('알 수 없는 카테고리입니다.');
             }
+
+            items = items as (OneTwoSise | OfficetelSise | AptSise)[];
 
             // 필터 적용
             const filteredItems = items.filter((item) => {
