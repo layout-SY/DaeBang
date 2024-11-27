@@ -8,7 +8,6 @@ import { GiConfrontation } from 'react-icons/gi';
 import { useLocation } from 'react-router-dom';
 import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
 import { toggleFilter } from '../store/slice/filterSlice';
-import { useSearchParams } from 'react-router-dom';
 
 interface ICategory {
     name: string;
@@ -25,7 +24,6 @@ const CATEGORY_LIST: ICategory[] = [
 ];
 
 const CategoryBar = () => {
-    const { category } = useParams<{ category: string }>();
     const location = useLocation();
     const dispatch = useTypedDispatch();
     const filters = useTypedSelector((state) => state.filters);
