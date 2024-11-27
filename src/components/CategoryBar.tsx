@@ -59,25 +59,6 @@ const CategoryBar = () => {
                     })}
                 </ul>
             </nav>
-            {/* 체크박스 섹션 */}
-            <FilterSection>
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={filters.includes('월세')}
-                        onChange={() => handleCheckboxChange('월세')}
-                    />
-                    월세
-                </label>
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={filters.includes('전세')}
-                        onChange={() => handleCheckboxChange('전세')}
-                    />
-                    전세
-                </label>
-            </FilterSection>
         </StyledCategoryBar>
     );
 };
@@ -100,26 +81,6 @@ const StyledCategoryBar = styled.header`
             gap: 1rem;
             list-style: none;
         }
-    }
-`;
-
-const FilterSection = styled.div`
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-
-    label {
-        display: flex;
-        align-items: center;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-
-    input[type='checkbox'] {
-        margin-right: 0.5rem;
-        cursor: pointer;
     }
 `;
 
