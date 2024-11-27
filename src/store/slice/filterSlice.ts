@@ -11,7 +11,12 @@ const filtersSlice = createSlice({
         toggleFilter: (state, action: PayloadAction<string>) => {
             if (state.includes(action.payload)) {
                 // 이미 필터가 활성화된 경우, 필터를 제거
-                return state.filter((filter) => filter !== action.payload);
+                if (state.length > 1) {
+                    return state.filter((filter) => filter !== action.payload);
+                } else {
+                    // 필터가 하나도 없는 상태를 방지
+                    return state;
+                }
             } else {
                 // 필터가 활성화되지 않은 경우, 추가
                 return [...state, action.payload];
