@@ -6,6 +6,7 @@ import DetailList from './Detail/DetailList';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
 import { setDetail, setDetailOpen } from '../store/slice/DetailSlice';
+import SiseItemSkeleton from './Sise/SiseItemSkeleton';
 
 const SiseList = () => {
     const { data, isPending } = useSiseWithReactQuery();
@@ -43,6 +44,22 @@ const SiseList = () => {
     const closeDetail = () => {
         dispatch(setDetailOpen(false));
     };
+
+    if (isPending) {
+        return (
+            <StyledSiseList>
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+            </StyledSiseList>
+        );
+    }
 
     return (
         <StyledSiseList onScroll={handleScroll}>
