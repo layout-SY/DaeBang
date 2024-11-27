@@ -8,12 +8,15 @@ import {
 } from '../utils/sortUtils';
 import { addXyToSiseOfBuilding } from '../utils/adress';
 import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { SiseCaegory } from '../models/Sise.model';
 
 const useSiseWithReactQuery = () => {
     const [searchParams] = useSearchParams();
     const filters = useTypedSelector((state) => state.filters);
     const regionCode = parseInt(searchParams.get('region') || '0', 10);
     const queryClient = useQueryClient();
+    const { category } = useParams<{ category: SiseCaegory }>();
 
     // 기본 필터링 상태를 "월세"로 설정
     const activeFilters = filters.length > 0 ? filters : ['월세'];
@@ -75,11 +78,6 @@ const useSiseWithReactQuery = () => {
 
             // 그룹화 및 좌표 추가
             const groupedByAddress = groupSiseByAddress(filteredItems);
-
-            const dada = groupSiseByUmdnumWithAverages(
-                filteredItems,
-                activeFilters,
-            );
 
             const result = await addXyToSiseOfBuilding(
                 groupedByAddress,
