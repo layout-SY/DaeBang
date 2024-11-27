@@ -1,17 +1,12 @@
 import styled from 'styled-components';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
+import { formatPrice } from '../../utils/format';
 
 interface CustomMapMarkerProps {
     sise: SiseOfBuildingWithXy;
 }
 
 const CustomMapMarker = ({ sise }: CustomMapMarkerProps) => {
-    // TODO : 현재는 첫번째 계약 정보를 보여주고 있으나, 추후에 평균계약 정보를 조여주면 좋을 것 같음.
-    // 이는 전세 월세  필터가 생긴다음 구현하는게 좋을 것 같음.
-
-    // TODO : 말풀선으 꼬리로 좌표를 가리키기 위해 마커의 위치를 조정하고 있는데 완벽하지 않음..
-
-    //TODO : 마커 클릭시 상세 정보를 보여주어야 함.
     const contractType = sise.contracts[0].monthlyRent ? '월세' : '전세';
     return (
         <StyledCustomMapMarker
@@ -23,12 +18,12 @@ const CustomMapMarker = ({ sise }: CustomMapMarkerProps) => {
                 <div className="marker">
                     <span>{contractType}</span>
                     {contractType === '전세' && (
-                        <span>{sise.contracts[0].deposit}</span>
+                        <span>{formatPrice(sise.contracts[0].deposit)}</span>
                     )}
                     {contractType === '월세' && (
                         <span>
-                            {sise.contracts[0].deposit}/
-                            {sise.contracts[0].monthlyRent}
+                            {formatPrice(sise.contracts[0].deposit)}/
+                            {formatPrice(sise.contracts[0].monthlyRent)}
                         </span>
                     )}
                 </div>
@@ -36,12 +31,28 @@ const CustomMapMarker = ({ sise }: CustomMapMarkerProps) => {
                     <div>
                         {sise.umdNum} {sise.jibun} {sise.mhouseNm}
                     </div>
-                    {sise.contracts.map((contract, index) => (
-                        <div key={index}>
-                            {contract.contractType} {contract.deposit}/
-                            {contract.monthlyRent}
-                        </div>
-                    ))}
+                    <div></div>
+                    {sise.contracts
+                        .filter((contract) => contract.monthlyRent)
+                        .map((contract, index) => (
+                            <div key={index}>
+                                {contract.contractType}{' '}
+                                {formatPrice(contract.deposit)}/
+                                {formatPrice(contract.monthlyRent)} {'전용'}
+                                {contract.excluUseAr}
+                                {`m²`}
+                            </div>
+                        ))}
+                    {sise.contracts
+                        .filter((contract) => !contract.monthlyRent)
+                        .map((contract, index) => (
+                            <div key={index}>
+                                {contract.contractType}{' '}
+                                {formatPrice(contract.deposit)} {'전용'}
+                                {contract.excluUseAr}
+                                {`m²`}
+                            </div>
+                        ))}
                 </div>
             </div>
         </StyledCustomMapMarker>
