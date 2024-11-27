@@ -8,6 +8,11 @@ import { throttle } from 'lodash';
 import { useTypedSelector } from '../../hooks/redux';
 import DetailSise from './DetailSise';
 import DetailViewOnMapButton from './DetailViewOnMapButton';
+import {
+    addBookMark,
+    deleteBookMark,
+    isBookMarked,
+} from '../../hooks/bookMark';
 
 interface Props {
     closeDetail: () => void;
@@ -44,40 +49,34 @@ const DetailList = ({ closeDetail }: Props) => {
     const { detailInfo } = useTypedSelector((state) => state.detail);
     const position = { lat: detailInfo!.y, lng: detailInfo!.x };
     const [activeMenu, setActiveMenu] = useState<string>('header');
-    const [bookmarkIndex, setBookMarkIndex] = useState<number>(-1);
     const [menuVisible, setMenuVisible] = useState(false);
+    const [bookmarked, setBookmarked] = useState(false);
     const wrapper = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // 북마크 여부
-        const existingBookmarks = JSON.parse(
-            localStorage.getItem('bookmark') || '[]',
-        ) as any[];
-        const index = existingBookmarks.findIndex(
-            (bookmark) => bookmark === detailInfo,
-        );
-        setBookMarkIndex(index);
+        console.log('검사');
+        if (detailInfo) {
+            setBookmarked(isBookMarked(detailInfo));
+            console.log(isBookMarked(detailInfo));
+        }
     }, [detailInfo]);
+
+    const handleClickHeart = () => {
+        if (!detailInfo) return;
+
+        if (bookmarked) {
+            setBookmarked(false);
+            deleteBookMark(detailInfo);
+            window.dispatchEvent(new Event('bookmarksChanged'));
+        } else {
+            setBookmarked(true);
+            addBookMark(detailInfo);
+            window.dispatchEvent(new Event('bookmarksChanged'));
+        }
+    };
 
     const handleClose = () => {
         closeDetail();
-    };
-
-    const handleClickHeart = () => {
-        const existingBookmarks = JSON.parse(
-            localStorage.getItem('bookmark') || '[]',
-        ) as any[];
-        let newBookMarks = [];
-
-        if (bookmarkIndex !== -1) {
-            newBookMarks = existingBookmarks.splice(bookmarkIndex, 1);
-            setBookMarkIndex(-1);
-        } else {
-            newBookMarks = [...existingBookmarks, detailInfo];
-            setBookMarkIndex(newBookMarks.length - 1);
-        }
-
-        localStorage.setItem('bookmark', JSON.stringify(newBookMarks));
     };
 
     const handleMenuVisible = useCallback(
@@ -167,11 +166,7 @@ const DetailList = ({ closeDetail }: Props) => {
                     <div className="header_button_container">
                         <DetailViewOnMapButton position={position} />
                         <button className="bookmark" onClick={handleClickHeart}>
-                            {bookmarkIndex !== -1 ? (
-                                <FaHeart />
-                            ) : (
-                                <FaRegHeart />
-                            )}
+                            {bookmarked ? <FaHeart /> : <FaRegHeart />}
                         </button>
                         <button className="close" onClick={handleClose}>
                             <FaPlus />
@@ -179,7 +174,7 @@ const DetailList = ({ closeDetail }: Props) => {
                     </div>
                 </div>
                 <div className="detail_content">
-                    <DetailRoadView position={position} />
+                    <DetailRoadView />
 
                     <h2>
                         {detailInfo!.contracts[0].monthlyRent === 0
@@ -205,7 +200,7 @@ const DetailList = ({ closeDetail }: Props) => {
                 </div>
 
                 <div className="detail_neighbor">
-                    <DetailNeighbor position={position} />
+                    <DetailNeighbor />
                 </div>
 
                 <div className="detail_graph">

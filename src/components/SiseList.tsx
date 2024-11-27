@@ -42,8 +42,8 @@ const SiseList2 = ({ isCompareMode, onCompareComplete }: SiseList2Props) => {
     };
 
     const openDetail = (house: SiseOfBuildingWithXy) => {
-        dispatch(setDetail(house));
         dispatch(setDetailOpen(true));
+        dispatch(setDetail(house));
     };
 
     const closeDetail = () => {

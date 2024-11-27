@@ -56,7 +56,7 @@ const StyledCustomMapMarker = styled.div`
         transform: translate(30%, -60%);
 
         .marker {
-            background: ${({ theme }) => theme.colors.blue};
+            background: rgba(59, 130, 246, 0.9);
             color: white;
             padding: 8px 12px;
             border-radius: 3px;
@@ -72,12 +72,12 @@ const StyledCustomMapMarker = styled.div`
                 content: '';
                 position: absolute;
                 bottom: -8px;
-                left: 18px;
+                left: 10px;
                 width: 0;
                 height: 0;
                 border-left: 8px solid transparent;
                 border-right: 8px solid transparent;
-                border-top: 8px solid ${({ theme }) => theme.colors.blue};
+                border-top: 8px solid rgba(59, 130, 246, 0.9);
             }
         }
 
@@ -102,7 +102,6 @@ const StyledCustomMapMarker = styled.div`
                 content: '';
                 position: absolute;
                 bottom: -8px;
-                left: 18px;
                 width: 0;
                 height: 0;
                 border-left: 8px solid transparent;
