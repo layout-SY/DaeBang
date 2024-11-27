@@ -42,7 +42,8 @@ export const fetchSiseDataThatThrowsError = async <T>(
     try {
         const response = await axios.get<BaseSiseAPIResponse<T>>(url, {
             params: {
-                serviceKey: process.env.REACT_APP_Sise_API_KEY,
+                serviceKey:
+                    'A20RCgS2wjkbDnuSQthB8HSa5fsL6y/q41joBu21NW7NA39fbaJ5sXigJU0DaNTPAy7sHo3do1Md+hpnc0lUWg==',
                 ...params,
             },
             signal,
@@ -73,7 +74,7 @@ export const fetchOfficetelSiseData = (
     signal?: AbortSignal,
 ): Promise<BaseSiseAPIResponse<OfficetelSise>> => {
     return fetchSiseDataThatThrowsError<OfficetelSise>(
-        'http://apis.data.go.kr/1613000/RTMSDataSvcAptRent/getRTMSDataSvcAptRent',
+        'https://apis.data.go.kr/1613000/RTMSDataSvcOffiRent/getRTMSDataSvcOffiRent',
         params,
         signal,
     );
