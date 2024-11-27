@@ -3,6 +3,7 @@ import {
     MapTypeControl,
     ZoomControl,
     CustomOverlayMap,
+    MarkerClusterer,
 } from 'react-kakao-maps-sdk';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import { debounce, map } from 'lodash';
@@ -148,18 +149,42 @@ const Map = () => {
             >
                 <MapTypeControl position={'TOPRIGHT'} />
                 <ZoomControl position={'BOTTOMRIGHT'} />
-                {data &&
-                    zoom <= 7 &&
-                    data.map((item) => {
-                        return (
-                            <CustomOverlayMap
-                                key={`${item.umdNum} ${item.jibun} ${item.mhouseNm}`}
-                                position={{ lat: item.y, lng: item.x }}
-                            >
-                                <CustomMapMarker sise={item} />
-                            </CustomOverlayMap>
-                        );
-                    })}
+                <MarkerClusterer
+                    averageCenter={true}
+                    minLevel={4}
+                    disableClickZoom={false} // 클릭시 부드럽게 줌인되었으면 좋겠다.
+                    calculator={[]} // 사이즈에 상관없이 모무 같은 스타일입니다.
+                    styles={[
+                        {
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '40px',
+                            height: '40px',
+                            backgroundColor: 'rgba(59, 130, 246, 0.9)',
+                            border: '1px #3b82f6',
+                            borderRadius: '50%',
+                            color: 'white',
+                            textAlign: 'center',
+                            fontWeight: 'bold',
+                            // 인라인 스타일에서 호버속성은 사용할 수 없습니다 ㅠㅠ
+                        },
+                    ]}
+                >
+                    {data &&
+                        zoom <= 7 &&
+                        data.map((item) => {
+                            return (
+                                <CustomOverlayMap
+                                    key={`${item.umdNum} ${item.jibun} ${item.mhouseNm}`}
+                                    position={{ lat: item.y, lng: item.x }}
+                                >
+                                    <CustomMapMarker sise={item} />
+                                </CustomOverlayMap>
+                            );
+                        })}
+                </MarkerClusterer>
+
                 <LocationPopup address={address} />
             </KakaoMap>
         </>
