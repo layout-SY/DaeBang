@@ -6,6 +6,9 @@ import {
     Contract,
     GroupedSiseDataWithAverage,
     SiseOfBuildingWithXy,
+    OneTwoSise,
+    OfficetelSise,
+    AptSise,
 } from '../models/Sise.model';
 
 export const groupAndSortByDate = (
@@ -49,18 +52,28 @@ export const groupAndSortByDate = (
 //     return paginatedData;
 // };
 
-export const groupSiseByAddress = (data: Sise[]): SiseOfBuilding[] => {
+export const groupSiseByAddress = (
+    data: (OneTwoSise | OfficetelSise | AptSise)[],
+): SiseOfBuilding[] => {
     const buildingMap: { [key: string]: SiseOfBuilding } = {};
 
     data.forEach((item) => {
         const key = `${item.umdNm} ${item.jibun}`;
+        const buildingName =
+            'mhouseNm' in item
+                ? item.mhouseNm
+                : 'aptName' in item
+                  ? item.aptName
+                  : 'offName' in item
+                    ? item.offName
+                    : '';
 
         if (!buildingMap[key]) {
             buildingMap[key] = {
                 buildYear: item.buildYear,
-                houseType: item.houseType,
+                houseType: 'houseType' in item ? item.houseType : '',
                 jibun: item.jibun,
-                mhouseNm: item.mhouseNm,
+                mhouseNm: buildingName as string,
                 sggCd: item.sggCd,
                 umdNum: item.umdNm,
                 contracts: [],
