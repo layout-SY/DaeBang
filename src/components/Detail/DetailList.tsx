@@ -7,6 +7,7 @@ import { WIDTH } from '../../utils/constants';
 import { throttle } from 'lodash';
 import { useTypedSelector } from '../../hooks/redux';
 import DetailSise from './DetailSise';
+import DetailViewOnMapButton from './DetailViewOnMapButton';
 
 interface Props {
     closeDetail: () => void;
@@ -164,6 +165,7 @@ const DetailList = ({ closeDetail }: Props) => {
                 <div className="detail_header">
                     <h2>상세 정보</h2>
                     <div className="header_button_container">
+                        <DetailViewOnMapButton position={position} />
                         <button className="bookmark" onClick={handleClickHeart}>
                             {bookmarkIndex !== -1 ? (
                                 <FaHeart />

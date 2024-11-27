@@ -1,6 +1,7 @@
 import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
+import Search from './Search';
 
 interface SidebarProps {
     children: ReactNode;
@@ -16,7 +17,7 @@ const Sidebar = ({ children }: SidebarProps) => {
     return (
         <>
             <StyledSidebar $isOpen={isOpen}>
-                {/* 검색 창 */}
+                <Search />
                 {children}
             </StyledSidebar>
             <ToggleButton
