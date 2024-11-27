@@ -1,14 +1,14 @@
 import SideBarItem from './SideBarItem';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { SiseOfBuilding, SiseOfBuildingWithXy } from '../models/Sise.model';
+import { SiseOfBuildingWithXy } from '../models/Sise.model';
 import DetailList from './Detail/DetailList';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
 import { setDetail, setDetailOpen } from '../store/slice/DetailSlice';
 
 const SiseList = () => {
-    const { data } = useSiseWithReactQuery();
+    const { data, isPending } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
     const [visibleData, setVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
