@@ -1,25 +1,26 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useTypedSelector } from '../hooks/redux';
-import { fetchSiseDataThatThrowsError } from '../api/Sise.api';
 import {
-    groupSiseByAddress,
-    groupSiseByUmdnumWithAverages,
-} from '../utils/sortUtils';
+    fetchOneTwoSiseData,
+    fetchOfficetelSiseData,
+    fetchAptSiseData,
+} from '../api/Sise.api';
+import { groupSiseByAddress } from '../utils/sortUtils';
 import { addXyToSiseOfBuilding } from '../utils/adress';
 import { useSearchParams } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { SiseCaegory } from '../models/Sise.model';
+import { SiseCaegory, AnySise } from '../models/Sise.model';
 
 const useSiseWithReactQuery = () => {
     const [searchParams] = useSearchParams();
-    const filters = useTypedSelector((state) => state.filters);
+    // const filters = useTypedSelector((state) => state.filters);
     const regionCode = parseInt(searchParams.get('region') || '0', 10);
     const queryClient = useQueryClient();
     const { category } = useParams<{ category: SiseCaegory }>();
 
     // 기본 필터링 상태를 "월세"로 설정
-    const activeFilters = filters.length > 0 ? filters : ['월세'];
+    // const activeFilters = filters.length > 0 ? filters : ['월세'];
 
     // 현재 월의 데이터를 조회합니다.
     const currentYYYYMM = new Date().toISOString().slice(0, 7).replace('-', '');
@@ -28,10 +29,10 @@ const useSiseWithReactQuery = () => {
     useEffect(() => {
         return () => {
             queryClient.cancelQueries({
-                queryKey: ['siseData', regionCode, currentYYYYMM],
+                queryKey: [category, regionCode, currentYYYYMM],
             });
         };
-    }, [regionCode, queryClient]);
+    }, [regionCode, queryClient, currentYYYYMM]);
 
     const {
         data,
@@ -42,42 +43,78 @@ const useSiseWithReactQuery = () => {
         isLoading,
         dataUpdatedAt,
     } = useQuery({
-        queryKey: ['siseData', regionCode, currentYYYYMM, activeFilters],
+        queryKey: [category, regionCode, currentYYYYMM],
         queryFn: async ({ signal }) => {
             const startTime = performance.now();
             console.log(
                 `[${regionCode}]🔄 새로운 데이터 fetch 요청 발생 [${new Date().toLocaleTimeString()}]`,
             );
 
-            const data = await fetchSiseDataThatThrowsError(
-                {
-                    LAWD_CD: regionCode,
-                    DEAL_YMD: Number(currentYYYYMM),
-                    pageNo: 1,
-                    numOfRows: 1000,
-                },
-                signal,
-            );
+            let data;
+            let items;
 
-            let items = data.response.body.items.item;
+            if (category === 'onetwo') {
+                data = await fetchOneTwoSiseData(
+                    {
+                        LAWD_CD: regionCode,
+                        DEAL_YMD: Number(currentYYYYMM),
+                        pageNo: 1,
+                        numOfRows: 1000,
+                    },
+                    signal,
+                );
+                items = data.response.body.items.item;
 
-            if (!Array.isArray(items)) {
-                items = [items];
+                if (!Array.isArray(items)) {
+                    items = [items];
+                }
+            } else if (category === 'officetel') {
+                data = await fetchOfficetelSiseData(
+                    {
+                        LAWD_CD: regionCode,
+                        DEAL_YMD: Number(currentYYYYMM),
+                        pageNo: 1,
+                        numOfRows: 1000,
+                    },
+                    signal,
+                );
+                items = data.response.body.items.item;
+
+                if (!Array.isArray(items)) {
+                    items = [items];
+                }
+            } else if (category === 'apt') {
+                data = await fetchAptSiseData(
+                    {
+                        LAWD_CD: regionCode,
+                        DEAL_YMD: Number(currentYYYYMM),
+                        pageNo: 1,
+                        numOfRows: 1000,
+                    },
+                    signal,
+                );
+                items = data.response.body.items.item;
+
+                if (!Array.isArray(items)) {
+                    items = [items];
+                }
+            } else {
+                throw new Error('알 수 없는 카테고리입니다.');
             }
 
-            // 필터 적용
-            const filteredItems = items.filter((item) => {
-                const isJeonse = item.monthlyRent === 0; // 전세 조건
-                const isWolse = item.monthlyRent > 0; // 월세 조건
+            // // 필터 적용
+            // const filteredItems = items.filter((item) => {
+            //     const isJeonse = item.monthlyRent === 0; // 전세 조건
+            //     const isWolse = item.monthlyRent > 0; // 월세 조건
 
-                // activeFilters에 따라 데이터 필터링
-                if (activeFilters.includes('전세') && isJeonse) return true;
-                if (activeFilters.includes('월세') && isWolse) return true;
-                return false;
-            });
+            //     // activeFilters에 따라 데이터 필터링
+            //     if (activeFilters.includes('전세') && isJeonse) return true;
+            //     if (activeFilters.includes('월세') && isWolse) return true;
+            //     return false;
+            // });
 
             // 그룹화 및 좌표 추가
-            const groupedByAddress = groupSiseByAddress(filteredItems);
+            const groupedByAddress = groupSiseByAddress(items);
 
             const result = await addXyToSiseOfBuilding(
                 groupedByAddress,
