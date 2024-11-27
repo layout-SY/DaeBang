@@ -161,7 +161,7 @@ const Map = () => {
                             alignItems: 'center',
                             width: '40px',
                             height: '40px',
-                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.9)',
                             border: '1px #3b82f6',
                             borderRadius: '50%',
                             color: 'white',
