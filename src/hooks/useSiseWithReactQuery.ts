@@ -11,7 +11,7 @@ import { addXyToSiseOfBuilding } from '../utils/adress';
 import { useSearchParams } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import {
-    SiseCaegory,
+    SiseCategory,
     OneTwoSise,
     OfficetelSise,
     AptSise,
@@ -22,7 +22,7 @@ const useSiseWithReactQuery = () => {
     const filters = useTypedSelector((state) => state.filters);
     const regionCode = parseInt(searchParams.get('region') || '0', 10);
     const queryClient = useQueryClient();
-    const { category } = useParams<{ category: SiseCaegory }>();
+    const { category } = useParams<{ category: SiseCategory }>();
 
     //기본 필터링 상태를 "월세"로 설정
     const activeFilters = filters.length > 0 ? filters : ['월세'];
