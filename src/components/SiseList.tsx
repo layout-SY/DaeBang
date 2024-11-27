@@ -81,7 +81,7 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
     );
 };
 
-const StyledSiseList = styled.div`
+export const StyledSiseList = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
