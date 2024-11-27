@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { StyledSiseList } from '../SiseList';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
@@ -21,7 +21,17 @@ const BookmarkList = () => {
 
     useEffect(() => {
         setBookmarks(getBookMarks());
-    }, [bookmarks]);
+
+        const handleStorageChange = () => {
+            setBookmarks(getBookMarks());
+        };
+
+        window.addEventListener('bookmarksChanged', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('bookmarksChanged', handleStorageChange);
+        };
+    }, []);
 
     const openDetail = (house: SiseOfBuildingWithXy) => {
         dispatch(setDetailOpen(true));

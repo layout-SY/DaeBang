@@ -66,9 +66,11 @@ const DetailList = ({ closeDetail }: Props) => {
         if (bookmarked) {
             setBookmarked(false);
             deleteBookMark(detailInfo);
+            window.dispatchEvent(new Event('bookmarksChanged'));
         } else {
             setBookmarked(true);
             addBookMark(detailInfo);
+            window.dispatchEvent(new Event('bookmarksChanged'));
         }
     };
 
