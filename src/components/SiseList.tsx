@@ -61,7 +61,7 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
     };
 
     return (
-        <StyledSiseList2 onScroll={handleScroll}>
+        <StyledSiseList onScroll={handleScroll}>
             {visibleData.map((house, index) => (
                 <SideBarItem
                     key={`${house.umdNum}-${index}`}
@@ -77,11 +77,11 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
             {!isCompareMode && detailOpen && (
                 <DetailList closeDetail={closeDetail} />
             )}
-        </StyledSiseList2>
+        </StyledSiseList>
     );
 };
 
-const StyledSiseList2 = styled.div`
+const StyledSiseList = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -89,4 +89,4 @@ const StyledSiseList2 = styled.div`
     overflow-y: scroll;
 `;
 
-export default SiseList2;
+export default SiseList;
