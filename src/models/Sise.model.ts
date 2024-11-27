@@ -63,7 +63,7 @@ export interface OneTwoSise extends BaseSise {
 }
 
 export interface AptSise extends BaseSise {
-    aptName: string;
+    aptNm: string;
 }
 
 export interface OfficetelSise extends BaseSise {
