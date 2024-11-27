@@ -26,6 +26,7 @@ const Sidebar = ({ children }: SidebarProps) => {
                 onClick={toggleSidebar}
                 className="toggle"
                 $isOpen={isOpen}
+                aria-label={isOpen ? '사이드바 닫기' : '사이드바 열기'}
             >
                 <FaAngleLeft />
             </ToggleButton>
