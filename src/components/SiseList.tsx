@@ -19,8 +19,8 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
     const [compareData, setCompareData] = useState<SiseOfBuilding[]>([]);
 
     const openDetail = (house: SiseOfBuildingWithXy) => {
-        dispatch(setDetail(house));
         dispatch(setDetailOpen(true));
+        dispatch(setDetail(house));
     };
 
     const closeDetail = () => {
