@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
-import { toggleFilter } from '../store/slice/filterSlice';
+import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
+import { toggleFilter } from '../../store/slice/filterSlice';
 
 const ContractTypeFilter = () => {
     const dispatch = useTypedDispatch();
@@ -16,13 +16,13 @@ const ContractTypeFilter = () => {
                 계약 유형 필터
             </label>
             <StyledToggleButton
-                $isActive={filters.includes('월세')}
+                $isActive={filters.filters.includes('월세')}
                 onClick={() => handleFilter('월세')}
             >
                 월세
             </StyledToggleButton>
             <StyledToggleButton
-                $isActive={filters.includes('전세')}
+                $isActive={filters.filters.includes('전세')}
                 onClick={() => handleFilter('전세')}
             >
                 전세
@@ -32,9 +32,6 @@ const ContractTypeFilter = () => {
 };
 
 const StyledContractTypeFilter = styled.div`
-    position: absolute;
-    top: 10px;
-    right: -150px;
     display: flex;
     gap: 10px;
 `;

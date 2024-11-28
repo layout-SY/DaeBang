@@ -25,19 +25,17 @@ const useSiseWithReactQuery = () => {
     const { category } = useParams<{ category: SiseCategory }>();
 
     //기본 필터링 상태를 "월세"로 설정
-    const activeFilters = filters.length > 0 ? filters : ['월세'];
-
-    // 현재 월의 데이터를 조회합니다.
-    const currentYYYYMM = new Date().toISOString().slice(0, 7).replace('-', '');
+    const activeFilters = filters.filters;
+    const slectedYYYYMMM = filters.year + filters.month;
 
     // 캐시 초기화
     useEffect(() => {
         return () => {
             queryClient.cancelQueries({
-                queryKey: [category, regionCode, currentYYYYMM, activeFilters],
+                queryKey: [category, regionCode, slectedYYYYMMM, activeFilters],
             });
         };
-    }, [regionCode, queryClient, currentYYYYMM, activeFilters]);
+    }, [regionCode, queryClient, slectedYYYYMMM, activeFilters]);
 
     const {
         data,
@@ -48,7 +46,7 @@ const useSiseWithReactQuery = () => {
         isLoading,
         dataUpdatedAt,
     } = useQuery({
-        queryKey: [category, regionCode, currentYYYYMM, activeFilters],
+        queryKey: [category, regionCode, slectedYYYYMMM, activeFilters],
         queryFn: async ({ signal }) => {
             const startTime = performance.now();
             console.log(
@@ -61,7 +59,7 @@ const useSiseWithReactQuery = () => {
                 data = await fetchOneTwoSiseData(
                     {
                         LAWD_CD: regionCode,
-                        DEAL_YMD: Number(currentYYYYMM),
+                        DEAL_YMD: Number(slectedYYYYMMM),
                         pageNo: 1,
                         numOfRows: 1000,
                     },
@@ -76,7 +74,7 @@ const useSiseWithReactQuery = () => {
                 data = await fetchOfficetelSiseData(
                     {
                         LAWD_CD: regionCode,
-                        DEAL_YMD: Number(currentYYYYMM),
+                        DEAL_YMD: Number(slectedYYYYMMM),
                         pageNo: 1,
                         numOfRows: 1000,
                     },
@@ -91,7 +89,7 @@ const useSiseWithReactQuery = () => {
                 data = await fetchAptSiseData(
                     {
                         LAWD_CD: regionCode,
-                        DEAL_YMD: Number(currentYYYYMM),
+                        DEAL_YMD: Number(slectedYYYYMMM),
                         pageNo: 1,
                         numOfRows: 1000,
                     },

@@ -1,30 +1,50 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type FiltersState = string[]; // 필터는 "월세", "전세" 문자열 배열로 관리
+export interface FiltersState {
+    filters: string[]; // 필터는 "월세", "전세" 문자열 배열로 관리
+    year: string;
+    month: string;
+}
 
-const initialState: FiltersState = ['월세']; // 기본값으로 "월세" 필터 설정
+const getCurrentYear = () => new Date().getFullYear();
+const getCurrentMonth = () =>
+    String(new Date().getMonth() + 1).padStart(2, '0');
+
+const initialState: FiltersState = {
+    filters: ['월세'], // 기본값으로 "월세" 필터 설정
+    year: getCurrentYear().toString(),
+    month: getCurrentMonth(),
+};
 
 const filtersSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
         toggleFilter: (state, action: PayloadAction<string>) => {
-            if (state.includes(action.payload)) {
+            if (state.filters.includes(action.payload)) {
                 // 이미 필터가 활성화된 경우, 필터를 제거
-                if (state.length > 1) {
-                    return state.filter((filter) => filter !== action.payload);
-                } else {
-                    // 필터가 하나도 없는 상태를 방지
-                    return state;
+                if (state.filters.length > 1) {
+                    state.filters = state.filters.filter(
+                        (filter) => filter !== action.payload,
+                    );
                 }
             } else {
                 // 필터가 활성화되지 않은 경우, 추가
-                return [...state, action.payload];
+                state.filters.push(action.payload);
             }
         },
-        resetFilters: () => initialState, // 필터 초기화
+        resetFilters: (state) => {
+            state.filters = initialState.filters;
+        },
+        setYear: (state, action: PayloadAction<string>) => {
+            state.year = action.payload;
+        },
+        setMonth: (state, action: PayloadAction<string>) => {
+            state.month = action.payload;
+        },
     },
 });
 
-export const { toggleFilter, resetFilters } = filtersSlice.actions;
+export const { toggleFilter, resetFilters, setYear, setMonth } =
+    filtersSlice.actions;
 export const filtersReducer = filtersSlice.reducer;
