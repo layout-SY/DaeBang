@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { SiseOfBuildingWithXy } from '../models/Sise.model';
+import { formatPrice } from '../utils/format';
 
 interface Props {
     house: SiseOfBuildingWithXy;
@@ -19,8 +20,8 @@ const SideBarItem = ({ house, index, onClick }: Props) => {
             <div className="content">
                 <h3>
                     {house.contracts[0].monthlyRent === 0
-                        ? `전세 ${house.contracts[0].deposit}`
-                        : `월세 ${house.contracts[0].deposit}/${house.contracts[0].monthlyRent}`}
+                        ? `전세 ${formatPrice(house.contracts[0].deposit)}`
+                        : `월세 ${formatPrice(house.contracts[0].deposit)}/${formatPrice(house.contracts[0].monthlyRent)}`}
                 </h3>
                 <span>{house.mhouseNm}</span>
                 <span>{house.houseType}</span>
