@@ -37,6 +37,9 @@ const DetailBookMarkButton = () => {
             className="bookmark"
             onClick={handleClickHeart}
             $isBookmarked={bookmarked}
+            aria-pressed={bookmarked}
+            aria-label={bookmarked ? '북마크 제거하기' : '북마크 추가하기'}
+            title={bookmarked ? '북마크 제거하기' : '북마크 추가하기'}
         >
             <FaHeart />
         </DetailBookMarkButtonStyle>
