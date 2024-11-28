@@ -74,7 +74,7 @@ const DetailListStyle = styled.div`
     position: fixed;
     border-radius: ${({ theme }) => theme.borderRadius.large};
     top: 0;
-    left: calc(10px + ${WIDTH});
+    left: calc(20px + ${WIDTH});
     display: flex;
     flex-direction: column;
     overflow: scroll;
