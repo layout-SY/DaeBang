@@ -25,12 +25,7 @@ const CATEGORY_LIST: ICategory[] = [
 
 const CategoryBar = () => {
     const location = useLocation();
-    const dispatch = useTypedDispatch();
-    const filters = useTypedSelector((state) => state.filters);
     const currentPath = location.pathname.split('/')[1];
-    const handleCheckboxChange = (filter: string) => {
-        dispatch(toggleFilter(filter));
-    };
 
     return (
         <StyledCategoryBar>
