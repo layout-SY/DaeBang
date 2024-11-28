@@ -88,7 +88,7 @@ const useSiseWithReactQuery = () => {
                     items = [items];
                 }
             } else {
-                throw new Error('알 수 없는 카테고리입니다.');
+                return;
             }
 
             items = items as (OneTwoSise | OfficetelSise | AptSise)[];

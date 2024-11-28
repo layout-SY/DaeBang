@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import {
     GroupedSiseDataWithAverage,
-    SiseOfBuilding,
     SiseOfBuildingWithXy,
 } from '../models/Sise.model';
 import DetailList from './Detail/DetailList';
@@ -15,6 +14,7 @@ import { useParams } from 'react-router';
 import NotFound from './common/NotFound';
 import { groupSiseByUmdnumWithAverages } from '../utils/sortUtils';
 import { formatPrice } from '../utils/formatUtils';
+import { WIDTH } from '../utils/constants';
 
 const SiseList = () => {
     const { data, isPending } = useSiseWithReactQuery();
@@ -25,7 +25,6 @@ const SiseList = () => {
         SiseOfBuildingWithXy[]
     >([]);
     const { category } = useParams();
-    const [compareData, setCompareData] = useState<SiseOfBuilding[]>([]);
     const [filteredData, setFilteredData] =
         useState<GroupedSiseDataWithAverage[]>();
     const [activeKey, setActiveKey] = useState<string>('전체');
@@ -176,8 +175,9 @@ const SiseList = () => {
 
 const ButtonContainer = styled.div`
     display: flex;
-    overflow: hidden;
-    padding: 0.5rem 0;
+    overflow-x: scroll;
+    padding: 0.5rem 0.5rem;
+    width: ${WIDTH};
 `;
 
 const ButtonScrollContainer = styled.div`
@@ -236,7 +236,7 @@ export const StyledSiseList = styled.div`
     display: flex;
     flex-direction: column;
     height: calc(100% - 120px); /* 버튼 영역과 평균 영역 포함 */
-    width: 330px;
+    width: ${WIDTH};
     overflow-y: scroll;
 `;
 

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
 import Search from './Search';
 import FilterBar from './Filter/FilterBar';
+import { WIDTH } from '../utils/constants';
 
 interface SidebarProps {
     children: ReactNode;
@@ -48,6 +49,8 @@ export const StyledSidebar = styled.div<StyledSidebarProps>`
     transform: ${({ $isOpen }) =>
         $isOpen ? 'translateX(0%)' : 'translateX(-100%)'};
     z-index: 200;
+    width: flex;
+    border-left: 1px solid ${({ theme }) => theme.colors.border};
     border-right: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
@@ -61,7 +64,7 @@ const ToggleButton = styled.button<ToggleButtonProps>`
     align-items: center;
     justify-content: center;
     top: 50%;
-    left: ${({ $isOpen }) => ($isOpen ? '411px' : '79px')};
+    left: ${({ $isOpen }) => ($isOpen ? '430px' : '79px')};
     z-index: 1000;
     width: 23px;
     height: 46px;

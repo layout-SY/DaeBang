@@ -72,14 +72,12 @@ const DetailNeighbor = () => {
     const [order, setOrder] = useState<number>(0);
     const [infoOpen, setInfoOpen] = useState<string>('');
 
-    // 카테고리 변경 시 검색 실행
     useEffect(() => {
         const ps = new kakao.maps.services.Places();
 
         const placesSearchCB = (data: PlacesSearchResult, status: Status) => {
             if (status === Status.OK) {
                 setData(data);
-                console.log(data);
             } else {
                 setData([]);
             }
@@ -102,7 +100,6 @@ const DetailNeighbor = () => {
     };
 
     const clickMarker = (id: string) => {
-        // 없으면 생성
         if (infoOpen === id) {
             setInfoOpen('');
         } else {
