@@ -15,8 +15,14 @@ import { useParams } from 'react-router';
 import NotFound from './common/NotFound';
 import { groupSiseByUmdnumWithAverages } from '../utils/sortUtils';
 import { formatPrice } from '../utils/formatUtils';
+import { WIDTH } from '../utils/constants';
 
-const SiseList = () => {
+interface SiseListProps {
+    isCompareMode?: boolean;
+    onCompareComplete?: (compareData: SiseOfBuilding[]) => void;
+}
+
+const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
     const { data, isPending } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
@@ -82,10 +88,6 @@ const SiseList = () => {
         dispatch(setDetail(house));
     };
 
-    const closeDetail = () => {
-        dispatch(setDetailOpen(false));
-    };
-
     if (isPending) {
         return (
             <StyledSiseList>
@@ -101,7 +103,7 @@ const SiseList = () => {
             </StyledSiseList>
         );
     }
-    
+
     const handleSelectForCompare = (house: SiseOfBuilding) => {
         if (compareData.length < 2) {
             setCompareData((prev) => [...prev, house]);
@@ -163,9 +165,7 @@ const SiseList = () => {
                         }
                     />
                 ))}
-                {!isCompareMode && detailOpen && (
-                    <DetailList closeDetail={closeDetail} />
-                )}
+                {detailOpen && <DetailList />}
             </StyledSiseList>
         </>
     );
@@ -173,8 +173,9 @@ const SiseList = () => {
 
 const ButtonContainer = styled.div`
     display: flex;
-    overflow: hidden;
-    padding: 0.5rem 0;
+    overflow-x: scroll;
+    padding: 0.5rem 0.5rem;
+    width: ${WIDTH};
 `;
 
 const ButtonScrollContainer = styled.div`
@@ -233,7 +234,7 @@ export const StyledSiseList = styled.div`
     display: flex;
     flex-direction: column;
     height: calc(100% - 120px); /* 버튼 영역과 평균 영역 포함 */
-    width: 330px;
+    width: ${WIDTH};
     overflow-y: scroll;
 `;
 
