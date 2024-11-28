@@ -1,49 +1,45 @@
 import React, { useState } from 'react';
-import { SiseOfBuilding } from '../../models/Sise.model';
+import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import styled from 'styled-components';
-
-interface IcompareData {
-    leftData: SiseOfBuilding[];
-    rightData: SiseOfBuilding[];
-}
+import BookmarkCompareList from '../Bookmark/BookmarkCompareList';
 
 const CompareSise = () => {
-    const [comparedData, setComparedData] = useState<IcompareData>({
-        leftData: [],
-        rightData: [],
-    });
-    const [isSiseListOpened, setIsSiseListOpened] = useState<boolean>(false);
+    const [comparedData, setComparedData] = useState<SiseOfBuildingWithXy[]>(
+        [],
+    );
+    const [isCompareListOpened, setIsCompareListOpened] =
+        useState<boolean>(false);
 
-    const handleCompareData = (data: SiseOfBuilding[]) => {
-        if (data.length === 2) {
-            setComparedData({
-                leftData: [data[0]],
-                rightData: [data[1]],
-            });
-            setIsSiseListOpened(false);
-        }
+    const handleReset = () => {
+        setComparedData([]);
     };
 
     return (
         <CompareSiseContainer>
-            {isSiseListOpened && <SiseListContainer></SiseListContainer>}
+            {isCompareListOpened && (
+                <BookmarkCompareList
+                    comparedData={comparedData}
+                    setComparedData={setComparedData}
+                />
+            )}
 
             <CompareSiseBuildingNameContainer>
                 <div className="comparison-section">
                     <div className="building-name-box">
-                        <h4>
-                            {comparedData.leftData[0]?.mhouseNm || '건물명1'}
-                        </h4>
+                        <h4>{comparedData[0]?.mhouseNm || '건물명1'}</h4>
                     </div>
-                    <button
-                        onClick={() => setIsSiseListOpened(!isSiseListOpened)}
-                    >
-                        시세 목록 열기
-                    </button>
+                    <div className="button-container">
+                        <button
+                            onClick={() =>
+                                setIsCompareListOpened(!isCompareListOpened)
+                            }
+                        >
+                            시세 목록 열기
+                        </button>
+                        <button onClick={handleReset}>초기화</button>
+                    </div>
                     <div className="building-name-box">
-                        <h4>
-                            {comparedData.rightData[0]?.mhouseNm || '건물명2'}
-                        </h4>
+                        <h4>{comparedData[1]?.mhouseNm || '건물명2'}</h4>
                     </div>
                 </div>
             </CompareSiseBuildingNameContainer>
@@ -53,69 +49,59 @@ const CompareSise = () => {
                     <thead>
                         <tr>
                             <th>항목</th>
-                            <th>{comparedData.leftData[0]?.mhouseNm || '-'}</th>
-                            <th>
-                                {comparedData.rightData[0]?.mhouseNm || '-'}
-                            </th>
+                            <th>{comparedData[0]?.mhouseNm || '-'}</th>
+                            <th>{comparedData[1]?.mhouseNm || '-'}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>건축년도</td>
-                            <td>
-                                {comparedData.leftData[0]?.buildYear || '-'}
-                            </td>
-                            <td>
-                                {comparedData.rightData[0]?.buildYear || '-'}
-                            </td>
+                            <td>{comparedData[0]?.buildYear || '-'}</td>
+                            <td>{comparedData[1]?.buildYear || '-'}</td>
                         </tr>
                         <tr>
                             <td>층수</td>
                             <td>
-                                {comparedData.leftData[0]?.contracts[0].floor ||
-                                    '-'}
+                                {comparedData[0]?.contracts[0]?.floor || '-'}
                             </td>
                             <td>
-                                {comparedData.rightData[0]?.contracts[0]
-                                    .floor || '-'}
+                                {comparedData[1]?.contracts[0]?.floor || '-'}
                             </td>
                         </tr>
                         <tr>
                             <td>면적</td>
                             <td>
-                                {comparedData.leftData[0]?.contracts[0]
-                                    .excluUseAr || '-'}
+                                {comparedData[0]?.contracts[0]?.excluUseAr ||
+                                    '-'}
                                 ㎡
                             </td>
                             <td>
-                                {comparedData.rightData[0]?.contracts[0]
-                                    .excluUseAr || '-'}
+                                {comparedData[1]?.contracts[0]?.excluUseAr ||
+                                    '-'}
                                 ㎡
                             </td>
                         </tr>
                         <tr>
                             <td>보증금</td>
                             <td>
-                                {comparedData.leftData[0]?.contracts[0]
-                                    .deposit || '-'}
+                                {comparedData[0]?.contracts[0]?.deposit || '-'}
                                 만원
                             </td>
                             <td>
-                                {comparedData.rightData[0]?.contracts[0]
-                                    .deposit || '-'}
+                                {comparedData[1]?.contracts[0]?.deposit || '-'}
                                 만원
                             </td>
                         </tr>
                         <tr>
                             <td>월세 금액</td>
                             <td>
-                                {comparedData.leftData[0]?.contracts[0]
-                                    .monthlyRent || '-'}
+                                {comparedData[0]?.contracts[0]?.monthlyRent ||
+                                    '-'}
                                 만원
                             </td>
                             <td>
-                                {comparedData.rightData[0]?.contracts[0]
-                                    .monthlyRent || '-'}
+                                {comparedData[1]?.contracts[0]?.monthlyRent ||
+                                    '-'}
                                 만원
                             </td>
                         </tr>
@@ -130,15 +116,7 @@ const CompareSiseContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 1100px;
-    overflow-y: scroll;
-`;
-
-const SiseListContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 330px;
+    width: 900px;
     overflow-y: scroll;
 `;
 
@@ -157,7 +135,7 @@ const CompareSiseBuildingNameContainer = styled.div`
         .building-name-box {
             width: 150px;
             height: 150px;
-            background-color: #005977;
+            background-color: ${({ theme }) => theme.colors.blue};
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -173,19 +151,24 @@ const CompareSiseBuildingNameContainer = styled.div`
             }
         }
 
-        button {
-            align-self: center;
-            padding: 10px 20px;
-            background-color: #005977;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: -50px;
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
 
-            &:hover {
-                background-color: #004a66;
+            button {
+                padding: 10px 20px;
+                background-color: ${({ theme }) => theme.colors.blue};
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+
+                &:hover {
+                    background-color: #004a66;
+                }
             }
         }
     }
@@ -205,7 +188,7 @@ const CompareSiseGraphContainer = styled.div`
         table-layout: fixed; /* 균등한 너비 배분 */
 
         thead {
-            background-color: #005977;
+            background-color: ${({ theme }) => theme.colors.blue};
             color: white;
             text-align: center;
 
