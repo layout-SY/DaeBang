@@ -1,13 +1,10 @@
 import styled from 'styled-components';
-import { Link, useParams } from 'react-router-dom';
-import { FaHome } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { FaHome, FaBalanceScale } from 'react-icons/fa';
 import { HiMiniBuildingOffice } from 'react-icons/hi2';
 import { MdApartment } from 'react-icons/md';
-import { CiBookmark } from 'react-icons/ci';
-import { GiConfrontation } from 'react-icons/gi';
+import { FaRegBookmark } from 'react-icons/fa6';
 import { useLocation } from 'react-router-dom';
-import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
-import { toggleFilter } from '../store/slice/filterSlice';
 
 interface ICategory {
     name: string;
@@ -19,8 +16,8 @@ const CATEGORY_LIST: ICategory[] = [
     { name: '원/투룸', value: 'onetwo', icon: <FaHome /> },
     { name: '오피스텔', value: 'officetel', icon: <HiMiniBuildingOffice /> },
     { name: '아파트', value: 'apt', icon: <MdApartment /> },
-    { name: '북마크', value: 'bookmark', icon: <CiBookmark /> },
-    { name: '시세비교', value: 'compare', icon: <GiConfrontation /> },
+    { name: '북마크', value: 'bookmark', icon: <FaRegBookmark /> },
+    { name: '시세비교', value: 'compare', icon: <FaBalanceScale /> },
 ];
 
 const CategoryBar = () => {

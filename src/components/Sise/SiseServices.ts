@@ -1,6 +1,6 @@
 import { fetchSiseData } from '../../api/Sise.api';
 import { Sise } from '../../models/Sise.model';
-import { generatePastMonths } from '../../utils/dateUtils';
+import { generatePastMonths } from '../../utils/date';
 
 export const fetchSiseDataForPastMonths = async (
     lawdCd: number,

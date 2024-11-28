@@ -6,7 +6,7 @@ import {
     fetchOfficetelSiseData,
     fetchAptSiseData,
 } from '../api/Sise.api';
-import { groupSiseByAddress } from '../utils/sortUtils';
+import { groupSiseByAddress } from '../utils/sort';
 import { addXyToSiseOfBuilding } from '../utils/adress';
 import { useSearchParams } from 'react-router-dom';
 import { useParams } from 'react-router-dom';

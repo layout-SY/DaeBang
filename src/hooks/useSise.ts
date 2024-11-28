@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { paginateByKeyResultProps, Sise } from '../models/Sise.model';
 import { fetchSiseDataForPastMonths } from '../components/Sise/SiseServices';
 import { useSearchParams } from 'react-router-dom';
-import { groupAndSortByDate } from '../utils/sortUtils';
+import { groupAndSortByDate } from '../utils/sort';
 
 export const useSise = () => {
     const [searchParams] = useSearchParams();

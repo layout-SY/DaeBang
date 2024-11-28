@@ -1,4 +1,4 @@
-import { FiltersState } from './../store/slice/filterSlice';
+import { FiltersState } from '../store/slice/filterSlice';
 import {
     paginateByKeyResultProps,
     Sise,
