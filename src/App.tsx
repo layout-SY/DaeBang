@@ -22,7 +22,12 @@ function App() {
         <ThemeProvider theme={theme}>
             <GlobalStyle />
             <QueryClientProvider client={queryClient}>
-                <Router>
+                <Router
+                    future={{
+                        v7_startTransition: true,
+                        v7_relativeSplatPath: true,
+                    }}
+                >
                     <AppRoutes />
                 </Router>
             </QueryClientProvider>

@@ -36,12 +36,21 @@ const DetailBookMarkButton = () => {
         <DetailBookMarkButtonStyle
             className="bookmark"
             onClick={handleClickHeart}
+            $isBookmarked={bookmarked}
+            aria-pressed={bookmarked}
+            aria-label={bookmarked ? '북마크 제거하기' : '북마크 추가하기'}
+            title={bookmarked ? '북마크 제거하기' : '북마크 추가하기'}
         >
-            {bookmarked ? <FaHeart /> : <FaRegHeart />}
+            <FaHeart />
         </DetailBookMarkButtonStyle>
     );
 };
-const DetailBookMarkButtonStyle = styled.button`
+
+interface DetailBookMarkButtonStyleProps {
+    $isBookmarked: boolean;
+}
+
+const DetailBookMarkButtonStyle = styled.button<DetailBookMarkButtonStyleProps>`
     border: none;
     background: transparent;
     outline: none;
@@ -49,6 +58,12 @@ const DetailBookMarkButtonStyle = styled.button`
 
     svg {
         font-size: 1.25rem;
+        color: ${({ $isBookmarked, theme }) =>
+            $isBookmarked ? theme.colors.pink : theme.colors.gray};
+
+        :hover {
+            color: ${({ theme }) => theme.colors.pink};
+        }
     }
 `;
 export default DetailBookMarkButton;

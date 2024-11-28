@@ -42,6 +42,7 @@ const PeriodFilter = () => {
                 id="year-select"
                 value={year}
                 onChange={handleYearChange}
+                aria-label="년도 선택"
             >
                 {years.map((year) => (
                     <option key={year} value={year}>
@@ -56,6 +57,7 @@ const PeriodFilter = () => {
                 id="month-select"
                 value={month}
                 onChange={handleMonthChange}
+                aria-label="월 선택"
             >
                 <option value="01">1월</option>
                 <option value="02">2월</option>
