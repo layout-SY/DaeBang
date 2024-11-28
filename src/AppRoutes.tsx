@@ -5,7 +5,7 @@ import LoadingLayout from './components/LoadingLayout';
 
 // 레이지 로딩을 위한 컴포넌트
 const Home = lazy(() => import('./components/Home'));
-const SiseList = lazy(() => import('./components/SiseList'));
+const SiseList = lazy(() => import('./components/SiseList/SiseList'));
 const CompareSise = lazy(() => import('./components/Compare/CompareSise'));
 const BookmarkList = lazy(() => import('./components/Bookmark/BookmarkList'));
 

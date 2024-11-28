@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { StyledSiseList } from '../SiseList';
+import { StyledSiseList } from '../SiseList/SiseList';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import { getBookMarks } from '../../hooks/bookMark';
 import BookmarkItem from '../Bookmark/BookmarkItem';

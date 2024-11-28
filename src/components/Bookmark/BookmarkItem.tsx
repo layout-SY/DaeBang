@@ -1,5 +1,5 @@
 import React from 'react';
-import { SideBarItemStyle } from '../SideBarItem';
+import { SiseListItemStyle } from '../SiseList/SiseListItem';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 
 interface Props {
@@ -27,5 +27,5 @@ const BookmarkItem = ({ house, index, onClick }: Props) => {
         </BookmarkItemStyle>
     );
 };
-const BookmarkItemStyle = SideBarItemStyle;
+const BookmarkItemStyle = SiseListItemStyle;
 export default BookmarkItem;
