@@ -21,6 +21,9 @@ const SiseList = () => {
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
     const [visibleData, setVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
+    const [filteredVisibleData, setFilteredVisibleData] = useState<
+        SiseOfBuildingWithXy[]
+    >([]);
     const { category } = useParams();
     const [filteredData, setFilteredData] =
         useState<GroupedSiseDataWithAverage[]>();
@@ -30,7 +33,10 @@ const SiseList = () => {
         if (data) {
             const grouped = groupSiseByUmdnumWithAverages(data);
             setFilteredData(grouped);
+
+            // '전체'의 경우, 초기 10개 데이터만 visibleData에 설정
             setVisibleData(data.slice(0, 10));
+            setFilteredVisibleData([]); // 초기화
         }
     }, [data]);
 
@@ -47,10 +53,22 @@ const SiseList = () => {
     }
 
     const loadMoreData = () => {
-        if (data && visibleData.length < data.length && activeKey === '전체') {
+        if (activeKey === '전체' && data && visibleData.length < data.length) {
             const currentLength = visibleData.length;
             const nextData = data.slice(currentLength, currentLength + 10);
             setVisibleData((prev) => [...prev, ...nextData]);
+        } else if (activeKey !== '전체') {
+            const selectedGroup = filteredData?.find(
+                (group) => group.key === activeKey,
+            );
+            if (selectedGroup) {
+                const currentLength = filteredVisibleData.length;
+                const nextData = selectedGroup.SiseData.slice(
+                    currentLength,
+                    currentLength + 10,
+                );
+                setFilteredVisibleData((prev) => [...prev, ...nextData]);
+            }
         }
     };
 
@@ -66,12 +84,14 @@ const SiseList = () => {
 
         if (key === '전체' && data) {
             setVisibleData(data.slice(0, 10));
+            setFilteredVisibleData([]); // 필터링 데이터 초기화
         } else {
             const selectedGroup = filteredData?.find(
                 (group) => group.key === key,
             );
             if (selectedGroup) {
-                setVisibleData(selectedGroup.SiseData);
+                setFilteredVisibleData(selectedGroup.SiseData.slice(0, 10));
+                setVisibleData([]); // 전체 데이터 초기화
             }
         }
     };
@@ -96,6 +116,9 @@ const SiseList = () => {
             </StyledSiseList>
         );
     }
+
+    const displayedData =
+        activeKey === '전체' ? visibleData : filteredVisibleData;
 
     return (
         <>
@@ -136,7 +159,7 @@ const SiseList = () => {
                 )}
             </AveragePriceContainer>
             <StyledSiseList onScroll={handleScroll}>
-                {visibleData.map((house, index) => (
+                {displayedData.map((house, index) => (
                     <SideBarItem
                         key={`${house.umdNum}-${index}`}
                         house={house}
