@@ -224,9 +224,9 @@ const CategoryList = styled.ul<CategoryItemProps>`
     background: white;
     padding: 8px;
     border-radius: 6px;
-    box-shadow : 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-    li{
+    li {
         font-size: 12px;
         padding: 4px 8px;
         cursor: pointer;
@@ -235,13 +235,14 @@ const CategoryList = styled.ul<CategoryItemProps>`
         transition: all 0.2s;
 
         &:hover {
-            background: ${({ $active, theme }) => ($active ? `${theme.colors.blue}` : `${theme.colors.gray}`)};
-         
+            background: ${({ $active, theme }) =>
+                $active ? `${theme.colors.blue}` : `${theme.colors.gray}`};
         }
 
-        &.active{
-            background :  ${({ theme }) => theme.colors.blue};
-            color : white;
+        &.active {
+            background: ${({ theme }) => theme.colors.blue};
+            color: white;
+        }
     }
 `;
 
