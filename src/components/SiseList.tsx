@@ -10,19 +10,18 @@ import DetailList from './Detail/DetailList';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 import { useTypedDispatch, useTypedSelector } from '../hooks/redux';
 import { setDetail, setDetailOpen } from '../store/slice/DetailSlice';
+import SiseItemSkeleton from './Sise/SiseItemSkeleton';
+import { useParams } from 'react-router';
+import NotFound from './common/NotFound';
 import { groupSiseByUmdnumWithAverages } from '../utils/sortUtils';
 import { formatPrice } from '../utils/formatUtils';
 
-interface SiseListProps {
-    isCompareMode?: boolean;
-    onCompareComplete?: (compareData: SiseOfBuilding[]) => void;
-}
-
-const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
-    const { data } = useSiseWithReactQuery();
+const SiseList = () => {
+    const { data, isPending } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
     const [visibleData, setVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
+    const { category } = useParams();
     const [compareData, setCompareData] = useState<SiseOfBuilding[]>([]);
     const [filteredData, setFilteredData] =
         useState<GroupedSiseDataWithAverage[]>();
@@ -35,6 +34,18 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
             setVisibleData(data.slice(0, 10));
         }
     }, [data]);
+
+    if (
+        category !== 'apt' &&
+        category !== 'officetel' &&
+        category !== 'onetwo'
+    ) {
+        return (
+            <StyledSiseList>
+                <NotFound />
+            </StyledSiseList>
+        );
+    }
 
     const loadMoreData = () => {
         if (data && visibleData.length < data.length && activeKey === '전체') {
@@ -71,6 +82,26 @@ const SiseList = ({ isCompareMode, onCompareComplete }: SiseListProps) => {
         dispatch(setDetail(house));
     };
 
+    const closeDetail = () => {
+        dispatch(setDetailOpen(false));
+    };
+
+    if (isPending) {
+        return (
+            <StyledSiseList>
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+                <SiseItemSkeleton />
+            </StyledSiseList>
+        );
+    }
+    
     const handleSelectForCompare = (house: SiseOfBuilding) => {
         if (compareData.length < 2) {
             setCompareData((prev) => [...prev, house]);

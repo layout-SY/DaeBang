@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
+import { formatPrice } from '../../utils/format';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
 
@@ -32,12 +33,12 @@ const CustomMapMarker = ({ sise }: CustomMapMarkerProps) => {
                 <div className="marker">
                     <span>{contractType}</span>
                     {contractType === '전세' && (
-                        <span>{sise.contracts[0].deposit}</span>
+                        <span>{formatPrice(sise.contracts[0].deposit)}</span>
                     )}
                     {contractType === '월세' && (
                         <span>
-                            {sise.contracts[0].deposit}/
-                            {sise.contracts[0].monthlyRent}
+                            {formatPrice(sise.contracts[0].deposit)}/
+                            {formatPrice(sise.contracts[0].monthlyRent)}
                         </span>
                     )}
                 </div>
@@ -45,12 +46,28 @@ const CustomMapMarker = ({ sise }: CustomMapMarkerProps) => {
                     <div>
                         {sise.umdNum} {sise.jibun} {sise.mhouseNm}
                     </div>
-                    {sise.contracts.map((contract, index) => (
-                        <div key={index}>
-                            {contract.contractType} {contract.deposit}/
-                            {contract.monthlyRent}
-                        </div>
-                    ))}
+                    <div></div>
+                    {sise.contracts
+                        .filter((contract) => contract.monthlyRent)
+                        .map((contract, index) => (
+                            <div key={index}>
+                                {contract.contractType}{' '}
+                                {formatPrice(contract.deposit)}/
+                                {formatPrice(contract.monthlyRent)} {'전용'}
+                                {contract.excluUseAr}
+                                {`m²`}
+                            </div>
+                        ))}
+                    {sise.contracts
+                        .filter((contract) => !contract.monthlyRent)
+                        .map((contract, index) => (
+                            <div key={index}>
+                                {contract.contractType}{' '}
+                                {formatPrice(contract.deposit)} {'전용'}
+                                {contract.excluUseAr}
+                                {`m²`}
+                            </div>
+                        ))}
                 </div>
             </div>
         </StyledCustomMapMarker>

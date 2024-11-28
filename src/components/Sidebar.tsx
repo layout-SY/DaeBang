@@ -2,6 +2,7 @@ import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
 import Search from './Search';
+import FilterBar from './Filter/FilterBar';
 
 interface SidebarProps {
     children: ReactNode;
@@ -17,12 +18,14 @@ const Sidebar = ({ children }: SidebarProps) => {
         <>
             <StyledSidebar $isOpen={isOpen}>
                 <Search />
+                <FilterBar />
                 {children}
             </StyledSidebar>
             <ToggleButton
                 onClick={toggleSidebar}
                 className="toggle"
                 $isOpen={isOpen}
+                aria-label={isOpen ? '사이드바 닫기' : '사이드바 열기'}
             >
                 <FaAngleLeft />
             </ToggleButton>

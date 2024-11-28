@@ -11,7 +11,7 @@ import { addXyToSiseOfBuilding } from '../utils/adress';
 import { useSearchParams } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import {
-    SiseCaegory,
+    SiseCategory,
     OneTwoSise,
     OfficetelSise,
     AptSise,
@@ -22,46 +22,31 @@ const useSiseWithReactQuery = () => {
     const filters = useTypedSelector((state) => state.filters);
     const regionCode = parseInt(searchParams.get('region') || '0', 10);
     const queryClient = useQueryClient();
-    const { category } = useParams<{ category: SiseCaegory }>();
+    const { category } = useParams<{ category: SiseCategory }>();
 
     //기본 필터링 상태를 "월세"로 설정
-    const activeFilters = filters.length > 0 ? filters : ['월세'];
+    const activeFilters = filters.filters;
+    const slectedYYYYMMM = filters.year + filters.month;
 
-    // 현재 월의 데이터를 조회합니다.
-    const currentYYYYMM = new Date().toISOString().slice(0, 7).replace('-', '');
-
-    // 캐시 초기화
+    // 새 요청이 발생할 때 이전 요청 취소
     useEffect(() => {
         return () => {
             queryClient.cancelQueries({
-                queryKey: [category, regionCode, currentYYYYMM, activeFilters],
+                queryKey: [category, regionCode, slectedYYYYMMM, activeFilters],
             });
         };
-    }, [regionCode, queryClient, currentYYYYMM, activeFilters]);
+    }, [category, regionCode, queryClient, slectedYYYYMMM, activeFilters]);
 
-    const {
-        data,
-        isPending,
-        isError,
-        error,
-        isFetching,
-        isLoading,
-        dataUpdatedAt,
-    } = useQuery({
-        queryKey: [category, regionCode, currentYYYYMM, activeFilters],
+    const { data, isPending, isError, error } = useQuery({
+        queryKey: [category, regionCode, slectedYYYYMMM, activeFilters],
         queryFn: async ({ signal }) => {
-            const startTime = performance.now();
-            console.log(
-                `[${regionCode}]🔄 새로운 데이터 fetch 요청 발생 [${new Date().toLocaleTimeString()}]`,
-            );
-
             let data;
             let items;
             if (category === 'onetwo') {
                 data = await fetchOneTwoSiseData(
                     {
                         LAWD_CD: regionCode,
-                        DEAL_YMD: Number(currentYYYYMM),
+                        DEAL_YMD: Number(slectedYYYYMMM),
                         pageNo: 1,
                         numOfRows: 1000,
                     },
@@ -76,7 +61,7 @@ const useSiseWithReactQuery = () => {
                 data = await fetchOfficetelSiseData(
                     {
                         LAWD_CD: regionCode,
-                        DEAL_YMD: Number(currentYYYYMM),
+                        DEAL_YMD: Number(slectedYYYYMMM),
                         pageNo: 1,
                         numOfRows: 1000,
                     },
@@ -91,7 +76,7 @@ const useSiseWithReactQuery = () => {
                 data = await fetchAptSiseData(
                     {
                         LAWD_CD: regionCode,
-                        DEAL_YMD: Number(currentYYYYMM),
+                        DEAL_YMD: Number(slectedYYYYMMM),
                         pageNo: 1,
                         numOfRows: 1000,
                     },
@@ -127,26 +112,9 @@ const useSiseWithReactQuery = () => {
                 signal,
             );
 
-            const endTime = performance.now();
-            console.log(
-                `[${result.length}건] 데이터 로딩 시간: ${(endTime - startTime).toFixed(2)}ms`,
-            );
             return result;
         },
     });
-
-    // 캐시된 데이터 확인
-    useEffect(() => {
-        if (data) {
-            const isFromCache = !isFetching && !isLoading;
-            const consoleMessage = isFromCache
-                ? '📦 캐시된 데이터 사용'
-                : '🔄 새로운 데이터 수신';
-            console.log(
-                `[🔍 ${consoleMessage} - ${new Date().toLocaleTimeString()}]`,
-            );
-        }
-    }, [data, isFetching, isLoading, dataUpdatedAt]);
 
     return { data, isPending, isError, error };
 };

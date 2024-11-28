@@ -1,24 +1,23 @@
 import styled from 'styled-components';
 import CategoryBar from './CategoryBar';
-import { Outlet } from 'react-router';
-import Map from './Map';
+import Loader from './common/Loader';
 import Sidebar from './Sidebar';
 
-const Layout = () => {
+const LoadingLayout = () => {
     return (
-        <StyledLayout>
+        <StyledLoadingLayout>
             <CategoryBar />
             <main className="sidebar-layout">
                 <Sidebar>
-                    <Outlet />
+                    <Loader />
                 </Sidebar>
-                <Map />
+                <Loader />
             </main>
-        </StyledLayout>
+        </StyledLoadingLayout>
     );
 };
 
-const StyledLayout = styled.div`
+const StyledLoadingLayout = styled.div`
     display: flex;
     height: 100%;
 
@@ -27,4 +26,4 @@ const StyledLayout = styled.div`
     }
 `;
 
-export default Layout;
+export default LoadingLayout;

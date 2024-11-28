@@ -14,6 +14,8 @@ const SideBarItem = ({ house, index, onClick }: Props) => {
             <img
                 src={`/dummyImg/dummy_${index % 20}.jpeg`}
                 alt={house.mhouseNm}
+                width={100}
+                height={100}
             />
             <div className="content">
                 <h3>

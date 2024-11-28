@@ -1,21 +1,25 @@
 import { Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import Layout from './components/Layout';
-import SiseList from './components/SiseList';
-import Home from './components/Home';
-import CompareSise from './components/Sise/CompareSise';
-import BookmarkList from './components/Bookmark/BookmarkList';
+import LoadingLayout from './components/LoadingLayout';
 
-// 라우팅은 여기서 설정합니다.
+// 레이지 로딩을 위한 컴포넌트
+const Home = lazy(() => import('./components/Home'));
+const SiseList = lazy(() => import('./components/SiseList'));
+const CompareSise = lazy(() => import('./components/Sise/CompareSise'));
+const BookmarkList = lazy(() => import('./components/Bookmark/BookmarkList'));
+
 const AppRoutes = () => (
-    <Routes>
-        <Route path="/" element={<Layout />}>
-            {/* 현재 홈페이지는 내용이 없고 바로 /onetwo로 리다이렉트 됩니다. */}
-            <Route path="/" element={<Home />} />
-            <Route path=":category" element={<SiseList />} />
-            <Route path="/bookmark" element={<BookmarkList />} />
-            <Route path="/compare" element={<CompareSise />} />
-        </Route>
-    </Routes>
+    <Suspense fallback={<LoadingLayout />}>
+        <Routes>
+            <Route path="/" element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path=":category" element={<SiseList />} />
+                <Route path="/bookmark" element={<BookmarkList />} />
+                <Route path="/compare" element={<CompareSise />} />
+            </Route>
+        </Routes>
+    </Suspense>
 );
 
 export default AppRoutes;

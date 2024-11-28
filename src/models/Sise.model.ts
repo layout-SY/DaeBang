@@ -55,7 +55,7 @@ interface BaseSise {
     useRRRight: string;
 }
 
-export type SiseCaegory = 'onetwo' | 'officetel' | 'apt';
+export type SiseCategory = 'onetwo' | 'officetel' | 'apt';
 
 export interface OneTwoSise extends BaseSise {
     houseType: string;

@@ -6,7 +6,7 @@ import {
     MarkerClusterer,
 } from 'react-kakao-maps-sdk';
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { debounce, map } from 'lodash';
+import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
@@ -22,13 +22,21 @@ const Map = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const mapRef = useRef<kakao.maps.Map>(null);
     const [address, setAddress] = useState<string>('');
-    const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
+    // const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
 
     // ref를 전역적으로 접근 가능하게 만들기
     useEffect(() => {
         if (mapRef.current) {
             (window as any).mapInstance = mapRef.current;
+
+            const pantoAndZoom = (lat: number, lng: number) => {
+                mapRef.current?.panTo(new kakao.maps.LatLng(lat, lng));
+                setTimeout(() => {
+                    mapRef.current?.setLevel(1);
+                }, 500);
+            };
+            (window as any).mapInstance.pantoAndZoom = pantoAndZoom;
         }
     }, [mapRef.current]);
 
@@ -134,8 +142,8 @@ const Map = () => {
                             MAP_CENTER_POSITION.lng.toString(),
                     ),
                 }}
-                level={zoom}
-                onZoomChanged={(target) => setZoom(target.getLevel())}
+                // level={zoom}
+                // onZoomChanged={(target) => setZoom(target.getLevel())}
                 keyboardShortcuts={true}
                 onCenterChanged={handleCenterChanged}
                 style={{
@@ -149,41 +157,43 @@ const Map = () => {
             >
                 <MapTypeControl position={'TOPRIGHT'} />
                 <ZoomControl position={'BOTTOMRIGHT'} />
-                <MarkerClusterer
-                    averageCenter={true}
-                    minLevel={4}
-                    disableClickZoom={false} // 클릭시 부드럽게 줌인되었으면 좋겠다.
-                    calculator={[]} // 사이즈에 상관없이 모무 같은 스타일입니다.
-                    styles={[
-                        {
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '40px',
-                            height: '40px',
-                            backgroundColor: 'rgba(59, 130, 246, 0.9)',
-                            border: '1px #3b82f6',
-                            borderRadius: '50%',
-                            color: 'white',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                            // 인라인 스타일에서 호버속성은 사용할 수 없습니다 ㅠㅠ
-                        },
-                    ]}
-                >
-                    {data &&
-                        zoom <= 7 &&
-                        data.map((item) => {
-                            return (
-                                <CustomOverlayMap
-                                    key={`${item.umdNum} ${item.jibun} ${item.mhouseNm}`}
-                                    position={{ lat: item.y, lng: item.x }}
-                                >
-                                    <CustomMapMarker sise={item} />
-                                </CustomOverlayMap>
-                            );
-                        })}
-                </MarkerClusterer>
+                {!isPending && (
+                    <MarkerClusterer
+                        averageCenter={true}
+                        minLevel={4}
+                        disableClickZoom={false} // 클릭시 부드럽게 줌인되었으면 좋겠다.
+                        calculator={[]} // 사이즈에 상관없이 모무 같은 스타일입니다.
+                        styles={[
+                            {
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '40px',
+                                height: '40px',
+                                backgroundColor: 'rgba(59, 130, 246, 0.9)',
+                                border: '1px #3b82f6',
+                                borderRadius: '50%',
+                                color: 'white',
+                                textAlign: 'center',
+                                fontWeight: 'bold',
+                                // 인라인 스타일에서 호버속성은 사용할 수 없습니다 ㅠㅠ
+                            },
+                        ]}
+                    >
+                        {data &&
+                            // zoom <= 7 &&
+                            data.map((item) => {
+                                return (
+                                    <CustomOverlayMap
+                                        key={`${item.umdNum} ${item.jibun} ${item.mhouseNm}`}
+                                        position={{ lat: item.y, lng: item.x }}
+                                    >
+                                        <CustomMapMarker sise={item} />
+                                    </CustomOverlayMap>
+                                );
+                            })}
+                    </MarkerClusterer>
+                )}
 
                 <LocationPopup address={address} />
             </KakaoMap>

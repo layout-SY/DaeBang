@@ -10,11 +10,7 @@ const DetailViewOnMapButton = ({ position }: DetailViewOnMapButtonProps) => {
     const handleClick = () => {
         const mapInstance = (window as any).mapInstance;
         if (mapInstance) {
-            const moveLatLon = new kakao.maps.LatLng(
-                position.lat,
-                position.lng,
-            );
-            mapInstance.panTo(moveLatLon);
+            mapInstance.pantoAndZoom(position.lat, position.lng);
         }
     };
 
