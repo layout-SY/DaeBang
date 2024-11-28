@@ -4,8 +4,6 @@ import { FaSearch } from 'react-icons/fa';
 import univ from '../data/univ.json';
 import sub from '../data/sub.json';
 import { escapeRegExp } from '../utils/string';
-import { useSearchParams } from 'react-router-dom';
-import { set } from 'lodash';
 
 interface Item {
     name: string;
@@ -20,7 +18,6 @@ const Search = () => {
     const [activeIndex, setActiveIndex] = useState(-1);
     const inputRef = useRef<HTMLInputElement>(null);
     const dropdownRef = useRef<HTMLUListElement>(null);
-    const [searchParams, setSearchParams] = useSearchParams();
 
     // 외부 클릭 감지
     useEffect(() => {

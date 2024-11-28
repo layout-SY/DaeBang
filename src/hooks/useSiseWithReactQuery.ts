@@ -28,31 +28,18 @@ const useSiseWithReactQuery = () => {
     const activeFilters = filters.filters;
     const slectedYYYYMMM = filters.year + filters.month;
 
-    // 캐시 초기화
+    // 새 요청이 발생할 때 이전 요청 취소
     useEffect(() => {
         return () => {
             queryClient.cancelQueries({
                 queryKey: [category, regionCode, slectedYYYYMMM, activeFilters],
             });
         };
-    }, [regionCode, queryClient, slectedYYYYMMM, activeFilters]);
+    }, [category, regionCode, queryClient, slectedYYYYMMM, activeFilters]);
 
-    const {
-        data,
-        isPending,
-        isError,
-        error,
-        isFetching,
-        isLoading,
-        dataUpdatedAt,
-    } = useQuery({
+    const { data, isPending, isError, error } = useQuery({
         queryKey: [category, regionCode, slectedYYYYMMM, activeFilters],
         queryFn: async ({ signal }) => {
-            const startTime = performance.now();
-            console.log(
-                `[${regionCode}]🔄 새로운 데이터 fetch 요청 발생 [${new Date().toLocaleTimeString()}]`,
-            );
-
             let data;
             let items;
             if (category === 'onetwo') {
@@ -125,26 +112,9 @@ const useSiseWithReactQuery = () => {
                 signal,
             );
 
-            const endTime = performance.now();
-            console.log(
-                `[${result.length}건] 데이터 로딩 시간: ${(endTime - startTime).toFixed(2)}ms`,
-            );
             return result;
         },
     });
-
-    // 캐시된 데이터 확인
-    useEffect(() => {
-        if (data) {
-            const isFromCache = !isFetching && !isLoading;
-            const consoleMessage = isFromCache
-                ? '📦 캐시된 데이터 사용'
-                : '🔄 새로운 데이터 수신';
-            console.log(
-                `[🔍 ${consoleMessage} - ${new Date().toLocaleTimeString()}]`,
-            );
-        }
-    }, [data, isFetching, isLoading, dataUpdatedAt]);
 
     return { data, isPending, isError, error };
 };
