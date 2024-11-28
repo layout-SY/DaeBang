@@ -50,10 +50,6 @@ export const fetchSiseDataThatThrowsError = async <T>(
         });
         return response.data;
     } catch (error) {
-        if ((error as any).message === 'canceled') {
-            console.error(`${params.LAWD_CD} 요청을 취소했습니다`);
-        }
-        console.error(error);
         throw error;
     }
 };
