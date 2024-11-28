@@ -36,8 +36,8 @@ const categories: Category[] = [
     { id: 'BK9', name: '은행', order: 0 },
     { id: 'MT1', name: '마트', order: 1 },
     { id: 'PM9', name: '약국', order: 2 },
-    { id: 'OL7', name: '주유소', order: 3 },
-    { id: 'CE7', name: '카페', order: 4 },
+    { id: 'SW8', name: '지하철', order: 3 },
+    { id: 'PO3', name: '관공서', order: 4 },
     { id: 'CS2', name: '편의점', order: 5 },
 ];
 
@@ -79,6 +79,7 @@ const DetailNeighbor = () => {
         const placesSearchCB = (data: PlacesSearchResult, status: Status) => {
             if (status === Status.OK) {
                 setData(data);
+                console.log(data);
             } else {
                 setData([]);
             }
@@ -90,8 +91,7 @@ const DetailNeighbor = () => {
         });
     }, [currCategory]);
 
-    const markerImageSrc =
-        'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png';
+    const markerImageSrc = '/places_category.png';
     const imageSize = { width: 27, height: 28 };
     const spriteSize = { width: 72, height: 208 };
     const offset = { x: 11, y: 28 };
@@ -126,6 +126,7 @@ const DetailNeighbor = () => {
                         center={position}
                         style={{ width: '100%', height: '300px' }}
                         level={4}
+                        zoomable={false}
                     >
                         <MapMarker position={position} />
                         {data.map((item) => (
@@ -229,21 +230,21 @@ const CategoryList = styled.ul<CategoryItemProps>`
     box-shadow : 0 0 10px rgba(0,0,0,0.1);
 
     li{
-        font-size: 14px;
+        font-size: 12px;
         padding: 4px 8px;
         cursor: pointer;
         border-radius: 4px;
-        background: 'white';
-        color: 'black';
+        background: white;
         transition: all 0.2s;
 
         &:hover {
-            background: ${(props) => (props.$active ? '#007AFF' : '#f0f0f0')};
+            background: ${({ $active, theme }) => ($active ? `${theme.colors.blue}` : `${theme.colors.gray}`)};
+         
         }
 
         &.active{
-            background :  '#007AFF';
-            color : 'white;
+            background :  ${({ theme }) => theme.colors.blue};
+            color : white;
     }
 `;
 
