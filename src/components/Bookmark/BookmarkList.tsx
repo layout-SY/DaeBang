@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { StyledSiseList } from '../SiseList';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
@@ -7,12 +7,6 @@ import BookmarkItem from './BookmarkItem';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
 import DetailList from '../Detail/DetailList';
-
-interface Props {
-    house: SiseOfBuildingWithXy;
-    index?: number;
-    onClick: (house: SiseOfBuildingWithXy) => void;
-}
 
 const BookmarkList = () => {
     const [bookmarks, setBookmarks] = useState<SiseOfBuildingWithXy[]>([]);
@@ -38,10 +32,6 @@ const BookmarkList = () => {
         dispatch(setDetail(house));
     };
 
-    const closeDetail = () => {
-        dispatch(setDetailOpen(false));
-    };
-
     return (
         <BookmarkListStyle>
             {bookmarks && bookmarks.length > 0 ? (
@@ -58,7 +48,7 @@ const BookmarkList = () => {
                     <span>북마크가 없습니다</span>
                 </Empty>
             )}
-            {detailOpen && <DetailList closeDetail={closeDetail} />}
+            {detailOpen && <DetailList />}
         </BookmarkListStyle>
     );
 };
