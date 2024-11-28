@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import styled from 'styled-components';
 import { WIDTH } from '../../utils/constants';
-import { getBookMarks } from '../../hooks/bookMark';
+import { getBookMarks } from '../../hooks/useBookMarks';
 import SiseListItem from '../SiseList/SiseListItem';
 import { formatPrice } from '../../utils/format';
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { StyledSiseList } from '../SiseList/SiseList';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
-import { getBookMarks } from '../../hooks/bookMark';
+import { getBookMarks } from '../../hooks/useBookMarks';
 import BookmarkItem from './BookmarkItem';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';

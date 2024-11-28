@@ -5,7 +5,7 @@ import {
     addBookMark,
     deleteBookMark,
     isBookMarked,
-} from '../../hooks/bookMark';
+} from '../../hooks/useBookMarks';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 const DetailBookMarkButton = () => {
