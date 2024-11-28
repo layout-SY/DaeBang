@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import CategoryBar from './CategoryBar';
-import Loader from './common/Loader';
+import Loader from './Common/Loader';
 import Sidebar from './Sidebar';
 
 const LoadingLayout = () => {
