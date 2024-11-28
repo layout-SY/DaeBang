@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import styled from 'styled-components';
 import ErrorBox from '../Common/ErrorBox';
 import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
@@ -127,7 +127,7 @@ const DetailNeighbor = () => {
                     >
                         <MapMarker position={position} />
                         {data.map((item) => (
-                            <React.Fragment key={item.id}>
+                            <Fragment key={item.id}>
                                 <MapMarker
                                     onClick={() => clickMarker(item.id)}
                                     position={{
@@ -163,7 +163,7 @@ const DetailNeighbor = () => {
                                         </div>
                                     ) : null}
                                 </CustomOverlayMap>
-                            </React.Fragment>
+                            </Fragment>
                         ))}
                     </Map>
                 </>

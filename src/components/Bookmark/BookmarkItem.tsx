@@ -1,4 +1,3 @@
-import React from 'react';
 import { SiseListItemStyle } from '../SiseList/SiseListItem';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 

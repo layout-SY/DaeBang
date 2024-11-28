@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useTypedSelector } from '../../hooks/redux';
 import {
@@ -6,7 +6,7 @@ import {
     deleteBookMark,
     isBookMarked,
 } from '../../hooks/useBookMarks';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaHeart } from 'react-icons/fa';
 
 const DetailBookMarkButton = () => {
     const [bookmarked, setBookmarked] = useState(false);
