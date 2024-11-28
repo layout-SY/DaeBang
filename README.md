@@ -28,7 +28,11 @@
 -   버전 및 이슈관리 : Github, Github Issues
 -   협업 툴 : Notion, Slack
     <br>
+<<<<<<< HEAD
     <br>
+=======
+<br>
+>>>>>>> 7c26676e12437d1b11ba162553cb00acaaab7644
 
 ## 2. 역할 분담
 
