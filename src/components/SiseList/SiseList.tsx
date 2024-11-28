@@ -12,7 +12,7 @@ import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
 import SiseItemSkeleton from '../Sise/SiseItemSkeleton';
 import { useParams } from 'react-router';
 import NotFound from '../Common/NotFound';
-import { groupSiseByUmdnumWithAverages } from '../../utils/sortUtils';
+import { groupSiseByUmdnumWithAverages } from '../../utils/sort';
 import { formatPrice } from '../../utils/format';
 import { WIDTH } from '../../utils/constants';
 
