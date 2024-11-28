@@ -28,93 +28,7 @@
 -   버전 및 이슈관리 : Github, Github Issues
 -   협업 툴 : Notion, Slack
     <br>
-
-## 2. 프로젝트 구조
-
-```
-├── README.md
-├── .env
-├── .gitignore
-├── .prettierrc
-├── package-lock.json
-├── package.json
-├── tsconfig.json
-├── public
-│     └── dummyImg
-│           ├── css_sprites.png
-│           ├── logo-404.svg
-│           └── logo-home.svg
-└── src
-     ├── App.tsx
-     ├── index.tsx
-     ├── api
-     │     └── Sise.api.ts
-     ├── components
-     │     ├── Bookmark
-     │     │     ├── BookmarkItem.tsx
-     │     │     └── BookmarkList.tsx
-     │     ├── common
-     │     │     ├── ErrorBox.tsx
-     │     │     ├── Loader.tsx
-     │     │     └── NotFound.tsx
-     │     ├── Detail
-     │     │     ├── DetailBookmarkButton.tsx
-     │     │     ├── DetailList.tsx
-     │     │     ├── DetailNeighbor.tsx
-     │     │     ├── DetailRoadView.tsx
-     │     │     └── DetailViewOnMapButton.tsx
-     │     ├── Filter
-     │     │     ├── ContractTypeFilter.tsx
-     │     │     ├── FilterBar.tsx
-     │     │     └── PeriodFilter.tsx
-     │     ├── Map
-     │     │     ├── CustomMapMarker.tsx
-     │     │     └── LocationPopup.tsx
-     │     ├── Sise
-     │     │     ├── CompareSise.tsx
-     │     │     ├── SiseItemSkeleton.tsx
-     │     │     └── SiseServices.ts
-     │     ├── CategoryBar.tsx
-     │     ├── Home.tsx
-     │     ├── Layout.tsx
-     │     ├── LoadingLayout.tsx
-     │     ├── Map.tsx
-     │     ├── Search.tsx
-     │     ├── Sidebar.tsx
-     │     ├── SideBarItem.tsx
-     │     └── SiseList.tsx
-     ├── data
-     │     ├── sub.json
-     │     └── univ.json
-     ├── hooks
-     │     ├── bookMark.ts
-     │     ├── redux.ts
-     │     ├── useSise.ts
-     │     └── useSiseWithReactQuery.ts
-     ├── models
-     │     └── SiseList.tsx
-     ├── store
-     │     ├── reducer
-     │     │     └── reducer.ts
-     │     ├── slice
-     │     │     ├── DetailSlice.ts
-     │     │     └── filterSlice.ts
-     │     └── index.ts
-     ├── style
-     │     ├── global.ts
-     │     └── theme.ts
-     └── utils
-           ├── adress.ts
-           ├── constants.ts
-           ├── dateUtils.ts
-           ├── format.ts
-           ├── formatUtils.ts
-           ├── sortUtils.ts
-           └── string.ts
-
-```
-
-<br>
+    <br>
 
 ## 2. 역할 분담
 
@@ -158,7 +72,7 @@
 
 <br>
 
-## 5. 개발 기간 및 작업 관리
+## 3. 개발 기간 및 작업 관리
 
 ### 개발 기간
 
@@ -176,7 +90,7 @@
 
 <br>
 
-## 7. 페이지별 기능
+## 4. 페이지별 기능
 
 ### [초기화면]
 
@@ -316,7 +230,7 @@
 
 <br>
 
-## 10. 프로젝트 후기
+## 4. 프로젝트 후기
 
 ### 🍊 조승연
 
