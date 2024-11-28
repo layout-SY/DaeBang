@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { StyledSiseList } from '../SiseList';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import { getBookMarks } from '../../hooks/bookMark';
-import BookmarkItem from './BookmarkItem';
+import BookmarkItem from '../Bookmark/BookmarkItem';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
 import DetailList from '../Detail/DetailList';
