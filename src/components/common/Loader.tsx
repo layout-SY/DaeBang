@@ -3,9 +3,9 @@ import styled, { keyframes } from 'styled-components';
 const Loader = () => {
     return (
         <StyledLoader>
-            <Dot delay="0s" />
-            <Dot delay="0.1s" />
-            <Dot delay="0.2s" />
+            <Dot $delay="0s" />
+            <Dot $delay="0.1s" />
+            <Dot $delay="0.2s" />
         </StyledLoader>
     );
 };
@@ -28,13 +28,17 @@ const StyledLoader = styled.div`
     gap: 5px;
 `;
 
-const Dot = styled.div<{ delay: string }>`
+interface DotProps {
+    $delay: string;
+}
+
+const Dot = styled.div<DotProps>`
     width: 10px;
     height: 10px;
     background-color: ${({ theme }) => theme.colors.blue};
     border-radius: 50%;
     animation: ${bounce} 1.4s infinite ease-in-out;
-    animation-delay: ${({ delay }) => delay};
+    animation-delay: ${({ $delay }) => $delay};
 `;
 
 export default Loader;
