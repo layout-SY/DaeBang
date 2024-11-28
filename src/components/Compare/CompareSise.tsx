@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import styled from 'styled-components';
 import { WIDTH } from '../../utils/constants';
-import { getBookMarks } from '../../hooks/bookMark';
-import SideBarItem from '../SideBarItem';
+import { getBookMarks } from '../../hooks/useBookMarks';
+import SiseListItem from '../SiseList/SiseListItem';
 import { formatPrice } from '../../utils/format';
 
 const CompareSise = () => {
@@ -52,7 +52,7 @@ const CompareSise = () => {
                 <h2>비교하기</h2>
                 <span className="sub">클릭해서 추가하기</span>
                 {bookmaredItems.map((item, index) => (
-                    <SideBarItem
+                    <SiseListItem
                         key={index}
                         house={item}
                         index={index}

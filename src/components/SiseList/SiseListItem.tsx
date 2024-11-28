@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { SiseOfBuildingWithXy } from '../models/Sise.model';
-import { formatPrice } from '../utils/format';
+import { SiseOfBuildingWithXy } from '../../models/Sise.model';
+import { formatPrice } from '../../utils/format';
 
 interface Props {
     house: SiseOfBuildingWithXy;
@@ -8,9 +8,9 @@ interface Props {
     onClick: (house: SiseOfBuildingWithXy) => void;
 }
 
-const SideBarItem = ({ house, index, onClick }: Props) => {
+const SiseListItem = ({ house, index, onClick }: Props) => {
     return (
-        <SideBarItemStyle onClick={() => onClick(house)}>
+        <SiseListItemStyle onClick={() => onClick(house)}>
             <img
                 src={`/dummyImg/dummy_${index % 20}.jpeg`}
                 alt={house.mhouseNm}
@@ -26,11 +26,11 @@ const SideBarItem = ({ house, index, onClick }: Props) => {
                 <span>{house.mhouseNm}</span>
                 <span>{house.houseType}</span>
             </div>
-        </SideBarItemStyle>
+        </SiseListItemStyle>
     );
 };
 
-export const SideBarItemStyle = styled.div`
+export const SiseListItemStyle = styled.div`
     display: flex;
     gap: 10px;
     padding: 10px;
@@ -61,4 +61,4 @@ export const SideBarItemStyle = styled.div`
     }
 `;
 
-export default SideBarItem;
+export default SiseListItem;

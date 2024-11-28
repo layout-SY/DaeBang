@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import styled from 'styled-components';
-import ErrorBox from '../common/ErrorBox';
+import ErrorBox from '../Common/ErrorBox';
 import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useTypedSelector } from '../../hooks/redux';
 
@@ -127,7 +127,7 @@ const DetailNeighbor = () => {
                     >
                         <MapMarker position={position} />
                         {data.map((item) => (
-                            <React.Fragment key={item.id}>
+                            <Fragment key={item.id}>
                                 <MapMarker
                                     onClick={() => clickMarker(item.id)}
                                     position={{
@@ -163,7 +163,7 @@ const DetailNeighbor = () => {
                                         </div>
                                     ) : null}
                                 </CustomOverlayMap>
-                            </React.Fragment>
+                            </Fragment>
                         ))}
                     </Map>
                 </>
@@ -224,9 +224,9 @@ const CategoryList = styled.ul<CategoryItemProps>`
     background: white;
     padding: 8px;
     border-radius: 6px;
-    box-shadow : 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-    li{
+    li {
         font-size: 12px;
         padding: 4px 8px;
         cursor: pointer;
@@ -235,13 +235,14 @@ const CategoryList = styled.ul<CategoryItemProps>`
         transition: all 0.2s;
 
         &:hover {
-            background: ${({ $active, theme }) => ($active ? `${theme.colors.blue}` : `${theme.colors.gray}`)};
-         
+            background: ${({ $active, theme }) =>
+                $active ? `${theme.colors.blue}` : `${theme.colors.gray}`};
         }
 
-        &.active{
-            background :  ${({ theme }) => theme.colors.blue};
-            color : white;
+        &.active {
+            background: ${({ theme }) => theme.colors.blue};
+            color: white;
+        }
     }
 `;
 
