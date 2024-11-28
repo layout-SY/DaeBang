@@ -13,7 +13,7 @@ import SiseItemSkeleton from './Sise/SiseItemSkeleton';
 import { useParams } from 'react-router';
 import NotFound from './common/NotFound';
 import { groupSiseByUmdnumWithAverages } from '../utils/sortUtils';
-import { formatPrice } from '../utils/formatUtils';
+import { formatPrice } from '../utils/format';
 import { WIDTH } from '../utils/constants';
 
 const SiseList = () => {
@@ -28,10 +28,12 @@ const SiseList = () => {
     const [filteredData, setFilteredData] =
         useState<GroupedSiseDataWithAverage[]>();
     const [activeKey, setActiveKey] = useState<string>('전체');
+    const [showAll, setShowAll] = useState(false);
 
     useEffect(() => {
         if (data) {
             const grouped = groupSiseByUmdnumWithAverages(data);
+            setActiveKey('전체');
             setFilteredData(grouped);
 
             // '전체'의 경우, 초기 10개 데이터만 visibleData에 설정
@@ -101,6 +103,10 @@ const SiseList = () => {
         dispatch(setDetail(house));
     };
 
+    const handleShowAll = () => {
+        setShowAll(!showAll);
+    };
+
     if (isPending) {
         return (
             <StyledSiseList>
@@ -123,14 +129,15 @@ const SiseList = () => {
     return (
         <>
             <ButtonContainer>
-                <ButtonScrollContainer>
-                    <FilterButton
-                        isActive={activeKey === '전체'}
-                        onClick={() => handleFilter('전체')}
-                    >
-                        전체
-                    </FilterButton>
-                    {filteredData?.map((group) => (
+                <FilterButton
+                    isActive={activeKey === '전체'}
+                    onClick={() => handleFilter('전체')}
+                >
+                    전체
+                </FilterButton>
+                {filteredData
+                    ?.slice(0, showAll ? filteredData.length : 6)
+                    .map((group) => (
                         <FilterButton
                             key={group.key}
                             isActive={activeKey === group.key}
@@ -139,21 +146,24 @@ const SiseList = () => {
                             {group.key}
                         </FilterButton>
                     ))}
-                </ButtonScrollContainer>
+
+                {filteredData && filteredData.length > 6 && (
+                    <MoreButton onClick={handleShowAll}>
+                        {showAll ? '접기' : '더보기'}
+                    </MoreButton>
+                )}
             </ButtonContainer>
             <AveragePriceContainer>
                 {activeKey === '전체' ? (
-                    <AveragePriceText>평균 월세와 전세 데이터</AveragePriceText>
+                    <AveragePriceText>전체보기</AveragePriceText>
                 ) : (
                     filteredData
                         ?.filter((group) => group.key === activeKey)
                         .map((group) => (
                             <AveragePriceText key={group.key}>
-                                {`${group.key}: 평균 월세 ${formatPrice(
-                                    group.averageMonthlyRent,
-                                )}, 평균 보증금 ${formatPrice(
-                                    group.averageDeposit,
-                                )}`}
+                                {group.key}: 평균{' '}
+                                {formatPrice(group.averageDeposit)}/{' '}
+                                {formatPrice(group.averageMonthlyRent)}
                             </AveragePriceText>
                         ))
                 )}
@@ -175,29 +185,10 @@ const SiseList = () => {
 
 const ButtonContainer = styled.div`
     display: flex;
-    overflow-x: scroll;
+    flex-wrap: wrap;
     padding: 0.5rem 0.5rem;
     width: ${WIDTH};
-`;
-
-const ButtonScrollContainer = styled.div`
-    display: flex;
-    flex-wrap: nowrap;
     gap: 0.5rem;
-    overflow-x: auto;
-    width: 100%;
-    scrollbar-width: thin;
-
-    &::-webkit-scrollbar {
-        height: 6px;
-    }
-    &::-webkit-scrollbar-thumb {
-        background-color: #007bff;
-        border-radius: 3px;
-    }
-    &::-webkit-scrollbar-track {
-        background-color: #f1f1f1;
-    }
 `;
 
 const FilterButton = styled.button<{ isActive: boolean }>`
@@ -206,30 +197,46 @@ const FilterButton = styled.button<{ isActive: boolean }>`
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: ${({ isActive }) => (isActive ? '#007bff' : '#e0e0e0')};
+    background-color: ${({ isActive, theme }) =>
+        isActive ? theme.colors.blue : '#e0e0e0'};
     color: ${({ isActive }) => (isActive ? 'white' : '#333')};
     font-weight: bold;
 
     &:hover {
-        background-color: #0056b3;
+        background-color: ${({ theme }) => theme.colors.blue};
+        color: white;
+    }
+`;
+
+const MoreButton = styled.button`
+    flex: 0 0 auto;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: ${({ theme }) => theme.colors.blue};
+    color: white;
+    font-weight: bold;
+
+    &:hover {
+        background-color: ${({ theme }) => theme.colors.blue};
         color: white;
     }
 `;
 
 const AveragePriceContainer = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 0.5rem 0;
-    background-color: #f9f9f9;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
 `;
 
-const AveragePriceText = styled.div`
-    font-size: 0.9rem;
+const AveragePriceText = styled.h2`
+    font-size: 1.5rem;
     font-weight: bold;
-    color: #555;
+    color: ${({ theme }) => theme.colors.text};
+    margin: 0;
+    margin-left: 0.5rem;
+    max-width: 100%;
+    word-wrap: break-word;
 `;
 
 export const StyledSiseList = styled.div`

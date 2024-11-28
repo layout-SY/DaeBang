@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import styled from 'styled-components';
 import DetailRoadView from './DetailRoadView';
@@ -8,6 +8,7 @@ import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import DetailViewOnMapButton from './DetailViewOnMapButton';
 import { removeDetail, setDetailOpen } from '../../store/slice/DetailSlice';
 import DetailBookMarkButton from './DetailBookmarkButton';
+import { formatPrice } from '../../utils/format';
 
 const DetailList = () => {
     const dispatch = useTypedDispatch();
@@ -39,8 +40,8 @@ const DetailList = () => {
 
                     <h2>
                         {detailInfo!.contracts[0].monthlyRent === 0
-                            ? `전세 ${detailInfo!.contracts[0].deposit}`
-                            : `월세 ${detailInfo!.contracts[0].deposit}/${detailInfo!.contracts[0].monthlyRent}`}
+                            ? `전세 ${formatPrice(detailInfo!.contracts[0].deposit)}`
+                            : `월세 ${formatPrice(detailInfo!.contracts[0].deposit)}/${formatPrice(detailInfo!.contracts[0].monthlyRent)}`}
                     </h2>
                     <div className="grid">
                         <div>
@@ -70,7 +71,7 @@ const DetailList = () => {
 
 const TEST = styled.div``;
 
-const DetailListStyle = styled.div`
+const DetailListStyle = styled.section`
     position: fixed;
     border-radius: ${({ theme }) => theme.borderRadius.large};
     top: 0;
@@ -86,9 +87,11 @@ const DetailListStyle = styled.div`
     background: #fff;
     border-right: 1px solid ${({ theme }) => theme.colors.border};
     border-left: 1px solid ${({ theme }) => theme.colors.border};
+    color: ${({ theme }) => theme.colors.text};
 
     h2 {
         margin: 0;
+        padding: 0;
     }
 
     .detail_header {
