@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import ErrorBox from '../common/ErrorBox';
+import ErrorBox from '../Common/ErrorBox';
 import { useTypedSelector } from '../../hooks/redux';
 
 const DetailRoadView = () => {

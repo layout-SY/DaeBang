@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import styled from 'styled-components';
-import { StyledSiseList } from '../SiseList';
+import { StyledSiseList } from '../SiseList/SiseList';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
-import { getBookMarks } from '../../hooks/bookMark';
+import { getBookMarks } from '../../hooks/useBookMarks';
 import BookmarkItem from './BookmarkItem';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
-import DetailList from '../Detail/DetailList';
+
+const DetailList = lazy(() => import('../Detail/DetailList'));
 
 const BookmarkList = () => {
     const [bookmarks, setBookmarks] = useState<SiseOfBuildingWithXy[]>([]);
@@ -48,7 +49,11 @@ const BookmarkList = () => {
                     <span>북마크가 없습니다</span>
                 </Empty>
             )}
-            {detailOpen && <DetailList />}
+            {detailOpen && (
+                <Suspense fallback={<></>}>
+                    <DetailList />
+                </Suspense>
+            )}
         </BookmarkListStyle>
     );
 };

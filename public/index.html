@@ -2,6 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
+        <link rel="dns-prefetch" href="https://apis.data.go.kr" />
+        <link rel="preconnect" href="https://apis.data.go.kr" crossorigin />
+        <link rel="dns-prefetch" href="https://dapi.kakao.com" />
+        <link rel="preconnect" href="https://dapi.kakao.com" crossorigin />
         <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
@@ -25,6 +29,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
         <title>React App</title>
+        <!-- DNS 조회 최적화를 위한 dns-prefetch -->
         <script
             type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0be8ca05ad0dd0c80da443e49e5f1488&libraries=services,clusterer"
