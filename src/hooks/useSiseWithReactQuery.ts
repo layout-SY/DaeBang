@@ -88,7 +88,7 @@ const useSiseWithReactQuery = () => {
                     items = [items];
                 }
             } else {
-                return;
+                return [];
             }
 
             items = items as (OneTwoSise | OfficetelSise | AptSise)[];

@@ -1,7 +1,13 @@
 import { SiseOfBuildingWithXy } from '../models/Sise.model';
 
 export const getBookMarks = (): SiseOfBuildingWithXy[] => {
-    return JSON.parse(localStorage.getItem('bookmark') || '[]');
+    try {
+        const data = localStorage.getItem('bookmark');
+        return data ? JSON.parse(data) : [];
+    } catch (error) {
+        console.error('Failed to parse bookmarks:', error);
+        return [];
+    }
 };
 
 const saveBookMarks = (bookmarks: SiseOfBuildingWithXy[]) => {
