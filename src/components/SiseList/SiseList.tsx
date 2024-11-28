@@ -1,11 +1,10 @@
 import SiseLisItem from './SiseListItem';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import {
     GroupedSiseDataWithAverage,
     SiseOfBuildingWithXy,
 } from '../../models/Sise.model';
-import DetailList from '../Detail/DetailList';
 import useSiseWithReactQuery from '../../hooks/useSiseWithReactQuery';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
@@ -15,6 +14,8 @@ import NotFound from '../Common/NotFound';
 import { groupSiseByUmdnumWithAverages } from '../../utils/sort';
 import { formatPrice } from '../../utils/format';
 import { WIDTH } from '../../utils/constants';
+
+const DetailList = lazy(() => import('../Detail/DetailList'));
 
 const SiseList = () => {
     const { data, isPending } = useSiseWithReactQuery();
@@ -177,7 +178,11 @@ const SiseList = () => {
                         onClick={() => openDetail(house)}
                     />
                 ))}
-                {detailOpen && <DetailList />}
+                {detailOpen && (
+                    <Suspense fallback={<></>}>
+                        <DetailList />
+                    </Suspense>
+                )}
             </StyledSiseList>
         </>
     );
