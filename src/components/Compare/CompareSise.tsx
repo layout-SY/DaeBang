@@ -51,6 +51,10 @@ const CompareSise = () => {
             <section className="boommark-list">
                 <h2>비교하기</h2>
                 <span className="sub">클릭해서 추가하기</span>
+
+                {bookmaredItems.length === 0 && (
+                    <p className="no-bookmark">북마크를 추가해주세요.</p>
+                )}
                 {bookmaredItems.map((item, index) => (
                     <SiseListItem
                         key={index}
@@ -166,6 +170,11 @@ const StyledCompaedSise = styled.div`
     .sub {
         margin-left: 10px;
         font-size: 0.875rem;
+    }
+
+    .no-bookmark {
+        margin-top: 5rem;
+        text-align: center;
     }
 `;
 

@@ -10,7 +10,7 @@ import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
 import SiseItemSkeleton from '../Sise/SiseItemSkeleton';
 import { useParams } from 'react-router';
-import NotFound from '../Common/NotFound';
+import NotFound from '../common/NotFound';
 import { groupSiseByUmdnumWithAverages } from '../../utils/sort';
 import { formatPrice } from '../../utils/format';
 import { WIDTH } from '../../utils/constants';

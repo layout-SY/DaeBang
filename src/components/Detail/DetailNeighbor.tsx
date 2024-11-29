@@ -1,6 +1,6 @@
 import { useEffect, useState, Fragment } from 'react';
 import styled from 'styled-components';
-import ErrorBox from '../Common/ErrorBox';
+import ErrorBox from '../common/ErrorBox';
 import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useTypedSelector } from '../../hooks/redux';
 
