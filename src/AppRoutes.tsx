@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import Layout from './components/Layout';
-import Loader from './components/Common/Loader';
+import Loader from './components/common/Loader';
 
 // 레이지 로딩을 위한 컴포넌트
 const Home = lazy(() => import('./components/Home'));
