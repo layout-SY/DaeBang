@@ -27,8 +27,10 @@
 
 -   Front : Typescript, React, styled-component, Redux ,React-Query
 -   버전 및 이슈관리 : Github
--   협업 툴 : Notion, Slack
-    <br>
+-   협업 툴 : Notion, Slack, Figma
+    -   노션 : https://www.notion.so/Ryn-2cc1e4c1836840a1b59fe919afc70076?p=1c0856ba96be4c4daf6468494933c94b&pm=s
+    -   Figma : https://www.figma.com/design/ScwvQGzy7682Fv0BYCkI5v/Bootstrap-5-UI-Kit-(Community)?node-id=5491-5567&node-type=canvas&t=sdlcBOtwE4lfmZhg-0
+        <br>
 
 ## 2. 역할 분담
 
