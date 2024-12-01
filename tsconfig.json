@@ -15,6 +15,39 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
+        /*
+          아래와 같이 path 속성을 작성해주시면 깔끔하고 마음이 편안한 코드로 파일 import 할 수 있습니다.
+
+          import { SiseOfBuildingWithXy } from '../../models/Sise.model';
+          import { toggleFilter } from '../../store/slice/filterSlice';
+          위 코드를
+
+          import { SiseOfBuildingWithXy } from 'models/Sise.model';
+          import { toggleFilter } from 'slice/filterSlice';
+          이렇게 작성할 수 있습니다. 깔끔하고 가독성도 좋죠? 자동완성으로 저렇게 작성 된답니다 :)
+        */
+        "baseUrl": ".",
+        "paths": {
+            "public/*": ["public/*"],
+            "api/*": ["src/api/*"],
+            "Bookmark/*": ["src/components/Bookmark/*"],
+            "Compare/*": ["src/components/Compare/*"],
+            "Detail/*": ["src/components/Detail/*"],
+            "Filter/*": ["src/components/Filter/*"],
+            "Map/*": ["src/components/Map/*"],
+            "Sise/*": ["src/components/Sise/*"],
+            "SiseList/*": ["src/components/SiseList/*"],
+            "common/*": ["src/components/common/*"],
+            "components/*": ["src/components/*"],
+            "data/*": ["src/data/*"],
+            "hooks/*": ["src/hooks/*"],
+            "models/*": ["src/models/*"],
+            "reducer/*": ["src/store/reducer/*"],
+            "slice/*": ["src/store/slice/*"],
+            "store/*": ["src/store/*"],
+            "style/*": ["src/style/*"],
+            "utils/*": ["src/utils/*"]
+        },
         "jsx": "react-jsx"
     },
     "include": ["src"]

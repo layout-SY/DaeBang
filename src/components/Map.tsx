@@ -5,7 +5,7 @@ import {
     CustomOverlayMap,
     MarkerClusterer,
 } from 'react-kakao-maps-sdk';
-import { useRef, useCallback, useState, useEffect } from 'react';
+import { useRef, useCallback, useState, useEffect, useMemo } from 'react';
 import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import LocationPopup from './Map/LocationPopup';
@@ -112,21 +112,38 @@ const Map = () => {
 
     // 지도 드래그가 끝날 때 마다 중심좌표를 가져옵니다
     // 그 좌표를를 바탕으로 서치파람을 업데이트 합니다.
-    const handleCenterChanged = useCallback(
-        debounce(() => {
-            const map = mapRef.current;
-            if (!map) return;
+    const handleCenterChanged = useCallback(() => {
+        const map = mapRef.current;
+        if (!map) return;
+        const center = map.getCenter();
+        const newPosition = {
+            lat: center.getLat(),
+            lng: center.getLng(),
+        };
+        searchAddressFromCoordsAndSetRegion(newPosition);
+    }, [searchAddressFromCoordsAndSetRegion]);
 
-            const center = map.getCenter();
-            const newPosition = {
-                lat: center.getLat(),
-                lng: center.getLng(),
-            };
-
-            searchAddressFromCoordsAndSetRegion(newPosition);
-        }, 200),
-        [searchAddressFromCoordsAndSetRegion],
+    const debouncedHandleCenterChanged = useMemo(
+        () => debounce(handleCenterChanged, 200),
+        [handleCenterChanged],
     );
+
+    useEffect(() => {
+        return () => {
+            debouncedHandleCenterChanged.cancel();
+        };
+    }, [debouncedHandleCenterChanged]);
+    /*
+      debounce 함수를 매번 생성하지 않도록 메모이제이션을 시도하신 것 같습니다.
+      하지만 위와 같은 코드는 원하시는 대로 메모이제이션이 동작하지 않습니다.
+      useCallback은 함수 참조 자체를 메모이제이션 합니다. 하지만 debounce()는 고차함수로, 매번 새로운 함수를 생성하게 됩니다.
+      그래서 매 렌더링마다 새로운 함수 참조를 받게되고 결과적으로 원하는 방향의 메모이제이션이 되지 않습니다.
+
+      그렇기 때문에 위와 같이 debounce 함수는 useMemo로 메모이제이션 해야,
+      매번 debounce()함수를 생성하지 않고 이전에 생성한 debounce를 사용할 것입니다.
+
+      그리고 컨포넌트가 언마운트 시 대기 중이던 debounce를 해제하는 cleanup 함수도 넣어주시면 좋을 것 같습니다 :)
+    */
 
     return (
         <>
@@ -145,7 +162,7 @@ const Map = () => {
                 // level={zoom}
                 // onZoomChanged={(target) => setZoom(target.getLevel())}
                 keyboardShortcuts={true}
-                onCenterChanged={handleCenterChanged}
+                onCenterChanged={debouncedHandleCenterChanged} // useMemo에 메모이제이션된 debounce 함수
                 style={{
                     display: 'flex',
                     width: '100%',

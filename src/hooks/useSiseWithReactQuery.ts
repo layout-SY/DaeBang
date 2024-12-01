@@ -90,6 +90,7 @@ const useSiseWithReactQuery = () => {
             } else {
                 return [];
             }
+            // 여기는 switch case 문으로 작성하면 더 좋을 것 같네요 :)
 
             items = items as (OneTwoSise | OfficetelSise | AptSise)[];
 

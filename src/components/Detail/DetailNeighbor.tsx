@@ -25,6 +25,8 @@ type CategoryCode =
     | 'HP8'
     | 'PM9';
 
+// 위의 타입은 enum으로 선언했어도 좋았을 것 같습니다. 휴면 에러를 줄이기 아주 좋거든요 :)
+
 interface Category {
     id: CategoryCode;
     name: string;
