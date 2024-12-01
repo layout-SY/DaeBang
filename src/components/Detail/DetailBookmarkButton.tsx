@@ -24,12 +24,15 @@ const DetailBookMarkButton = () => {
         if (bookmarked) {
             setBookmarked(false);
             deleteBookMark(detailInfo);
-            window.dispatchEvent(new Event('bookmarksChanged'));
         } else {
             setBookmarked(true);
             addBookMark(detailInfo);
-            window.dispatchEvent(new Event('bookmarksChanged'));
         }
+        window.dispatchEvent(new Event('bookmarksChanged'));
+        /* 
+          window.dispatchEvent(new Event('bookmarksChanged')); 는 bookmarked와 관계 없이 일어나는 부분이니
+          if문 바깥쪽에 작성하는 것이 가독성에 더 좋고 코드의 양도 줄여줄 수 있을 것 같습니다.
+        */
     };
 
     return (
