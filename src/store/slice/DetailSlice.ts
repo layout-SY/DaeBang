@@ -15,8 +15,8 @@ const detailSlice = createSlice({
     name: 'detail',
     initialState,
     reducers: {
-        setDetailOpen: (state, { payload }: PayloadAction<boolean>) => {
-            state.detailOpen = payload;
+        setDetailOpen: (state, action: PayloadAction<boolean>) => {
+            state.detailOpen = action.payload;
         },
         setDetail: (
             state,
