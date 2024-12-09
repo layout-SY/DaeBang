@@ -1,6 +1,6 @@
-import SiseLisItem from './SiseListItem';
+import React, { useEffect, useState, Suspense, lazy, useRef } from 'react';
 import styled from 'styled-components';
-import { useEffect, useState, Suspense, lazy } from 'react';
+import SiseLisItem from './SiseListItem';
 import {
     GroupedSiseDataWithAverage,
     SiseOfBuildingWithXy,
@@ -22,14 +22,14 @@ const SiseList = () => {
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const dispatch = useTypedDispatch();
     const [visibleData, setVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
-    const [filteredVisibleData, setFilteredVisibleData] = useState<
-        SiseOfBuildingWithXy[]
-    >([]);
+    const [filteredVisibleData, setFilteredVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
     const { category } = useParams();
-    const [filteredData, setFilteredData] =
-        useState<GroupedSiseDataWithAverage[]>();
+    const [filteredData, setFilteredData] = useState<GroupedSiseDataWithAverage[]>();
     const [activeKey, setActiveKey] = useState<string>('전체');
     const [showAll, setShowAll] = useState(false);
+    const observerRef = useRef<HTMLDivElement | null>(null);
+
+    const isValidCategory = ['apt', 'officetel', 'onetwo'].includes(category ?? '');
 
     useEffect(() => {
         if (data) {
@@ -43,27 +43,13 @@ const SiseList = () => {
         }
     }, [data]);
 
-    if (
-        category !== 'apt' &&
-        category !== 'officetel' &&
-        category !== 'onetwo'
-    ) {
-        return (
-            <StyledSiseList>
-                <NotFound />
-            </StyledSiseList>
-        );
-    }
-
     const loadMoreData = () => {
         if (activeKey === '전체' && data && visibleData.length < data.length) {
             const currentLength = visibleData.length;
             const nextData = data.slice(currentLength, currentLength + 10);
             setVisibleData((prev) => [...prev, ...nextData]);
         } else if (activeKey !== '전체') {
-            const selectedGroup = filteredData?.find(
-                (group) => group.key === activeKey,
-            );
+            const selectedGroup = filteredData?.find((group) => group.key === activeKey);
             if (selectedGroup) {
                 const currentLength = filteredVisibleData.length;
                 const nextData = selectedGroup.SiseData.slice(
@@ -75,12 +61,27 @@ const SiseList = () => {
         }
     };
 
-    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        const target = e.target as HTMLElement;
-        if (target.scrollHeight - target.scrollTop <= target.clientHeight + 5) {
-            loadMoreData();
+    // Intersection Observer 설정
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    loadMoreData();
+                }
+            },
+            { threshold: 1.0 },
+        );
+
+        if (observerRef.current) {
+            observer.observe(observerRef.current);
         }
-    };
+
+        return () => {
+            if (observerRef.current) {
+                observer.unobserve(observerRef.current);
+            }
+        };
+    }, [visibleData, filteredVisibleData, activeKey]);
 
     const handleFilter = (key: string) => {
         setActiveKey(key);
@@ -89,9 +90,7 @@ const SiseList = () => {
             setVisibleData(data.slice(0, 10));
             setFilteredVisibleData([]); // 필터링 데이터 초기화
         } else {
-            const selectedGroup = filteredData?.find(
-                (group) => group.key === key,
-            );
+            const selectedGroup = filteredData?.find((group) => group.key === key);
             if (selectedGroup) {
                 setFilteredVisibleData(selectedGroup.SiseData.slice(0, 10));
                 setVisibleData([]); // 전체 데이터 초기화
@@ -111,21 +110,14 @@ const SiseList = () => {
     if (isPending) {
         return (
             <StyledSiseList>
-                <SiseItemSkeleton />
-                <SiseItemSkeleton />
-                <SiseItemSkeleton />
-                <SiseItemSkeleton />
-                <SiseItemSkeleton />
-                <SiseItemSkeleton />
-                <SiseItemSkeleton />
-                <SiseItemSkeleton />
-                <SiseItemSkeleton />
+                {[...Array(8)].map((_, i) => (
+                    <SiseItemSkeleton key={i} />
+                ))}
             </StyledSiseList>
         );
     }
 
-    const displayedData =
-        activeKey === '전체' ? visibleData : filteredVisibleData;
+    const displayedData = activeKey === '전체' ? visibleData : filteredVisibleData;
 
     return (
         <>
@@ -169,7 +161,7 @@ const SiseList = () => {
                         ))
                 )}
             </AveragePriceContainer>
-            <StyledSiseList onScroll={handleScroll}>
+            <StyledSiseList>
                 {displayedData.map((house, index) => (
                     <SiseLisItem
                         key={`${house.umdNum}-${index}`}
@@ -183,11 +175,13 @@ const SiseList = () => {
                         <DetailList />
                     </Suspense>
                 )}
+                <Observer ref={observerRef} />
             </StyledSiseList>
         </>
     );
 };
 
+// Styled Components
 const ButtonContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -244,12 +238,16 @@ const AveragePriceText = styled.h2`
     word-wrap: break-word;
 `;
 
+const Observer = styled.div`
+    height: 1px;
+`;
+
 export const StyledSiseList = styled.div`
     display: flex;
     flex-direction: column;
     height: calc(100% - 120px); /* 버튼 영역과 평균 영역 포함 */
     width: ${WIDTH};
-    overflow-y: scroll;
+    overflow-y: auto;
 `;
 
 export default SiseList;
