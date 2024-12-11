@@ -54,7 +54,7 @@ const StyledToggleButton = styled.button<StyledToggleButtonProps>`
     font-weight: bold;
     color: ${({ $isActive, theme }) =>
         $isActive ? 'white' : theme.colors.text};
-    width: 100%;
+    width: 3.5rem;
     height: 100%;
     border: none;
     font-size: 14px;
