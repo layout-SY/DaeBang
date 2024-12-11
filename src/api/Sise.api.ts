@@ -14,25 +14,25 @@ interface ApiParams {
     numOfRows: number;
 }
 
-export const SiseApi = (params: ApiParams): AxiosInstance => {
-    return axios.create({
-        baseURL:
-            'http://apis.data.go.kr/1613000/RTMSDataSvcRHRent/getRTMSDataSvcRHRent',
-        params: {
-            serviceKey: process.env.REACT_APP_Sise_API_KEY,
+// export const SiseApi = (params: ApiParams): AxiosInstance => {
+//     return axios.create({
+//         baseURL:
+//             'http://apis.data.go.kr/1613000/RTMSDataSvcRHRent/getRTMSDataSvcRHRent',
+//         params: {
+//             serviceKey: process.env.REACT_APP_Sise_API_KEY,
 
-            ...params,
-        },
-    });
-};
+//             ...params,
+//         },
+//     });
+// };
 
-export const fetchSiseData = async (
-    params: ApiParams,
-): Promise<SiseApiResponseAll> => {
-    const api = SiseApi(params);
-    const response = await api.get<SiseApiResponseAll>('');
-    return response.data;
-};
+// export const fetchSiseData = async (
+//     params: ApiParams,
+// ): Promise<SiseApiResponseAll> => {
+//     const api = SiseApi(params);
+//     const response = await api.get<SiseApiResponseAll>('');
+//     return response.data;
+// };
 
 export const fetchSiseDataThatThrowsError = async <T>(
     url: string,
