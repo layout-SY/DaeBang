@@ -16,7 +16,7 @@ const FilterBar = () => {
 const StyledFilterBar = styled.div`
     position: absolute;
     top: 10px;
-    right: -110%;
+    right: -115%;
     display: flex;
     gap: 10px;
 `;

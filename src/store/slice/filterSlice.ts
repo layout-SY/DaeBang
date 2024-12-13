@@ -4,6 +4,9 @@ export interface FiltersState {
     filters: string[]; // 필터는 "월세", "전세" 문자열 배열로 관리
     year: string;
     month: string;
+    depositRange: [number, number];
+    rentRange: [number, number];
+    areaRange: [number, number];
 }
 
 const getCurrentYear = () => new Date().getFullYear();
@@ -14,6 +17,9 @@ const initialState: FiltersState = {
     filters: ['월세'], // 기본값으로 "월세" 필터 설정
     year: getCurrentYear().toString(),
     month: getCurrentMonth(),
+    depositRange: [0, Infinity],
+    rentRange: [0, Infinity],
+    areaRange: [0, Infinity],
 };
 
 const filtersSlice = createSlice({
@@ -42,9 +48,25 @@ const filtersSlice = createSlice({
         setMonth: (state, action: PayloadAction<string>) => {
             state.month = action.payload;
         },
+        setDepositRange: (state, action: PayloadAction<[number, number]>) => {
+            state.depositRange = action.payload;
+        },
+        setRentRange: (state, action: PayloadAction<[number, number]>) => {
+            state.rentRange = action.payload;
+        },
+        setAreaRange: (state, action: PayloadAction<[number, number]>) => {
+            state.areaRange = action.payload;
+        },
     },
 });
 
-export const { toggleFilter, resetFilters, setYear, setMonth } =
-    filtersSlice.actions;
+export const {
+    toggleFilter,
+    resetFilters,
+    setYear,
+    setMonth,
+    setDepositRange,
+    setRentRange,
+    setAreaRange,
+} = filtersSlice.actions;
 export const filtersReducer = filtersSlice.reducer;

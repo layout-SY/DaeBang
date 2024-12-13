@@ -1,18 +1,22 @@
 import styled from 'styled-components';
 import { useState, useRef, useEffect } from 'react';
-import ReactSlider from 'react-slider';
+import Slider from './Slider';
 import { formatPrice } from '../../utils/format';
+import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
+import {
+    setDepositRange,
+    setRentRange,
+    setAreaRange,
+} from '../../store/slice/filterSlice';
 
 const FilterBox = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const [depositRange, setDepositRange] = useState<[number, number]>([
-        0,
-        Infinity,
-    ]);
-    const [rentRange, setRentRange] = useState<[number, number]>([0, Infinity]);
-    const [areaRange, setAreaRange] = useState<[number, number]>([0, Infinity]);
+    const { depositRange, rentRange, areaRange } = useTypedSelector(
+        (state) => state.filters,
+    );
+    const dispatch = useTypedDispatch();
 
     const handleToggle = () => {
         setIsOpen((prev) => !prev);
@@ -41,77 +45,79 @@ const FilterBox = () => {
 
     return (
         <div ref={dropdownRef}>
-            <StyledFilterBox onClick={handleToggle}>FilterBox</StyledFilterBox>
+            <StyledFilterBox onClick={handleToggle}>
+                가격 면적 필터
+            </StyledFilterBox>
             {isOpen && (
                 <DropdownBox>
-                    <div>
-                        <h3>가격</h3>
+                    <Filter>
+                        <FilterTitle>가격</FilterTitle>
                         <label>보증금(전세금)</label>
-                        <StyledSlider
+                        <Slider
                             min={0}
-                            max={900000000}
-                            step={10000000}
+                            max={91000}
+                            step={1000}
                             value={depositRange}
-                            onChange={(value) =>
-                                setDepositRange(value as [number, number])
+                            onChange={(value) => {
+                                if (value[1] > 90000) {
+                                    dispatch(
+                                        setDepositRange([value[0], Infinity]),
+                                    );
+                                } else {
+                                    dispatch(setDepositRange(value));
+                                }
+                            }}
+                            formatValue={(value) =>
+                                value === Infinity
+                                    ? '무제한'
+                                    : `${formatPrice(value)}`
                             }
-                            withTracks
-                            pearling
                         />
-                        <span className="range-text">
-                            {formatPrice(depositRange[0] / 100000)} ~{' '}
-                            {depositRange[1] === Infinity
-                                ? '무제한'
-                                : `${formatPrice(depositRange[1] / 10000)}`}
-                        </span>
+
                         <label>월세</label>
-                        <StyledSlider
+                        <Slider
                             min={0}
-                            max={3500000}
-                            step={100000}
+                            max={360}
+                            step={10}
                             value={rentRange}
-                            onChange={(value) =>
-                                setRentRange(value as [number, number])
+                            onChange={(value) => {
+                                if (value[1] > 350) {
+                                    dispatch(
+                                        setRentRange([value[0], Infinity]),
+                                    );
+                                } else {
+                                    dispatch(setRentRange(value));
+                                }
+                            }}
+                            formatValue={(value) =>
+                                value === Infinity
+                                    ? '무제한'
+                                    : `${formatPrice(value)}`
                             }
-                            withTracks
-                            pearling
                         />
-                        <span className="range-text">
-                            {formatPrice(rentRange[0] / 10000)} ~{' '}
-                            {rentRange[1] === Infinity
-                                ? '무제한'
-                                : `${formatPrice(rentRange[1] / 10000)}`}
-                        </span>
-                    </div>
-                    <div>
-                        <h3>면적</h3>
+                    </Filter>
+                    <Filter>
+                        <FilterTitle>면적</FilterTitle>
                         <label>전용면적</label>
-                        <StyledSlider
+                        <Slider
                             min={0}
-                            max={300}
-                            step={1}
+                            max={6 * 33 + 33}
+                            step={33}
                             value={areaRange}
-                            onChange={(value) =>
-                                setAreaRange(value as [number, number])
+                            onChange={(value) => {
+                                if (value[1] > 6 * 33) {
+                                    dispatch(
+                                        setAreaRange([value[0], Infinity]),
+                                    );
+                                } else {
+                                    dispatch(setAreaRange(value));
+                                }
+                            }}
+                            formatValue={(value) =>
+                                value === Infinity ? '무제한' : `${value}㎡`
                             }
-                            withTracks
-                            pearling
                         />
-                        <div>0 ~ 300</div>
-                    </div>
-                    <div>
-                        <h3>연한</h3>
-                        <label>전용면적</label>
-                        <StyledSlider
-                            min={0}
-                            max={300}
-                            step={1}
-                            value={[0, 300]}
-                            withTracks
-                            pearling
-                        />
-                        <div>0 ~ 300</div>
-                    </div>
+                    </Filter>
                 </DropdownBox>
             )}
         </div>
@@ -142,6 +148,7 @@ const StyledFilterBox = styled.div`
 const DropdownBox = styled.div`
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
     width: 300px;
     position: absolute;
     margin-top: 10px;
@@ -152,33 +159,15 @@ const DropdownBox = styled.div`
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
-const StyledSlider = styled(ReactSlider)`
+const Filter = styled.div`
     display: flex;
-    align-items: center;
-    width: 100%;
-    height: 5px;
-    margin-bottom: 10px;
+    flex-direction: column;
+    gap: 0.5rem;
+`;
 
-    .thumb {
-        height: 25px;
-        width: 25px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 50%;
-        cursor: grab;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .track {
-        top: 0;
-        bottom: 0;
-        background: #ddd;
-        border-radius: 999px;
-    }
-
-    .track.track-1 {
-        background: ${({ theme }) => theme.colors.blue};
-    }
+const FilterTitle = styled.div`
+    font-size: 1.2rem;
+    font-weight: 600;
 `;
 
 export default FilterBox;
