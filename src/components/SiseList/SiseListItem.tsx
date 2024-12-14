@@ -23,7 +23,7 @@ const SiseListItem = ({ house, index, onClick }: Props) => {
                         ? `전세 ${formatPrice(house.contracts[0].deposit)}`
                         : `월세 ${formatPrice(house.contracts[0].deposit)}/${formatPrice(house.contracts[0].monthlyRent)}`}
                 </h3>
-                <span>{house.mhouseNm}</span>
+                <span>{`${house.umdNum} ${house.mhouseNm}`}</span>
                 <span>{house.houseType}</span>
             </div>
         </SiseListItemStyle>

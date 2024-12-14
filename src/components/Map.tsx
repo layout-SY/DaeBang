@@ -12,6 +12,7 @@ import LocationPopup from './Map/LocationPopup';
 import useSiseWithReactQuery from '../hooks/useSiseWithReactQuery';
 import { MAP_CENTER_POSITION, MAP_ZOOM_LEVEL } from '../utils/constants';
 import CustomMapMarker from './Map/CustomMapMarker';
+import { useTypedSelector } from '../hooks/redux';
 
 export interface Position {
     lat: number;
@@ -24,6 +25,9 @@ const Map = () => {
     const [address, setAddress] = useState<string>('');
     // const [zoom, setZoom] = useState<number>(MAP_ZOOM_LEVEL);
     const { data, isPending, isError, error } = useSiseWithReactQuery();
+    const { depositRange, rentRange, areaRange } = useTypedSelector(
+        (state) => state.filters,
+    );
 
     // ref를 전역적으로 접근 가능하게 만들기
     useEffect(() => {
@@ -182,16 +186,46 @@ const Map = () => {
                     >
                         {data &&
                             // zoom <= 7 &&
-                            data.map((item) => {
-                                return (
-                                    <CustomOverlayMap
-                                        key={`${item.umdNum} ${item.jibun} ${item.mhouseNm}`}
-                                        position={{ lat: item.y, lng: item.x }}
-                                    >
-                                        <CustomMapMarker sise={item} />
-                                    </CustomOverlayMap>
-                                );
-                            })}
+                            data
+                                .filter((item) => {
+                                    const depositString =
+                                        item.contracts[0].deposit;
+                                    const deposit =
+                                        typeof depositString === 'string'
+                                            ? Number(
+                                                  depositString.replace(
+                                                      /,/g,
+                                                      '',
+                                                  ),
+                                              )
+                                            : Number(depositString);
+
+                                    return (
+                                        deposit >= depositRange[0] &&
+                                        deposit <= depositRange[1] &&
+                                        item.contracts[0].monthlyRent >=
+                                            rentRange[0] &&
+                                        item.contracts[0].monthlyRent <=
+                                            rentRange[1] &&
+                                        item.contracts[0].excluUseAr >=
+                                            areaRange[0] &&
+                                        item.contracts[0].excluUseAr <=
+                                            areaRange[1]
+                                    );
+                                })
+                                .map((item) => {
+                                    return (
+                                        <CustomOverlayMap
+                                            key={`${item.umdNum} ${item.jibun} ${item.mhouseNm}`}
+                                            position={{
+                                                lat: item.y,
+                                                lng: item.x,
+                                            }}
+                                        >
+                                            <CustomMapMarker sise={item} />
+                                        </CustomOverlayMap>
+                                    );
+                                })}
                     </MarkerClusterer>
                 )}
 

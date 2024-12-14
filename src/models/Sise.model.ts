@@ -131,3 +131,11 @@ export interface GroupedSiseDataWithAverage {
     averageDeposit: number;
     SiseData: SiseOfBuildingWithXy[];
 }
+
+export interface OpenAPI_ServiceResponse {
+    cmmMsgHeader: {
+        errMsg: string;
+        returnAuthMsg: string;
+        returnReasonCode: string;
+    };
+}

@@ -5,6 +5,7 @@ import {
     OneTwoSise,
     OfficetelSise,
     AptSise,
+    OpenAPI_ServiceResponse,
 } from '../models/Sise.model';
 
 interface ApiParams {
@@ -40,7 +41,9 @@ export const fetchSiseDataThatThrowsError = async <T>(
     signal?: AbortSignal,
 ): Promise<BaseSiseAPIResponse<T>> => {
     try {
-        const response = await axios.get<BaseSiseAPIResponse<T>>(url, {
+        const response = await axios.get<
+            BaseSiseAPIResponse<T> | OpenAPI_ServiceResponse
+        >(url, {
             params: {
                 serviceKey:
                     'A20RCgS2wjkbDnuSQthB8HSa5fsL6y/q41joBu21NW7NA39fbaJ5sXigJU0DaNTPAy7sHo3do1Md+hpnc0lUWg==',
@@ -48,7 +51,17 @@ export const fetchSiseDataThatThrowsError = async <T>(
             },
             signal,
         });
-        return response.data;
+
+        // 에러 응답 체크
+        const errorResponse = response.data as OpenAPI_ServiceResponse;
+        if (errorResponse.cmmMsgHeader?.returnReasonCode) {
+            const errorCode = errorResponse.cmmMsgHeader.returnReasonCode;
+            const errorMessage = errorResponse.cmmMsgHeader.errMsg;
+
+            throw new Error(`[${errorCode}] ${errorMessage}`);
+        }
+
+        return response.data as BaseSiseAPIResponse<T>;
     } catch (error) {
         throw error;
     }
