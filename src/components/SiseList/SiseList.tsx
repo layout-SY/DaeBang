@@ -1,47 +1,55 @@
 import SiseLisItem from './SiseListItem';
 import styled from 'styled-components';
-import { useEffect, useState, Suspense, lazy } from 'react';
-import {
-    GroupedSiseDataWithAverage,
-    SiseOfBuildingWithXy,
-} from '../../models/Sise.model';
+import { useEffect, useState, Suspense, lazy, useRef } from 'react';
+import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import useSiseWithReactQuery from '../../hooks/useSiseWithReactQuery';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setDetail, setDetailOpen } from '../../store/slice/DetailSlice';
 import SiseItemSkeleton from '../Sise/SiseItemSkeleton';
 import { useParams } from 'react-router';
 import NotFound from '../common/NotFound';
-import { groupSiseByUmdnumWithAverages } from '../../utils/sort';
-import { formatPrice } from '../../utils/format';
+
 import { WIDTH } from '../../utils/constants';
+import DongSelect from './DongSelect';
 
 const DetailList = lazy(() => import('../Detail/DetailList'));
 
 const SiseList = () => {
     const { data, isPending } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
+    const { depositRange, rentRange, areaRange } = useTypedSelector(
+        (state) => state.filters,
+    );
     const dispatch = useTypedDispatch();
-    const [visibleData, setVisibleData] = useState<SiseOfBuildingWithXy[]>([]);
-    const [filteredVisibleData, setFilteredVisibleData] = useState<
-        SiseOfBuildingWithXy[]
-    >([]);
     const { category } = useParams();
-    const [filteredData, setFilteredData] =
-        useState<GroupedSiseDataWithAverage[]>();
-    const [activeKey, setActiveKey] = useState<string>('전체');
-    const [showAll, setShowAll] = useState(false);
+    const [page, setPage] = useState(1); // 무한 스크롤을 위한 페이지, 1페이지부터 시작 하여 10개씩 더 보여줌
+    const observerRef = useRef<HTMLDivElement | null>(null);
+    const [seledctedDongs, setSelectedDongs] = useState<string[]>([]); // 선택된 동 이름의 리스트, 최초에는 선택된 동이 없으므로 전체 데이터를 보여줌
 
     useEffect(() => {
-        if (data) {
-            const grouped = groupSiseByUmdnumWithAverages(data);
-            setActiveKey('전체');
-            setFilteredData(grouped);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    setPage((prevPage) => prevPage + 1);
+                }
+            },
+            {
+                root: null,
+                rootMargin: '0px',
+                threshold: 1.0,
+            },
+        );
 
-            // '전체'의 경우, 초기 10개 데이터만 visibleData에 설정
-            setVisibleData(data.slice(0, 10));
-            setFilteredVisibleData([]); // 초기화
+        if (observerRef.current) {
+            observer.observe(observerRef.current);
         }
-    }, [data]);
+
+        return () => {
+            if (observerRef.current) {
+                observer.unobserve(observerRef.current);
+            }
+        };
+    }, []);
 
     if (
         category !== 'apt' &&
@@ -54,59 +62,6 @@ const SiseList = () => {
             </StyledSiseList>
         );
     }
-
-    const loadMoreData = () => {
-        if (activeKey === '전체' && data && visibleData.length < data.length) {
-            const currentLength = visibleData.length;
-            const nextData = data.slice(currentLength, currentLength + 10);
-            setVisibleData((prev) => [...prev, ...nextData]);
-        } else if (activeKey !== '전체') {
-            const selectedGroup = filteredData?.find(
-                (group) => group.key === activeKey,
-            );
-            if (selectedGroup) {
-                const currentLength = filteredVisibleData.length;
-                const nextData = selectedGroup.SiseData.slice(
-                    currentLength,
-                    currentLength + 10,
-                );
-                setFilteredVisibleData((prev) => [...prev, ...nextData]);
-            }
-        }
-    };
-
-    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        const target = e.target as HTMLElement;
-        if (target.scrollHeight - target.scrollTop <= target.clientHeight + 5) {
-            loadMoreData();
-        }
-    };
-
-    const handleFilter = (key: string) => {
-        setActiveKey(key);
-
-        if (key === '전체' && data) {
-            setVisibleData(data.slice(0, 10));
-            setFilteredVisibleData([]); // 필터링 데이터 초기화
-        } else {
-            const selectedGroup = filteredData?.find(
-                (group) => group.key === key,
-            );
-            if (selectedGroup) {
-                setFilteredVisibleData(selectedGroup.SiseData.slice(0, 10));
-                setVisibleData([]); // 전체 데이터 초기화
-            }
-        }
-    };
-
-    const openDetail = (house: SiseOfBuildingWithXy) => {
-        dispatch(setDetailOpen(true));
-        dispatch(setDetail(house));
-    };
-
-    const handleShowAll = () => {
-        setShowAll(!showAll);
-    };
 
     if (isPending) {
         return (
@@ -124,37 +79,19 @@ const SiseList = () => {
         );
     }
 
-    const displayedData =
-        activeKey === '전체' ? visibleData : filteredVisibleData;
+    const openDetail = (house: SiseOfBuildingWithXy) => {
+        dispatch(setDetailOpen(true));
+        dispatch(setDetail(house));
+    };
 
     return (
         <>
-            <ButtonContainer>
-                <FilterButton
-                    isActive={activeKey === '전체'}
-                    onClick={() => handleFilter('전체')}
-                >
-                    전체
-                </FilterButton>
-                {filteredData
-                    ?.slice(0, showAll ? filteredData.length : 6)
-                    .map((group) => (
-                        <FilterButton
-                            key={group.key}
-                            isActive={activeKey === group.key}
-                            onClick={() => handleFilter(group.key)}
-                        >
-                            {group.key}
-                        </FilterButton>
-                    ))}
-
-                {filteredData && filteredData.length > 6 && (
-                    <MoreButton onClick={handleShowAll}>
-                        {showAll ? '접기' : '더보기'}
-                    </MoreButton>
-                )}
-            </ButtonContainer>
-            <AveragePriceContainer>
+            <DongSelect
+                data={data as SiseOfBuildingWithXy[]}
+                selectedDongs={seledctedDongs}
+                setSelectedDongs={setSelectedDongs}
+            />
+            {/* <AveragePriceContainer>
                 {activeKey === '전체' ? (
                     <AveragePriceText>전체보기</AveragePriceText>
                 ) : (
@@ -168,16 +105,40 @@ const SiseList = () => {
                             </AveragePriceText>
                         ))
                 )}
-            </AveragePriceContainer>
-            <StyledSiseList onScroll={handleScroll}>
-                {displayedData.map((house, index) => (
-                    <SiseLisItem
-                        key={`${house.umdNum}-${index}`}
-                        house={house}
-                        index={index}
-                        onClick={() => openDetail(house)}
-                    />
-                ))}
+            </AveragePriceContainer> */}
+            <StyledSiseList>
+                {data
+                    ?.filter(
+                        (house) =>
+                            seledctedDongs.length === 0 ||
+                            seledctedDongs.includes(house.umdNum),
+                    )
+                    .filter((house) => {
+                        const depositString = house.contracts[0].deposit;
+                        const deposit =
+                            typeof depositString === 'string'
+                                ? Number(depositString.replace(/,/g, ''))
+                                : Number(depositString);
+
+                        return (
+                            deposit >= depositRange[0] &&
+                            deposit <= depositRange[1] &&
+                            house.contracts[0].monthlyRent >= rentRange[0] &&
+                            house.contracts[0].monthlyRent <= rentRange[1] &&
+                            house.contracts[0].excluUseAr >= areaRange[0] &&
+                            house.contracts[0].excluUseAr <= areaRange[1]
+                        );
+                    })
+                    .slice(0, page * 10)
+                    .map((house, index) => (
+                        <SiseLisItem
+                            key={`${house.umdNum}-${index}`}
+                            house={house}
+                            index={index}
+                            onClick={() => openDetail(house)}
+                        />
+                    ))}
+                <div ref={observerRef} />
                 {detailOpen && (
                     <Suspense fallback={<></>}>
                         <DetailList />
@@ -187,62 +148,6 @@ const SiseList = () => {
         </>
     );
 };
-
-const ButtonContainer = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0.5rem 0.5rem;
-    width: ${WIDTH};
-    gap: 0.5rem;
-`;
-
-const FilterButton = styled.button<{ isActive: boolean }>`
-    flex: 0 0 auto;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: ${({ isActive, theme }) =>
-        isActive ? theme.colors.blue : '#e0e0e0'};
-    color: ${({ isActive }) => (isActive ? 'white' : '#333')};
-    font-weight: bold;
-
-    &:hover {
-        background-color: ${({ theme }) => theme.colors.blue};
-        color: white;
-    }
-`;
-
-const MoreButton = styled.button`
-    flex: 0 0 auto;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.colors.blue};
-    color: white;
-    font-weight: bold;
-
-    &:hover {
-        background-color: ${({ theme }) => theme.colors.blue};
-        color: white;
-    }
-`;
-
-const AveragePriceContainer = styled.div`
-    display: flex;
-    padding: 0.5rem 0;
-`;
-
-const AveragePriceText = styled.h2`
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: ${({ theme }) => theme.colors.text};
-    margin: 0;
-    margin-left: 0.5rem;
-    max-width: 100%;
-    word-wrap: break-word;
-`;
 
 export const StyledSiseList = styled.div`
     display: flex;
