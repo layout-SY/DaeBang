@@ -15,7 +15,7 @@ import DongSelect from './DongSelect';
 const DetailList = lazy(() => import('../Detail/DetailList'));
 
 const SiseList = () => {
-    const { data, isPending } = useSiseWithReactQuery();
+    const { data = [], isPending } = useSiseWithReactQuery();
     const { detailOpen } = useTypedSelector((state) => state.detail);
     const { depositRange, rentRange, areaRange } = useTypedSelector(
         (state) => state.filters,
