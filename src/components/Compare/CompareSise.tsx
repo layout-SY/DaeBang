@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SiseOfBuildingWithXy } from '../../models/Sise.model';
 import styled from 'styled-components';
 import { WIDTH } from '../../utils/constants';
@@ -13,38 +13,50 @@ const CompareSise = () => {
 
     const bookmaredItems = getBookMarks();
 
-    const comparisonFields = [
-        {
-            label: '건축년도',
-            getValue: (item: SiseOfBuildingWithXy) => item.buildYear || '-',
-        },
-        {
-            label: '층수',
-            getValue: (item: SiseOfBuildingWithXy) =>
-                item.contracts[0]?.floor || '-',
-        },
-        {
-            label: '면적',
-            getValue: (item: SiseOfBuildingWithXy) =>
-                item.contracts[0]?.excluUseAr
-                    ? `${item.contracts[0].excluUseAr}㎡`
-                    : '-',
-        },
-        {
-            label: '보증금',
-            getValue: (item: SiseOfBuildingWithXy) =>
-                item.contracts[0]?.deposit
-                    ? `${formatPrice(item.contracts[0].deposit)}`
-                    : '-',
-        },
-        {
-            label: '월세',
-            getValue: (item: SiseOfBuildingWithXy) =>
-                item.contracts[0]?.monthlyRent
-                    ? `${formatPrice(item.contracts[0].monthlyRent)}`
-                    : '-',
-        },
-    ];
+    const comparisonFields = useMemo(
+        () => [
+            {
+                label: '건축년도',
+                getValue: (item: SiseOfBuildingWithXy) => item.buildYear || '-',
+            },
+            {
+                label: '층수',
+                getValue: (item: SiseOfBuildingWithXy) =>
+                    item.contracts[0]?.floor || '-',
+            },
+            {
+                label: '면적',
+                getValue: (item: SiseOfBuildingWithXy) =>
+                    item.contracts[0]?.excluUseAr
+                        ? `${item.contracts[0].excluUseAr}㎡`
+                        : '-',
+            },
+            {
+                label: '보증금',
+                getValue: (item: SiseOfBuildingWithXy) =>
+                    item.contracts[0]?.deposit
+                        ? `${formatPrice(item.contracts[0].deposit)}`
+                        : '-',
+            },
+            {
+                label: '월세',
+                getValue: (item: SiseOfBuildingWithXy) =>
+                    item.contracts[0]?.monthlyRent
+                        ? `${formatPrice(item.contracts[0].monthlyRent)}`
+                        : '-',
+            },
+        ],
+        [],
+    );
+    /* 
+      배열 내의 객체와 함수를 생각했을 때 해당 내용은 메모이제이션을 하는 것이 성능상 더 좋을 것 같습니다.
+      위의 내용 정도면 CompareSise 컴포넌트가 리렌더링 되었을 때, 다시 배열을 생성해도 크게 무리가 없을 정도의 내용이긴 하지만
+      프로젝트의 크기가 더 커진다던지, 배열 내의 내용이 더 복잡해질 경우에는
+      해당 컴포넌트가 리렌더링 될 때, 이 배열도 새로 생성될 필요가 있을까?를 고려해서 메모이제이션을 도입하면 좋습니다.
+
+      아마 좀 더 공부하시다보면 useMemo, useCallback을 쓰면 성능이 더 안좋아진다- 같은 말을 듣게 되실 수 있는데,
+      그것은 메모이제이션을 남발했을 때의 이야기이지, 적재적소에 쓰인다면 성능은 좋아집니다.
+    */
 
     return (
         <StyledCompaedSise>
